@@ -5,13 +5,14 @@ include_directories(
     ${PICA_INCLUDE_DIR})
 	
 add_library(pica
-    ${PICA_HEADER_DIR}/Constants.h
+    ${PICA_HEADER_DIR}/math/Constants.h
+    ${PICA_HEADER_DIR}/math/FP.h
+    ${PICA_HEADER_DIR}/math/Vectors.h
     ${PICA_HEADER_DIR}/CurrentDeposition.h	
     ${PICA_HEADER_DIR}/Ensemble.h
     ${PICA_HEADER_DIR}/Fdtd.h
     ${PICA_HEADER_DIR}/FieldSolver.h		
     ${PICA_HEADER_DIR}/Formfactor.h
-    ${PICA_HEADER_DIR}/FP.h
     ${PICA_HEADER_DIR}/Grid.h
 	${PICA_HEADER_DIR}/OpenMPHelper.h
     ${PICA_HEADER_DIR}/Parameters.h
@@ -21,7 +22,6 @@ add_library(pica
     ${PICA_HEADER_DIR}/ScalarField.h
     ${PICA_HEADER_DIR}/TileInterpolator.h	
 	${PICA_HEADER_DIR}/Utility.h
-    ${PICA_HEADER_DIR}/Vectors.h
 	
 	CurrentDeposition.cpp
     Ensemble.cpp
