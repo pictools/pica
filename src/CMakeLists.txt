@@ -5,6 +5,8 @@ include_directories(
     ${PICA_INCLUDE_DIR})
 	
 add_library(pica
+    ${PICA_HEADER_DIR}/fieldSolver/Fdtd.h
+    ${PICA_HEADER_DIR}/fieldSolver/FieldSolver.h
     ${PICA_HEADER_DIR}/grid/Grid.h
     ${PICA_HEADER_DIR}/grid/ScalarField.h	
     ${PICA_HEADER_DIR}/math/Constants.h
@@ -15,21 +17,19 @@ add_library(pica
 	${PICA_HEADER_DIR}/utility/Utility.h	
     ${PICA_HEADER_DIR}/CurrentDeposition.h	
     ${PICA_HEADER_DIR}/Ensemble.h
-    ${PICA_HEADER_DIR}/Fdtd.h
-    ${PICA_HEADER_DIR}/FieldSolver.h		
     ${PICA_HEADER_DIR}/Formfactor.h
     ${PICA_HEADER_DIR}/Parameters.h
     ${PICA_HEADER_DIR}/ParticlePush.h	
     ${PICA_HEADER_DIR}/ParticleSystem.h
     ${PICA_HEADER_DIR}/TileInterpolator.h	
 
+	fieldSolver/Fdtd.cpp
+	fieldSolver/FieldSolver.cpp	
     grid/Grid.cpp	
     grid/ScalarField.cpp	
     particle/Particle.cpp	
 	utility/Utility.cpp	
 	CurrentDeposition.cpp
     Ensemble.cpp
-	Fdtd.cpp
-	FieldSolver.cpp
 	ParticlePush.cpp
     ParticleSystem.cpp)

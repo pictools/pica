@@ -3,7 +3,7 @@
 
 
 #include "pica/grid/Grid.h"
-#include "Parameters.h"
+#include "pica/Parameters.h"
 
 #include <memory>
 

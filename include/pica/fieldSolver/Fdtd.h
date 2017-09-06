@@ -2,7 +2,7 @@
 #define PICA_FDTD_H
 
 
-#include "pica/FieldSolver.h"
+#include "pica/fieldSolver/FieldSolver.h"
 #include "pica/grid/Grid.h"
 
 

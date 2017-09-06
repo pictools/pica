@@ -1,4 +1,4 @@
-#include "pica/FieldSolver.h"
+#include "pica/fieldSolver/FieldSolver.h"
 
 #include "pica/math/Constants.h"
 #include "pica/grid/Grid.h"

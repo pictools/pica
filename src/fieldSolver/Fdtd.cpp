@@ -1,4 +1,4 @@
-#include "pica/Fdtd.h"
+#include "pica/fieldSolver/Fdtd.h"
 
 #include "pica/math/Constants.h"
 #include "pica/grid/Grid.h"
