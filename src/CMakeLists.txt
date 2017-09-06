@@ -20,6 +20,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/particles/ParticleSystem.h
     ${PICA_HEADER_DIR}/particlePush/ParticlePush.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
+	${PICA_HEADER_DIR}/utility/Assert.h	
 	${PICA_HEADER_DIR}/utility/Utility.h	
     ${PICA_HEADER_DIR}/Parameters.h
 

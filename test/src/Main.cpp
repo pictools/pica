@@ -1,11 +1,31 @@
 #include "TestingUtility.h"
 
 #include "pica/threading/OpenMPHelper.h"
+#include "pica/utility/Assert.h"
 #include "pica/utility/Utility.h"
 
 #include <cstdio>
 #include <iostream>
 #include <string>
+
+
+// Assert handlers, are only used if the code is build accordingly (see pica/utility/Assert.h for details)
+namespace pica
+{
+void assertionFailed(const char* expr, const char* file, long line)
+{
+    std::string message = "ERROR: assertion \"" + std::string(expr) + "\" at " + std::string(file) + ":" +
+        toString(line) + " failed";
+    std::cerr << message;
+}
+
+void assertionFailedMsg(const char* expr, const char* msg, const char* file, long line)
+{
+    std::string message = "ERROR: assertion \"" + std::string(expr) + "\" at " + std::string(file) + ":" +
+        toString(line) + " failed with message \"" + std::string(msg) + "\"";
+    std::cerr << message;
+}
+} // namespace pica
 
 
 int main(int argc, char **argv)
