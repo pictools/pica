@@ -5,7 +5,8 @@ include_directories(
     ../include
 	src)
 
-add_executable(tests  
+add_executable(tests
+	src/fieldInterpolation/TileInterpolationTests.cpp
     src/grid/ScalarFieldTests.cpp
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
@@ -18,8 +19,7 @@ add_executable(tests
     src/ParticleMoveTests.cpp	
     src/ParticleSystemTests.cpp
 	src/TestingUtility.h
-	src/TestingUtility.cpp
-	src/TileInterpolationTests.cpp)
+	src/TestingUtility.cpp)
 	
 if (APPLE)
     target_link_libraries(tests

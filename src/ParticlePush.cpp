@@ -1,12 +1,12 @@
 #include "pica/ParticlePush.h"
 
 #include "pica/CurrentDeposition.h"
+#include "pica/fieldInterpolation/TileInterpolator.h"
 #include "pica/grid/Grid.h"
 #include "pica/Ensemble.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/Parameters.h"
 #include "pica/ParticleSystem.h"
-#include "pica/TileInterpolator.h"
 
 #include <algorithm>
 

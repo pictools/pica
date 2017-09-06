@@ -2,7 +2,7 @@
 #define PICA_TILEINTERPOLATOR_H
 
 
-#include "pica/Formfactor.h"
+#include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/grid/Grid.h"
 #include "pica/threading/OpenMPHelper.h"
 

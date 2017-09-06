@@ -1,8 +1,8 @@
 #include "TestingUtility.h"
 
+#include "pica/fieldInterpolation/TileInterpolator.h"
 #include "pica/Ensemble.h"
 #include "pica/grid/Grid.h"
-#include "pica/TileInterpolator.h"
 
 using namespace pica;
 

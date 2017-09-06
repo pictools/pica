@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/Formfactor.h"
+#include "pica/fieldInterpolation/Formfactor.h"
 
 using namespace pica;
 

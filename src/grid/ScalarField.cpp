@@ -1,6 +1,6 @@
 #include "pica/grid/ScalarField.h"
 
-#include "pica/Formfactor.h"
+#include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"
 
