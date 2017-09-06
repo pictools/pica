@@ -1,6 +1,6 @@
 #include "pica/ParticlePush.h"
 
-#include "pica/CurrentDeposition.h"
+#include "pica/currentDeposition/CurrentDeposition.h"
 #include "pica/fieldInterpolation/TileInterpolator.h"
 #include "pica/grid/Grid.h"
 #include "pica/Ensemble.h"

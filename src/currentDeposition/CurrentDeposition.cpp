@@ -1,4 +1,4 @@
-#include "pica/CurrentDeposition.h"
+#include "pica/currentDeposition/CurrentDeposition.h"
 
 #include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/grid/Grid.h"
