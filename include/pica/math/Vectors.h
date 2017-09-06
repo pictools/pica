@@ -2,6 +2,7 @@
 #define PICA_VECTORS_H
 
 
+#include "pica/math/Dimension.h"
 #include "pica/math/FP.h"
 
 #include <cmath>
@@ -411,6 +412,26 @@ inline FP dist(const FP3& v1, const FP3& v2)
 {
     return (v1 - v2).norm();
 }
+
+
+template<Dimension dimension>
+struct VectorFPTraits {
+};
+
+template<>
+struct VectorFPTraits<One> {
+    typedef FP Type;
+};
+
+template<>
+struct VectorFPTraits<Two> {
+    typedef Vector2<FP> Type;
+};
+
+template<>
+struct VectorFPTraits<Three> {
+    typedef Vector3<FP> Type;
+};
 
 
 } // namespace pica

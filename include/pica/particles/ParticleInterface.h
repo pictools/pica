@@ -12,7 +12,7 @@ public:
 
     // Either provide the following types or specialization of ParticleTraits
     typedef Vector3<double> PositionType;
-    typedef Vector3<double> MomemtumType;
+    typedef Vector3<double> MomentumType;
     typedef double GammaType;
     typedef double ChargeType;
     typedef double MassType;
@@ -20,7 +20,7 @@ public:
     typedef int SpeciesType;
 
     ParticleInterface();
-    ParticleInterface(const PositionType& position, const MomemtumType& momentum,
+    ParticleInterface(const PositionType& position, const MomentumType& momentum,
         const SpeciesType& species, FactorType factor);
 
     MassType getMass() const;
@@ -32,11 +32,11 @@ public:
     PositionType getPosition() const;
     void setPosition(const PositionType& newPosition);
 
-    MomemtumType getMomentum() const;
-    void setMomentum(const MomemtumType& newMomentum);
+    MomentumType getMomentum() const;
+    void setMomentum(const MomentumType& newMomentum);
 
-    MomemtumType getVelocity() const;
-    void setVelocity(const MomemtumType& newVelocity);
+    MomentumType getVelocity() const;
+    void setVelocity(const MomentumType& newVelocity);
 
     GammaType getGamma() const;
     
