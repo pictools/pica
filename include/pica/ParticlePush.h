@@ -5,7 +5,7 @@
 #include "pica/Grid.h"
 #include "pica/Ensemble.h"
 #include "pica/Parameters.h"
-#include "pica/Particle.h"
+#include "pica/particle/Particle.h"
 #include "pica/ParticleSystem.h"
 #include "pica/math/Vectors.h"
 #include "pica/utility/Utility.h"

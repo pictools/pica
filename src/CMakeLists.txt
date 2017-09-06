@@ -8,6 +8,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/math/Constants.h
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
+    ${PICA_HEADER_DIR}/particle/Particle.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
 	${PICA_HEADER_DIR}/utility/Utility.h	
     ${PICA_HEADER_DIR}/CurrentDeposition.h	
@@ -17,19 +18,18 @@ add_library(pica
     ${PICA_HEADER_DIR}/Formfactor.h
     ${PICA_HEADER_DIR}/Grid.h
     ${PICA_HEADER_DIR}/Parameters.h
-    ${PICA_HEADER_DIR}/Particle.h
     ${PICA_HEADER_DIR}/ParticlePush.h	
     ${PICA_HEADER_DIR}/ParticleSystem.h
     ${PICA_HEADER_DIR}/ScalarField.h
     ${PICA_HEADER_DIR}/TileInterpolator.h	
 
+    particle/Particle.cpp	
 	utility/Utility.cpp	
 	CurrentDeposition.cpp
     Ensemble.cpp
 	Fdtd.cpp
 	FieldSolver.cpp
     Grid.cpp
-    Particle.cpp
 	ParticlePush.cpp
     ParticleSystem.cpp
     ScalarField.cpp)

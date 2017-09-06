@@ -8,6 +8,7 @@ include_directories(
 add_executable(tests  
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
+    src/particle/ParticleTests.cpp
 	src/threading/OpenMPHelperTests.cpp	
 	src/utility/UtilityTests.cpp	
     src/EnsembleTests.cpp
@@ -15,7 +16,6 @@ add_executable(tests
 	src/Main.cpp
     src/ParticleMoveTests.cpp	
     src/ParticleSystemTests.cpp
-    src/ParticleTests.cpp
     src/ScalarFieldTests.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp
