@@ -1,7 +1,7 @@
-#add_subdirectory(gtest)
+add_subdirectory(gtest)
 
 include_directories(
-#    gtest/include
+    gtest/include
     ../include)
 
 add_executable(tests  
