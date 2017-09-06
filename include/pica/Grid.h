@@ -3,7 +3,8 @@
 
 
 #include "pica/ScalarField.h"
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
+
 
 namespace pica {
 

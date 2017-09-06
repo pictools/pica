@@ -5,7 +5,7 @@
 #include "pica/Parameters.h"
 #include "pica/Particle.h"
 #include "pica/ParticleSystem.h"
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
 
 #include "gtest/gtest.h"
 

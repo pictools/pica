@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
 
 #include <iostream>
 #include <sstream>

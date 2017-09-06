@@ -1,6 +1,6 @@
 #include "pica/CurrentDeposition.h"
 
-#include "pica/Constants.h"
+#include "pica/math/Constants.h"
 #include "pica/Ensemble.h"
 #include "pica/Formfactor.h"
 #include "pica/Grid.h"

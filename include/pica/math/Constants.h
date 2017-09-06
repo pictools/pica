@@ -2,7 +2,7 @@
 #define PICA_CONSTANTS_H
 
 
-#include "pica/FP.h"
+#include "pica/math/FP.h"
 
 
 namespace pica {

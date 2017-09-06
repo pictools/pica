@@ -1,10 +1,12 @@
 #ifndef PICA_FORMFACTOR_H
 #define PICA_FORMFACTOR_H
 
-#include "pica/FP.h"
-#include "pica/Vectors.h"
+
+#include "pica/math/FP.h"
+#include "pica/math/Vectors.h"
 
 #include <cmath>
+
 
 namespace pica {
 

@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/FP.h"
+#include "pica/math/FP.h"
 
 using namespace pica;
 

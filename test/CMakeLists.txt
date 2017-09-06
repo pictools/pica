@@ -2,11 +2,13 @@ add_subdirectory(gtest)
 
 include_directories(
     gtest/include
-    ../include)
+    ../include
+	src)
 
 add_executable(tests  
-    src/EnsembleTests.cpp	
-    src/FPTests.cpp
+    src/math/FPTests.cpp
+    src/math/VectorsTests.cpp	
+    src/EnsembleTests.cpp
     src/FormfactorTests.cpp
 	src/Main.cpp
 	src/OpenMPHelperTests.cpp	
@@ -17,8 +19,7 @@ add_executable(tests
 	src/TestingUtility.h
 	src/TestingUtility.cpp
 	src/TileInterpolationTests.cpp
-	src/UtilityTests.cpp
-    src/VectorsTests.cpp)
+	src/UtilityTests.cpp)
 	
 if (APPLE)
     target_link_libraries(tests

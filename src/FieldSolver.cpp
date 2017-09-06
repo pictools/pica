@@ -1,6 +1,6 @@
 #include "pica/FieldSolver.h"
 
-#include "pica/Constants.h"
+#include "pica/math/Constants.h"
 #include "pica/Grid.h"
 #include "pica/OpenMPHelper.h"
 

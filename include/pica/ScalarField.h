@@ -2,7 +2,7 @@
 #define PICA_SCALARFIELD_H
 
 
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
 
 #include <vector>
 

@@ -8,7 +8,7 @@
 #include "pica/Particle.h"
 #include "pica/ParticleSystem.h"
 #include "pica/Utility.h"
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
 
 
 namespace pica {

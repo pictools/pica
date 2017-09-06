@@ -2,7 +2,7 @@
 #define PICA_PARAMETERS_H
 
 
-#include "pica/Vectors.h"
+#include "pica/math/Vectors.h"
 
 #include <iostream>
 

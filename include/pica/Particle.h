@@ -2,9 +2,9 @@
 #define PICA_PARTICLE_H
 
 
-#include "pica/Constants.h"
-#include "pica/FP.h"
-#include "pica/Vectors.h"
+#include "pica/math/Constants.h"
+#include "pica/math/FP.h"
+#include "pica/math/Vectors.h"
 
 #include <cmath>
 #include <stddef.h>
