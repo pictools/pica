@@ -6,6 +6,7 @@ include_directories(
 	src)
 
 add_executable(tests
+    src/fieldInterpolation/FormfactorTests.cpp
 	src/fieldInterpolation/TileInterpolationTests.cpp
     src/grid/ScalarFieldTests.cpp
     src/math/FPTests.cpp
@@ -14,10 +15,9 @@ add_executable(tests
 	src/threading/OpenMPHelperTests.cpp	
 	src/utility/UtilityTests.cpp	
     src/EnsembleTests.cpp
-    src/FormfactorTests.cpp
-	src/Main.cpp
     src/ParticleMoveTests.cpp	
     src/ParticleSystemTests.cpp
+	src/Main.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp)
 	
