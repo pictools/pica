@@ -13,6 +13,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/grid/Grid.h
     ${PICA_HEADER_DIR}/grid/ScalarField.h	
     ${PICA_HEADER_DIR}/math/Constants.h
+    ${PICA_HEADER_DIR}/math/Dimension.h	
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
     ${PICA_HEADER_DIR}/particles/Ensemble.h
