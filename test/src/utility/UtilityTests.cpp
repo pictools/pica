@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 #include <limits>
 #include <string>

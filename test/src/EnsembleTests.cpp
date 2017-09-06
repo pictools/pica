@@ -1,7 +1,7 @@
 #include "TestingUtility.h"
 
 #include "pica/Ensemble.h"
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 #include <string>
 #include <vector>

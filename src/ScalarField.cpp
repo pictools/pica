@@ -2,7 +2,7 @@
 
 #include "pica/Formfactor.h"
 #include "pica/threading/OpenMPHelper.h"
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 
 namespace pica {

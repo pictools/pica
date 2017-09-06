@@ -1,8 +1,8 @@
 #include "TestingUtility.h"
 
 #include "pica/Particle.h"
-#include "pica/Utility.h"
 #include "pica/math/Vectors.h"
+#include "pica/utility/Utility.h"
 
 #include <cmath>
 #include <memory>

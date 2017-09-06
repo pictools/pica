@@ -1,6 +1,6 @@
 #include "pica/ParticleSystem.h"
 
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 
 namespace pica {

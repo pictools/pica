@@ -8,7 +8,8 @@ include_directories(
 add_executable(tests  
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
-	src/threading/OpenMPHelperTests.cpp		
+	src/threading/OpenMPHelperTests.cpp	
+	src/utility/UtilityTests.cpp	
     src/EnsembleTests.cpp
     src/FormfactorTests.cpp
 	src/Main.cpp
@@ -18,8 +19,7 @@ add_executable(tests
     src/ScalarFieldTests.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp
-	src/TileInterpolationTests.cpp
-	src/UtilityTests.cpp)
+	src/TileInterpolationTests.cpp)
 	
 if (APPLE)
     target_link_libraries(tests

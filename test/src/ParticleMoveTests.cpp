@@ -3,7 +3,7 @@
 #include "pica/math/Constants.h"
 #include "pica/Grid.h"
 #include "pica/Ensemble.h"
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 #include <iostream>
 using std::cout;

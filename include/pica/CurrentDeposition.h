@@ -3,7 +3,7 @@
 
 
 #include "pica/Parameters.h"
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 #include "pica/math/Vectors.h"
 
 #include <memory>

@@ -9,6 +9,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
+	${PICA_HEADER_DIR}/utility/Utility.h	
     ${PICA_HEADER_DIR}/CurrentDeposition.h	
     ${PICA_HEADER_DIR}/Ensemble.h
     ${PICA_HEADER_DIR}/Fdtd.h
@@ -21,8 +22,8 @@ add_library(pica
     ${PICA_HEADER_DIR}/ParticleSystem.h
     ${PICA_HEADER_DIR}/ScalarField.h
     ${PICA_HEADER_DIR}/TileInterpolator.h	
-	${PICA_HEADER_DIR}/Utility.h
-	
+
+	utility/Utility.cpp	
 	CurrentDeposition.cpp
     Ensemble.cpp
 	Fdtd.cpp
@@ -31,5 +32,4 @@ add_library(pica
     Particle.cpp
 	ParticlePush.cpp
     ParticleSystem.cpp
-    ScalarField.cpp
-	Utility.cpp)
+    ScalarField.cpp)

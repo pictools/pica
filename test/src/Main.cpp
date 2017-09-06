@@ -1,7 +1,7 @@
 #include "TestingUtility.h"
 
 #include "pica/threading/OpenMPHelper.h"
-#include "pica/Utility.h"
+#include "pica/utility/Utility.h"
 
 #include <cstdio>
 #include <iostream>
