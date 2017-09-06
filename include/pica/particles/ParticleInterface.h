@@ -9,6 +9,7 @@ namespace pica {
 class ParticleInterface {
 public:
 
+    // Either provide the following types or specialization of ParticleTraits
     typedef FP3 PositionType;
     typedef FP3 MomemtumType;
     typedef FP GammaType;
