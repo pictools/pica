@@ -4,7 +4,7 @@
 
 #include "pica/Particle.h"
 #include "pica/ParticleSystem.h"
-#include "pica/OpenMPHelper.h"
+#include "pica/threading/OpenMPHelper.h"
 
 #include <vector>
 

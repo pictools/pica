@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/OpenMPHelper.h"
+#include "pica/threading/OpenMPHelper.h"
 
 #include <vector>
 

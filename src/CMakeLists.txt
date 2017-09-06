@@ -8,13 +8,13 @@ add_library(pica
     ${PICA_HEADER_DIR}/math/Constants.h
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
+	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
     ${PICA_HEADER_DIR}/CurrentDeposition.h	
     ${PICA_HEADER_DIR}/Ensemble.h
     ${PICA_HEADER_DIR}/Fdtd.h
     ${PICA_HEADER_DIR}/FieldSolver.h		
     ${PICA_HEADER_DIR}/Formfactor.h
     ${PICA_HEADER_DIR}/Grid.h
-	${PICA_HEADER_DIR}/OpenMPHelper.h
     ${PICA_HEADER_DIR}/Parameters.h
     ${PICA_HEADER_DIR}/Particle.h
     ${PICA_HEADER_DIR}/ParticlePush.h	

@@ -2,7 +2,7 @@
 
 #include "pica/math/Constants.h"
 #include "pica/Grid.h"
-#include "pica/OpenMPHelper.h"
+#include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>
 

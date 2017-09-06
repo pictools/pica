@@ -3,7 +3,7 @@
 #include "pica/CurrentDeposition.h"
 #include "pica/Grid.h"
 #include "pica/Ensemble.h"
-#include "pica/OpenMPHelper.h"
+#include "pica/threading/OpenMPHelper.h"
 #include "pica/Parameters.h"
 #include "pica/ParticleSystem.h"
 #include "pica/TileInterpolator.h"

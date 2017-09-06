@@ -4,7 +4,7 @@
 #include "pica/Ensemble.h"
 #include "pica/Formfactor.h"
 #include "pica/Grid.h"
-#include "pica/OpenMPHelper.h"
+#include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>
 #include <stdexcept>
