@@ -1,4 +1,4 @@
-#include "pica/ParticleSystem.h"
+#include "pica/particles/ParticleSystem.h"
 
 #include "pica/utility/Utility.h"
 

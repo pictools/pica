@@ -2,8 +2,8 @@
 #define PICA_ENSEMBLE_H
 
 
-#include "pica/particle/Particle.h"
-#include "pica/ParticleSystem.h"
+#include "pica/particles/Particle.h"
+#include "pica/particles/ParticleSystem.h"
 #include "pica/threading/OpenMPHelper.h"
 
 #include <vector>

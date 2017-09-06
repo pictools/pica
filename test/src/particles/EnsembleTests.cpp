@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/Ensemble.h"
+#include "pica/particles/Ensemble.h"
 #include "pica/utility/Utility.h"
 
 #include <string>

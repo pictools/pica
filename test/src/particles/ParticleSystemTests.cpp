@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/ParticleSystem.h"
+#include "pica/particles/ParticleSystem.h"
 
 #include <vector>
 using std::vector;

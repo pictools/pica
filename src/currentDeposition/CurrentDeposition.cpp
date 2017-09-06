@@ -3,8 +3,8 @@
 #include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/grid/Grid.h"
 #include "pica/math/Constants.h"
+#include "pica/particles/Ensemble.h"
 #include "pica/threading/OpenMPHelper.h"
-#include "pica/Ensemble.h"
 
 #include <algorithm>
 #include <stdexcept>

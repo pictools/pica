@@ -3,10 +3,10 @@
 #include "pica/currentDeposition/CurrentDeposition.h"
 #include "pica/fieldInterpolation/TileInterpolator.h"
 #include "pica/grid/Grid.h"
-#include "pica/Ensemble.h"
+#include "pica/particles/Ensemble.h"
+#include "pica/particles/ParticleSystem.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/Parameters.h"
-#include "pica/ParticleSystem.h"
 
 #include <algorithm>
 

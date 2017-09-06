@@ -11,12 +11,12 @@ add_executable(tests
     src/grid/ScalarFieldTests.cpp
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
-    src/particle/ParticleTests.cpp
+    src/particles/EnsembleTests.cpp
+    src/particles/ParticleTests.cpp
+    src/particles/ParticleSystemTests.cpp
 	src/threading/OpenMPHelperTests.cpp	
 	src/utility/UtilityTests.cpp	
-    src/EnsembleTests.cpp
     src/ParticleMoveTests.cpp	
-    src/ParticleSystemTests.cpp
 	src/Main.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp)

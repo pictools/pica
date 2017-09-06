@@ -15,21 +15,21 @@ add_library(pica
     ${PICA_HEADER_DIR}/math/Constants.h
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
-    ${PICA_HEADER_DIR}/particle/Particle.h
+    ${PICA_HEADER_DIR}/particles/Ensemble.h
+    ${PICA_HEADER_DIR}/particles/Particle.h
+    ${PICA_HEADER_DIR}/particles/ParticleSystem.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
 	${PICA_HEADER_DIR}/utility/Utility.h	
-    ${PICA_HEADER_DIR}/Ensemble.h
     ${PICA_HEADER_DIR}/Parameters.h
     ${PICA_HEADER_DIR}/ParticlePush.h	
-    ${PICA_HEADER_DIR}/ParticleSystem.h
 
 	currentDeposition/CurrentDeposition.cpp
 	fieldSolver/Fdtd.cpp
 	fieldSolver/FieldSolver.cpp	
     grid/Grid.cpp	
     grid/ScalarField.cpp	
-    particle/Particle.cpp	
+    particles/Ensemble.cpp
+    particles/Particle.cpp
+    particles/ParticleSystem.cpp	
 	utility/Utility.cpp	
-    Ensemble.cpp
-	ParticlePush.cpp
-    ParticleSystem.cpp)
+	ParticlePush.cpp)

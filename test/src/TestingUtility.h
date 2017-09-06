@@ -4,8 +4,8 @@
 
 #include "pica/Parameters.h"
 #include "pica/math/Vectors.h"
-#include "pica/particle/Particle.h"
-#include "pica/ParticleSystem.h"
+#include "pica/particles/Particle.h"
+#include "pica/particles/ParticleSystem.h"
 
 #include "gtest/gtest.h"
 

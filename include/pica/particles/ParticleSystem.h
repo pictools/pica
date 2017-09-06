@@ -2,7 +2,7 @@
 #define PICA_PARTICLESYSTEM_H
 
 
-#include "pica/particle/Particle.h"
+#include "pica/particles/Particle.h"
 
 #include <vector>
 

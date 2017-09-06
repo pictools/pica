@@ -1,4 +1,4 @@
-#include "pica/particle/Particle.h"
+#include "pica/particles/Particle.h"
 
 
 namespace pica {

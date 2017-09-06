@@ -1,4 +1,4 @@
-#include "pica/Ensemble.h"
+#include "pica/particles/Ensemble.h"
 
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"

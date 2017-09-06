@@ -1,7 +1,7 @@
 #include "TestingUtility.h"
 
-#include "pica/particle/Particle.h"
 #include "pica/math/Vectors.h"
+#include "pica/particles/Particle.h"
 #include "pica/utility/Utility.h"
 
 #include <cmath>
