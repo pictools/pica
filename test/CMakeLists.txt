@@ -6,6 +6,7 @@ include_directories(
 	src)
 
 add_executable(tests  
+    src/grid/ScalarFieldTests.cpp
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
     src/particle/ParticleTests.cpp
@@ -16,7 +17,6 @@ add_executable(tests
 	src/Main.cpp
     src/ParticleMoveTests.cpp	
     src/ParticleSystemTests.cpp
-    src/ScalarFieldTests.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp
 	src/TileInterpolationTests.cpp)

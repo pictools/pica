@@ -2,7 +2,7 @@
 #define PICA_PARTICLEPUSH_H
 
 
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "pica/Ensemble.h"
 #include "pica/Parameters.h"
 #include "pica/particle/Particle.h"

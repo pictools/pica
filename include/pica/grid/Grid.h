@@ -2,7 +2,7 @@
 #define PICA_GRID_H
 
 
-#include "pica/ScalarField.h"
+#include "pica/grid/ScalarField.h"
 #include "pica/math/Vectors.h"
 
 

@@ -3,7 +3,7 @@
 
 
 #include "pica/FieldSolver.h"
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 
 
 namespace pica {

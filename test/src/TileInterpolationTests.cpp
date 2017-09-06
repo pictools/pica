@@ -1,7 +1,7 @@
 #include "TestingUtility.h"
 
 #include "pica/Ensemble.h"
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "pica/TileInterpolator.h"
 
 using namespace pica;

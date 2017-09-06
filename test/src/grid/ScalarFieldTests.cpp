@@ -1,6 +1,6 @@
 #include "TestingUtility.h"
 
-#include "pica/ScalarField.h"
+#include "pica/grid/ScalarField.h"
 
 using namespace pica;
 

@@ -1,7 +1,7 @@
 #include "TestingUtility.h"
 
 #include "pica/math/Constants.h"
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "pica/Ensemble.h"
 #include "pica/utility/Utility.h"
 

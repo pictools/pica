@@ -1,4 +1,4 @@
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 
 #include "pica/threading/OpenMPHelper.h"
 

@@ -1,7 +1,7 @@
 #include "pica/FieldSolver.h"
 
 #include "pica/math/Constants.h"
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>

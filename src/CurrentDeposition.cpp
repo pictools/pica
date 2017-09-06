@@ -1,10 +1,10 @@
 #include "pica/CurrentDeposition.h"
 
+#include "pica/grid/Grid.h"
 #include "pica/math/Constants.h"
+#include "pica/threading/OpenMPHelper.h"
 #include "pica/Ensemble.h"
 #include "pica/Formfactor.h"
-#include "pica/Grid.h"
-#include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>
 #include <stdexcept>

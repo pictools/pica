@@ -1,7 +1,7 @@
 #include "pica/ParticlePush.h"
 
 #include "pica/CurrentDeposition.h"
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "pica/Ensemble.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/Parameters.h"

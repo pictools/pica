@@ -1,4 +1,4 @@
-#include "pica/ScalarField.h"
+#include "pica/grid/ScalarField.h"
 
 #include "pica/Formfactor.h"
 #include "pica/threading/OpenMPHelper.h"

@@ -2,7 +2,7 @@
 #define PICA_FIELDSOLVER_H
 
 
-#include "pica/Grid.h"
+#include "pica/grid/Grid.h"
 #include "Parameters.h"
 
 #include <memory>
