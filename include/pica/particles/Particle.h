@@ -24,16 +24,6 @@ struct ParticleType
     std::string& name() { return _name; }
     const std::string& name() const { return _name; }
 
-    // Ionization
-    int numChargeStates;
-    FP chargeStep;
-    int ionizationL;
-    FP ionizationPotential;
-    int numElectrons;
-    int z0;
-
-    ParticleType(): numChargeStates(1), chargeStep(1), ionizationL(0),
-        ionizationPotential(0), numElectrons(0), z0(0) {}
 };
 
 

@@ -26,7 +26,7 @@ Ensemble::Ensemble(const Int3& numInternalCells, const FP3& minCoords, const FP3
     pendingParticles.resize(omp_get_max_threads());
     inParticlesLoop = false;
     computeBoundaryIndexes();
-    centerPoint = minCoords + 0.5 * steps * numInternalCells;
+    centerPoint = minCoords + 0.5 * steps * FP3(numInternalCells);
 }
 
 

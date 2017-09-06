@@ -24,7 +24,7 @@ Grid::Grid(const Int3 & _numInternalCells, FP _dt, const FP3 & minCoords, const 
     shiftBy(FP3(0, 0.5, 0) * steps),
     shiftBz(FP3(0, 0, 0.5) * steps),
     shiftRho(steps * 0.5),
-    origin(minCoords - steps * getNumExternalLeftCells()),
+    origin(minCoords - steps * FP3(getNumExternalLeftCells())),
     EB_timeShift(dt / 2)
 {
     setInterpolationType(Interpolation_CIC);

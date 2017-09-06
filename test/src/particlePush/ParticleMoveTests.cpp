@@ -35,7 +35,7 @@ void ParticleMoveTest::SetUp()
     parameters.localMax = parameters.globalMax = FP3(1, 1, 1) * spaceSize;
     parameters.localGridSize = parameters.globalGridSize = parameters.gridSize = Int3(32, 32, 32);
     parameters.step = (parameters.globalMax - parameters.globalMin) /
-        parameters.globalGridSize;
+        FP3(parameters.globalGridSize);
     parameters.localMinIndex = Int3(0, 0, 0);
     parameters.localMaxIndex = parameters.localGridSize - Int3(1, 1, 1);
     parameters.numIterations = 1;

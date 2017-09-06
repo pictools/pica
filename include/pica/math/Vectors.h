@@ -12,33 +12,244 @@
 
 namespace pica {
 
-// Vector of 3 ints. Can be accessed by either .x, .y, .z or [0], [1], [2].
-struct Int3
+// Vector of 2 components of arithmetic type T (T = int, double, etc.)
+// with access by .x, .y, and [], provides basic arithmetic operations
+template <typename T>
+struct Vector2
 {
-    int x, y, z;
+    T x, y;
 
-    Int3():
-        x(0), y(0), z(0) {}
+    Vector2() :
+        x(0), y(0) {}
 
-    Int3(int _x, int _y, int _z):
-        x(_x), y(_y), z(_z) {}
+    Vector2(T _x, T _y) :
+        x(_x), y(_y) {}
 
-    inline int operator[](int idx) const
-    { return *((int*)this + idx); }
+    template<typename U>
+    Vector2(const Vector2<U>& other) :
+        x(other.x), y(other.y) {}
 
-    inline int& operator[](int idx)
-    { return *((int*)this + idx); }
+    inline T operator[](int idx) const
+    {
+        return *((T*)this + idx);
+    }
 
-    inline int volume() const
-    { return x * y * z; }
+    inline T& operator[](int idx)
+    {
+        return *((T*)this + idx);
+    }
+
+    inline T volume() const
+    {
+        return x * y;
+    }
+
+    inline T norm() const
+    {
+        return sqrt(x * x + y * y);
+    }
+
+    inline T norm2() const
+    {
+        return x * x + y * y;
+    }
+
 };
 
-inline const Int3 operator + (const Int3& v1, const Int3& v2)
+template<typename T>
+inline const Vector2<T> operator + (const Vector2<T>& v1, const Vector2<T>& v2)
 {
-    return Int3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+    return Vector2<T>(v1.x + v2.x, v1.y + v2.y);
 }
 
-inline Int3& operator += (Int3& v1, const Int3& v2)
+template<typename T>
+inline Vector2<T>& operator += (Vector2<T>& v1, const Vector2<T>& v2)
+{
+    v1.x += v2.x;
+    v1.y += v2.y;
+    return v1;
+}
+
+template<typename T>
+inline const Vector2<T> operator - (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return Vector3<T>(v1.x - v2.x, v1.y - v2.y);
+}
+
+template<typename T>
+inline Vector2<T>& operator -= (Vector2<T>& v1, const Vector2<T>& v2)
+{
+    v1.x -= v2.x;
+    v1.y -= v2.y;
+    return v1;
+}
+
+template<typename T>
+inline const Vector2<T> operator * (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return Vector2<T>(v1.x * v2.x, v1.y * v2.y);
+}
+
+template<typename T>
+inline Vector2<T>& operator *= (Vector2<T>& v1, const Vector2<T>& v2)
+{
+    v1.x *= v2.x;
+    v1.y *= v2.y;
+    return v1;
+}
+
+template<typename T>
+inline const Vector2<T> operator * (const Vector2<T>& v, T a)
+{
+    return Vector2<T>(v.x * a, v.y * a);
+}
+
+template<typename T>
+inline const Vector2<T> operator * (T a, const Vector2<T>& v)
+{
+    return Vector2<T>(v.x * a, v.y * a);
+}
+
+template<typename T>
+inline Vector2<T>& operator *= (Vector2<T>& v, int a)
+{
+    v.x *= a;
+    v.y *= a;
+    return v;
+}
+
+template<typename T>
+inline const Vector2<T> operator / (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return Vector2<T>(v1.x / v2.x, v1.y / v2.y);
+}
+
+template<typename T>
+inline Vector2<T>& operator /= (Vector2<T>& v1, const Vector2<T>& v2)
+{
+    v1.x /= v2.x;
+    v1.y /= v2.y;
+    return v1;
+}
+
+template<typename T>
+inline const Vector2<T> operator / (const Vector2<T>& v, T a)
+{
+    return Vector2<T>(v.x / a, v.y / a);
+}
+
+template<typename T>
+inline Vector2<T>& operator /= (Vector2<T>& v, T a)
+{
+    v.x /= a;
+    v.y /= a;
+    return v;
+}
+
+template<typename T>
+inline bool operator == (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x == v2.x) && (v1.y == v2.y);
+}
+
+template<typename T>
+inline bool operator != (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x != v2.x) || (v1.y != v2.y);
+}
+
+template<typename T>
+inline bool operator < (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x < v2.x) && (v1.y < v2.y);
+}
+
+template<typename T>
+inline bool operator <= (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x <= v2.x) && (v1.y <= v2.y);
+}
+
+template<typename T>
+inline bool operator > (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x > v2.x) && (v1.y > v2.y);
+}
+
+template<typename T>
+inline bool operator >= (const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return (v1.x >= v2.x) && (v1.y >= v2.y);
+}
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const Vector2<T>& v)
+{
+    return out << "(" << v.x << ", " << v.y << ")";
+}
+
+template<typename T>
+inline T dot(const Vector2<T>& v1, const Vector2<T>& v2)
+{
+    return v1.x * v2.x + v1.y * v2.y;
+}
+
+
+// Vector of 3 components of arithmetic type T (T = int, double, etc.)
+// with access by .x, .y, .z and [], provides basic arithmetic operations
+template <typename T>
+struct Vector3
+{
+    T x, y, z;
+
+    Vector3() :
+        x(0), y(0), z(0) {}
+
+    Vector3(T _x, T _y, T _z) :
+        x(_x), y(_y), z(_z) {}
+
+    template<typename U>
+    Vector3(const Vector3<U>& other) :
+        x(other.x), y(other.y), z(other.z) {}
+
+    Vector3(Vector2<T> v) :
+        x(v.x), y(v.y), z(0) {}
+
+    inline T operator[](int idx) const
+    {
+        return *((T*)this + idx);
+    }
+
+    inline T& operator[](int idx)
+    {
+        return *((T*)this + idx);
+    }
+
+    inline T volume() const
+    {
+        return x * y * z;
+    }
+
+    inline T norm() const
+    {
+        return sqrt(x * x + y * y + z * z);
+    }
+
+    inline T norm2() const
+    {
+        return x * x + y * y + z * z;
+    }
+
+};
+
+template<typename T>
+inline const Vector3<T> operator + (const Vector3<T>& v1, const Vector3<T>& v2)
+{
+    return Vector3<T>(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
+}
+
+template<typename T>
+inline Vector3<T>& operator += (Vector3<T>& v1, const Vector3<T>& v2)
 {
     v1.x += v2.x;
     v1.y += v2.y;
@@ -46,12 +257,14 @@ inline Int3& operator += (Int3& v1, const Int3& v2)
     return v1;
 }
 
-inline const Int3 operator - (const Int3& v1, const Int3& v2)
+template<typename T>
+inline const Vector3<T> operator - (const Vector3<T>& v1, const Vector3<T>& v2)
 {
-    return Int3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
+    return Vector3<T>(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
 }
 
-inline Int3& operator -= (Int3& v1, const Int3& v2)
+template<typename T>
+inline Vector3<T>& operator -= (Vector3<T>& v1, const Vector3<T>& v2)
 {
     v1.x -= v2.x;
     v1.y -= v2.y;
@@ -59,12 +272,14 @@ inline Int3& operator -= (Int3& v1, const Int3& v2)
     return v1;
 }
 
-inline const Int3 operator * (const Int3& v1, const Int3& v2)
+template<typename T>
+inline const Vector3<T> operator * (const Vector3<T>& v1, const Vector3<T>& v2)
 {
-    return Int3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
+    return Vector3<T>(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
 }
 
-inline Int3& operator *= (Int3& v1, const Int3& v2)
+template<typename T>
+inline Vector3<T>& operator *= (Vector3<T>& v1, const Vector3<T>& v2)
 {
     v1.x *= v2.x;
     v1.y *= v2.y;
@@ -72,12 +287,20 @@ inline Int3& operator *= (Int3& v1, const Int3& v2)
     return v1;
 }
 
-inline const Int3 operator * (const Int3& v, int a)
+template<typename T>
+inline const Vector3<T> operator * (const Vector3<T>& v, T a)
 {
-    return Int3(v.x * a, v.y * a, v.z * a);
+    return Vector3<T>(v.x * a, v.y * a, v.z * a);
 }
 
-inline Int3& operator *= (Int3& v, int a)
+template<typename T>
+inline const Vector3<T> operator * (T a, const Vector3<T>& v2)
+{
+    return Vector3<T>(a * v2.x, a * v2.y, a * v2.z);
+}
+
+template<typename T>
+inline Vector3<T>& operator *= (Vector3<T>& v, T a)
 {
     v.x *= a;
     v.y *= a;
@@ -85,12 +308,14 @@ inline Int3& operator *= (Int3& v, int a)
     return v;
 }
 
-inline const Int3 operator / (const Int3& v1, const Int3& v2)
+template<typename T>
+inline const Vector3<T> operator / (const Vector3<T>& v1, const Vector3<T>& v2)
 {
-    return Int3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
+    return Vector3<T>(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
 }
 
-inline Int3& operator /= (Int3& v1, const Int3& v2)
+template<typename T>
+inline Vector3<T>& operator /= (Vector3<T>& v1, const Vector3<T>& v2)
 {
     v1.x /= v2.x;
     v1.y /= v2.y;
@@ -98,12 +323,14 @@ inline Int3& operator /= (Int3& v1, const Int3& v2)
     return v1;
 }
 
-inline const Int3 operator / (const Int3& v, int a)
+template<typename T>
+inline const Vector3<T> operator / (const Vector3<T>& v, T a)
 {
-    return Int3(v.x / a, v.y / a, v.z / a);
+    return Vector3<T>(v.x / a, v.y / a, v.z / a);
 }
 
-inline Int3& operator /= (Int3& v, int a)
+template<typename T>
+inline Vector3<T>& operator /= (Vector3<T>& v, T a)
 {
     v.x /= a;
     v.y /= a;
@@ -111,34 +338,68 @@ inline Int3& operator /= (Int3& v, int a)
     return v;
 }
 
-inline bool operator == (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator == (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x == v2.x) && (v1.y == v2.y) && (v1.z == v2.z);
 }
 
-inline bool operator != (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator != (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x != v2.x) || (v1.y != v2.y) || (v1.z != v2.z);
 }
 
-inline bool operator < (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator < (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x < v2.x) && (v1.y < v2.y) && (v1.z < v2.z);
 }
 
-inline bool operator <= (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator <= (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x <= v2.x) && (v1.y <= v2.y) && (v1.z <= v2.z);
 }
 
-inline bool operator > (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator > (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x > v2.x) && (v1.y > v2.y) && (v1.z > v2.z);
 }
 
-inline bool operator >= (const Int3& v1, const Int3& v2)
+template<typename T>
+inline bool operator >= (const Vector3<T>& v1, const Vector3<T>& v2)
 {
     return (v1.x >= v2.x) && (v1.y >= v2.y) && (v1.z >= v2.z);
+}
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const Vector3<T>& v)
+{
+    return out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
+}
+
+template<typename T>
+inline T dot(const Vector3<T>& v1, const Vector3<T>& v2)
+{
+    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
+}
+
+template<typename T>
+inline const Vector3<T> cross(const Vector3<T>& v1, const Vector3<T>& v2)
+{
+    return Vector3<T>(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z,
+        v1.x * v2.y - v1.y * v2.x);
+}
+
+
+typedef Vector3<int> Int3;
+typedef Vector3<FP> FP3;
+
+inline const Int3 truncate(const FP3& v)
+{
+    return Int3((int)v.x, (int)v.y, (int)v.z);
 }
 
 inline Int3 remainder(const Int3& v1, const Int3& v2)
@@ -146,222 +407,11 @@ inline Int3 remainder(const Int3& v1, const Int3& v2)
     return Int3(v1.x % v2.x, v1.y % v2.y, v1.z % v2.z);
 }
 
-inline std::ostream& operator<<(std::ostream& out, const Int3& v)
-{
-    return out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-}
-
-
-// Vector of 3 FPs. Can be accessed by either .x, .y, .z or [0], [1], [2].
-struct FP3
-{
-    FP x, y, z;
-
-    FP3():
-        x(0), y(0), z(0) {}
-
-    FP3(FP _x, FP _y, FP _z):
-        x(_x), y(_y), z(_z) {}
-
-    explicit FP3(const Int3& v):
-        x(v.x), y(v.y), z(v.z) {}
-
-    inline FP operator[](int idx) const
-    { return *((FP*)this + idx); }
-
-    inline FP& operator[](int idx)
-    { return *((FP*)this + idx); }
-
-    inline FP norm() const
-    { return sqrt(x * x + y * y + z * z); }
-
-    inline FP norm2() const
-    { return x * x + y * y + z * z; }
-
-    inline FP volume() const
-    { return x * y * z; }
-};
-
-inline const FP3 operator + (const FP3& v1, const FP3& v2)
-{
-    return FP3(v1.x + v2.x, v1.y + v2.y, v1.z + v2.z);
-}
-
-inline FP3& operator += (FP3& v1, const FP3& v2)
-{
-    v1.x += v2.x;
-    v1.y += v2.y;
-    v1.z += v2.z;
-    return v1;
-}
-
-inline const FP3 operator - (const FP3& v1, const FP3& v2)
-{
-   return FP3(v1.x - v2.x, v1.y - v2.y, v1.z - v2.z);
-}
-
-inline FP3& operator -= (FP3& v1, const FP3& v2)
-{
-    v1.x -= v2.x;
-    v1.y -= v2.y;
-    v1.z -= v2.z;
-    return v1;
-}
-
-inline const FP3 operator * (const FP3& v1, const FP3& v2)
-{
-    return FP3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
-}
-
-inline FP3& operator *= (FP3& v1, const FP3& v2)
-{
-    v1.x *= v2.x;
-    v1.y *= v2.y;
-    v1.z *= v2.z;
-    return v1;
-}
-
-inline const FP3 operator * (const FP3& v1, const Int3& v2)
-{
-   return FP3(v1.x * v2.x, v1.y * v2.y, v1.z * v2.z);
-}
-
-inline FP3& operator *= (FP3& v1, const Int3& v2)
-{
-    v1.x *= v2.x;
-    v1.y *= v2.y;
-    v1.z *= v2.z;
-    return v1;
-}
-
-inline const FP3 operator * (const FP3& v, FP a)
-{
-    return FP3(v.x * a, v.y * a, v.z * a);
-}
-
-inline FP3& operator *= (FP3& v, FP a)
-{
-    v.x *= a;
-    v.y *= a;
-    v.z *= a;
-    return v;
-}
-
-inline const FP3 operator * (FP a, const FP3& v1)
-{
-    return FP3(v1.x * a, v1.y * a, v1.z * a);
-}
-
-inline const FP3 operator / (const FP3 & v1, const FP3 & v2)
-{
-    return FP3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
-}
-
-inline FP3& operator /= (FP3& v1, const FP3& v2)
-{
-    v1.x /= v2.x;
-    v1.y /= v2.y;
-    v1.z /= v2.z;
-    return v1;
-}
-
-inline const FP3 operator / (const FP3 & v1, const Int3 & v2)
-{
-    return FP3(v1.x / v2.x, v1.y / v2.y, v1.z / v2.z);
-}
-
-inline FP3& operator /= (FP3& v1, const Int3& v2)
-{
-    v1.x /= v2.x;
-    v1.y /= v2.y;
-    v1.z /= v2.z;
-    return v1;
-}
-
-inline const FP3 operator / (const FP3 & v, FP a)
-{
-    return FP3(v.x / a, v.y / a, v.z / a);
-}
-
-inline FP3& operator /= (FP3& v, FP a)
-{
-    v.x /= a;
-    v.y /= a;
-    v.z /= a;
-    return v;
-}
-
-inline bool operator == (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x == v2.x) && (v1.y == v2.y) && (v1.z == v2.z);
-}
-
-inline bool operator != (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x != v2.x) || (v1.y != v2.y) || (v1.z != v2.z);
-}
-
-inline bool operator < (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x < v2.x) && (v1.y < v2.y) && (v1.z < v2.z);
-}
-
-inline bool operator <= (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x <= v2.x) && (v1.y <= v2.y) && (v1.z <= v2.z);
-}
-
-inline bool operator > (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x > v2.x) && (v1.y > v2.y) && (v1.z > v2.z);
-}
-
-inline bool operator >= (const FP3 & v1, const FP3 & v2)
-{
-    return (v1.x >= v2.x) && (v1.y >= v2.y) && (v1.z >= v2.z);
-}
-
-inline const Int3 truncate(const FP3& v)
-{
-    return Int3((int)v.x, (int)v.y, (int)v.z);
-}
-
-inline FP dot(const FP3& v1, const FP3& v2)
-{
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-}
-
-inline FP SP(const FP3& v1, const FP3& v2)
-{
-    return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
-}
-
-inline const FP3 cross(const FP3& v1, const FP3& v2)
-{
-    return FP3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z,
-        v1.x * v2.y - v1.y * v2.x);
-}
-
-inline const FP3 VP(const FP3& v1, const FP3& v2)
-{
-    return FP3(v1.y * v2.z - v1.z * v2.y, v1.z * v2.x - v1.x * v2.z,
-        v1.x * v2.y - v1.y * v2.x);
-}
-
 inline FP dist(const FP3& v1, const FP3& v2)
 {
     return (v1 - v2).norm();
 }
 
-inline FP sqr(const FP3& v)
-{
-    return v.x * v.x + v.y * v.y + v.z * v.z;
-}
-
-inline std::ostream& operator<<(std::ostream& out, const FP3& v)
-{
-    return out << "(" << v.x << ", " << v.y << ", " << v.z << ")";
-}
 
 } // namespace pica
 

@@ -1,6 +1,7 @@
 #ifndef PICA_PARTICLE_INTERFACE_H
 #define PICA_PARTICLE_INTERFACE_H
 
+// This file serves as a documentation and should not be included as it will fail to build
 
 namespace pica {
 
@@ -10,12 +11,12 @@ class ParticleInterface {
 public:
 
     // Either provide the following types or specialization of ParticleTraits
-    typedef FP3 PositionType;
-    typedef FP3 MomemtumType;
-    typedef FP GammaType;
-    typedef FP ChargeType;
-    typedef FP MassType;
-    typedef FP FactorType;
+    typedef Vector3<double> PositionType;
+    typedef Vector3<double> MomemtumType;
+    typedef double GammaType;
+    typedef double ChargeType;
+    typedef double MassType;
+    typedef double FactorType;
     typedef int SpeciesType;
 
     ParticleInterface();

@@ -293,7 +293,7 @@ TEST(VectorsTest, FP3ProductInt3)
 {
     FP3 v1(3, 5, -2);
     Int3 v2(6, -8, 2);
-    FP3 res = v1 * v2;
+    FP3 res = v1 * FP3(v2);
     ASSERT_EQ_FP3(res, FP3(18, -40, -4));
 }
 
@@ -301,15 +301,15 @@ TEST(VectorsTest, FP3ProductInt3Assignment)
 {
     FP3 v1(3, 5, -2);
     Int3 v2(6, -8, 2);
-    v1 *= v2;
+    v1 *= FP3(v2);
     ASSERT_EQ_FP3(v1, FP3(18, -40, -4));
 }
 
 TEST(VectorsTest, FP3ProductScalar)
 {
     FP3 v1(3, 5, -2);
-    FP3 res1 = v1 * 5;
-    FP3 res2 = 5 * v1;
+    FP3 res1 = v1 * 5.0;
+    FP3 res2 = 5.0 * v1;
     ASSERT_EQ_FP3(res1, FP3(15, 25, -10));
     ASSERT_EQ_FP3(res2, FP3(15, 25, -10));
 }
@@ -317,7 +317,7 @@ TEST(VectorsTest, FP3ProductScalar)
 TEST(VectorsTest, FP3ProductScalarAssignment)
 {
     FP3 v1(3, 5, -2);
-    v1 *= 5;
+    v1 *= 5.0;
     ASSERT_EQ_FP3(v1, FP3(15, 25, -10));
 }
 
@@ -339,7 +339,7 @@ TEST(VectorsTest, FP3QuotientInt3)
 {
     FP3 v1(12, 24, 21);
     Int3 v2(6, 8, 3);
-    FP3 res = v1 / v2;
+    FP3 res = v1 / FP3(v2);
     ASSERT_EQ_FP3(res, FP3(2, 3, 7));
 }
 
@@ -347,21 +347,21 @@ TEST(VectorsTest, FP3QuotientInt3Assignment)
 {
     FP3 v1(12, 24, 21);
     Int3 v2(6, 8, 3);
-    v1 /= v2;
+    v1 /= FP3(v2);
     ASSERT_EQ_FP3(v1, FP3(2, 3, 7));
 }
 
 TEST(VectorsTest, FP3QuotientScalar)
 {
     FP3 v1(12, -24, 22);
-    FP3 res = v1 / 2;
+    FP3 res = v1 / 2.0;
     ASSERT_EQ_FP3(res, FP3(6, -12, 11));
 }
 
 TEST(VectorsTest, FP3QuotientScalarAssignment)
 {
     FP3 v1(12, -24, 22);
-    v1 /= 2;
+    v1 /= 2.0;
     ASSERT_EQ_FP3(v1, FP3(6, -12, 11));
 }
 
@@ -435,12 +435,6 @@ TEST(VectorsTest, FP3Dot)
     ASSERT_EQ(dot(v1, v2), 5 * 1 + 7 * (-2) + (-1) * 3);
 }
 
-TEST(VectorsTest, FP3SP)
-{
-    FP3 v1(5, 7, -1), v2(1, -2, 3);
-    ASSERT_EQ(SP(v1, v2), 5 * 1 + 7 * (-2) + (-1) * 3);
-}
-
 TEST(VectorsTest, FP3Cross)
 {
     FP3 v1(5, 7, -1), v2(1, -2, 3);
@@ -451,12 +445,6 @@ TEST(VectorsTest, FP3Dist)
 {
     FP3 v1(5, 7, -1), v2(3, 4, -7);
     ASSERT_EQ(dist(v1, v2), 7);
-}
-
-TEST(VectorsTest, FP3Sqr)
-{
-    FP3 v(5, 7, -1);
-    ASSERT_EQ(sqr(v), v.norm2());
 }
 
 TEST(VectorsTest, FP3OperatorOutput)

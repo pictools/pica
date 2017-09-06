@@ -257,7 +257,7 @@ private:
         csdelimid[0] = delcs.x * iMidway.z;
         csdelimid[1] = delcs.y * iMidway.z;
         csdelimid[2] = delcs.z * iMidway.x;
-        FP3 csdel = csteps * delta.x * delta.y * delta.z / 12;
+        FP3 csdel = csteps * delta.x * delta.y * delta.z / 12.0;
         Int3 idx = localOrigin - baseGridIdx;
         Int3 iIdx = idx + Int3(1, 1, 1);
 

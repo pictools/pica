@@ -83,7 +83,7 @@ void BaseGridFixture::SetUp() {
     parameters.localGridSize = parameters.globalGridSize = parameters.gridSize = Int3(36, 42, 39);
     parameters.localMinIndex = Int3(0, 0, 0);
     parameters.localMaxIndex = parameters.localGridSize - Int3(1, 1, 1);
-    parameters.step = (parameters.globalMax - parameters.globalMin) / parameters.globalGridSize;
+    parameters.step = (parameters.globalMax - parameters.globalMin) / FP3(parameters.globalGridSize);
     parameters.numIterations = 1;
     parameters.timeStep = 1.463e-12;
 }
@@ -99,7 +99,7 @@ void BaseParticleFixture::SetUp() {
     parameters.localGridSize = parameters.globalGridSize = parameters.gridSize = Int3(4, 7, 6);
     parameters.localMinIndex = Int3(0, 0, 0);
     parameters.localMaxIndex = parameters.localGridSize - Int3(1, 1, 1);
-    parameters.step = (parameters.globalMax - parameters.globalMin) / parameters.globalGridSize;
+    parameters.step = (parameters.globalMax - parameters.globalMin) / FP3(parameters.globalGridSize);
     parameters.timeStep = 1e-12;
     parameters.numIterations = 1;
 
