@@ -17,7 +17,8 @@ add_executable(tests
     src/particles/ParticleTests.cpp
     src/particles/ParticleSystemTests.cpp
     src/particlePush/ParticleMoveTests.cpp
-	src/threading/OpenMPHelperTests.cpp	
+	src/threading/OpenMPHelperTests.cpp
+	src/utility/ArrayTests.cpp		
 	src/utility/UtilityTests.cpp	
 	src/Main.cpp
 	src/TestingUtility.h
