@@ -57,8 +57,8 @@ public:
     MomentumType getMomentum() const { return momentum; }
     void setMomentum(const MomentumType& newMomentum) { momentum = newMomentum; }
 
-    MomentumType getVelocity() const { return momentum / sqrt(sqr(getMass()) + (momentum / constants::c).norm2()); }
-    void setVelocity(const MomentumType& newVelocity) { momentum = getMass() * constants::c * newVelocity / sqrt(constants::c * constants::c - newVelocity.norm2()); }
+    MomentumType getVelocity() const { return momentum / sqrt(sqr(getMass()) + (momentum / Constants<FP>::c()).norm2()); }
+    void setVelocity(const MomentumType& newVelocity) { momentum = getMass() * Constants<FP>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2()); }
 
     GammaType getGamma() const { return sqrt(static_cast<FP>(1) / (static_cast<FP>(1) + (momentum / (getMass() * constants::c)).norm2())); }
 
@@ -145,23 +145,23 @@ public:
 
     const FP3 getMomentum() const
     {
-        return p * constants::c * mass();
+        return p * Constants<FP>::c() * mass();
     }
 
     void setMomentum(const FP3 & newMomentum)
     {
-        p = newMomentum / (constants::c * mass());
+        p = newMomentum / (Constants<FP>::c() * mass());
         invGamma = (FP)1 / sqrt((FP)1 + p.norm2());
     }
 
     const FP3 getVelocity() const
     {
-        return p * (constants::c * invGamma);
+        return p * (Constants<FP>::c() * invGamma);
     }
 
     void setVelocity(const FP3 & newVelocity)
     {
-        p = newVelocity / sqrt(constants::c * constants::c - newVelocity.norm2());
+        p = newVelocity / sqrt(Constants<FP>::c() * Constants<FP>::c() - newVelocity.norm2());
         invGamma = (FP)1 / sqrt((FP)1 + p.norm2());
     }
 

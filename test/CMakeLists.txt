@@ -9,6 +9,7 @@ add_executable(tests
     src/fieldInterpolation/FormfactorTests.cpp
 	src/fieldInterpolation/TileInterpolationTests.cpp
     src/grid/ScalarFieldTests.cpp
+    src/math/ConstantsTests.cpp	
     src/math/DimensionTests.cpp	
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
