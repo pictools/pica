@@ -15,6 +15,7 @@ class Grid_ {
 public:
     typedef Real ValueType;
     typedef typename VectorTypeHelper<dimension, int>::Type IndexType;
+    typedef typename VectorTypeHelper<dimension, Real>::Type StepsType;
 
     Grid_(const IndexType& size) :
         exData(size),
@@ -28,6 +29,7 @@ public:
         jzData(size) {}
 
     IndexType getSize() const { return exData.getSize(); }
+    StepsType getSteps() const { return StepsType(); }
 
     ValueType& ex(const IndexType& index) { return exData(index); }
     ValueType ex(const IndexType& index) const { return exData(index); }

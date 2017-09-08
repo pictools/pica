@@ -19,6 +19,63 @@ public:
         Grid_(size) {}
 };
 
+// This specialization adds overloads for accessing by two ints in addition to standard Vector2<int>
+template<typename Real>
+class YeeGrid<Two, Real> : public Grid_<Two, Real> {
+public:
+    YeeGrid(const IndexType& size) :
+        Grid_(size) {}
+
+    ValueType& ex(int i, int j) { return Grid_<Two, Real>::ex(IndexType(i, j)); }
+    ValueType ex(int i, int j) const { return Grid_<Two, Real>::ex(IndexType(i, j)); }
+    ValueType& ey(int i, int j) { return Grid_<Two, Real>::ey(IndexType(i, j)); }
+    ValueType ey(int i, int j) const { return Grid_<Two, Real>::ey(IndexType(i, j)); }
+    ValueType& ez(int i, int j) { return Grid_<Two, Real>::ez(IndexType(i, j)); }
+    ValueType ez(int i, int j) const { return Grid_<Two, Real>::ez(IndexType(i, j)); }
+
+    ValueType& bx(int i, int j) { return Grid_<Two, Real>::bx(IndexType(i, j)); }
+    ValueType bx(int i, int j) const { return Grid_<Two, Real>::bx(IndexType(i, j)); }
+    ValueType& by(int i, int j) { return Grid_<Two, Real>::by(IndexType(i, j)); }
+    ValueType by(int i, int j) const { return Grid_<Two, Real>::by(IndexType(i, j)); }
+    ValueType& bz(int i, int j) { return Grid_<Two, Real>::bz(IndexType(i, j)); }
+    ValueType bz(int i, int j) const { return Grid_<Two, Real>::bz(IndexType(i, j)); }
+
+    ValueType& jx(int i, int j) { return Grid_<Two, Real>::jx(IndexType(i, j)); }
+    ValueType jx(int i, int j) const { return Grid_<Two, Real>::jx(IndexType(i, j)); }
+    ValueType& jy(int i, int j) { return Grid_<Two, Real>::jy(IndexType(i, j)); }
+    ValueType jy(int i, int j) const { return Grid_<Two, Real>::jy(IndexType(i, j)); }
+    ValueType& jz(int i, int j) { return Grid_<Two, Real>::jz(IndexType(i, j)); }
+    ValueType jz(int i, int j) const { return Grid_<Two, Real>::jz(IndexType(i, j)); }
+};
+
+// This specialization adds overloads for accessing by two ints in addition to standard Vector3<int>
+template<typename Real>
+class YeeGrid<Three, Real> : public Grid_<Three, Real> {
+public:
+    YeeGrid(const IndexType& size) :
+        Grid_(size) {}
+
+    ValueType& ex(int i, int j, int k) { return Grid_<Two, Real>::ex(IndexType(i, j, k)); }
+    ValueType ex(int i, int j, int k) const { return Grid_<Two, Real>::ex(IndexType(i, j, k)); }
+    ValueType& ey(int i, int j, int k) { return Grid_<Two, Real>::ey(IndexType(i, j, k)); }
+    ValueType ey(int i, int j, int k) const { return Grid_<Two, Real>::ey(IndexType(i, j, k)); }
+    ValueType& ez(int i, int j, int k) { return Grid_<Two, Real>::ez(IndexType(i, j, k)); }
+    ValueType ez(int i, int j, int k) const { return Grid_<Two, Real>::ez(IndexType(i, j, k)); }
+
+    ValueType& bx(int i, int j, int k) { return Grid_<Two, Real>::bx(IndexType(i, j, k)); }
+    ValueType bx(int i, int j, int k) const { return Grid_<Two, Real>::bx(IndexType(i, j, k)); }
+    ValueType& by(int i, int j, int k) { return Grid_<Two, Real>::by(IndexType(i, j, k)); }
+    ValueType by(int i, int j, int k) const { return Grid_<Two, Real>::by(IndexType(i, j, k)); }
+    ValueType& bz(int i, int j, int k) { return Grid_<Two, Real>::bz(IndexType(i, j, k)); }
+    ValueType bz(int i, int j, int k) const { return Grid_<Two, Real>::bz(IndexType(i, j, k)); }
+
+    ValueType& jx(int i, int j, int k) { return Grid_<Two, Real>::jx(IndexType(i, j, k)); }
+    ValueType jx(int i, int j, int k) const { return Grid_<Two, Real>::jx(IndexType(i, j, k)); }
+    ValueType& jy(int i, int j, int k) { return Grid_<Two, Real>::jy(IndexType(i, j, k)); }
+    ValueType jy(int i, int j, int k) const { return Grid_<Two, Real>::jy(IndexType(i, j, k)); }
+    ValueType& jz(int i, int j, int k) { return Grid_<Two, Real>::jz(IndexType(i, j, k)); }
+    ValueType jz(int i, int j, int k) const { return Grid_<Two, Real>::jz(IndexType(i, j, k)); }
+};
 
 } // namespace pica
 

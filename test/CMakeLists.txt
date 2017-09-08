@@ -8,10 +8,11 @@ include_directories(
 add_executable(tests
     src/fieldInterpolation/FormfactorTests.cpp
 	src/fieldInterpolation/TileInterpolationTests.cpp
+	src/fieldSolver/YeeSolverTests.cpp
     src/grid/ScalarFieldTests.cpp
     src/grid/YeeGridTests.cpp
-    src/math/ConstantsTests.cpp	
-    src/math/DimensionTests.cpp	
+    src/math/ConstantsTests.cpp
+    src/math/DimensionTests.cpp
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
     src/particles/EnsembleTests.cpp
@@ -19,8 +20,8 @@ add_executable(tests
     src/particles/ParticleSystemTests.cpp
     src/particlePush/ParticleMoveTests.cpp
 	src/threading/OpenMPHelperTests.cpp
-	src/utility/ArrayTests.cpp		
-	src/utility/UtilityTests.cpp	
+	src/utility/ArrayTests.cpp
+	src/utility/UtilityTests.cpp
 	src/Main.cpp
 	src/TestingUtility.h
 	src/TestingUtility.cpp)
