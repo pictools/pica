@@ -115,13 +115,98 @@ struct YeeSolver::Implementation<Two, Real> {
             grid.bz(i, j) += coeff.y * (grid.ex(i, j) - grid.ex(i, j - 1)) -
                 coeff.x * (grid.ey(i, j) - grid.ey(i - 1, j));
         }
+        // Edges
+        for (int i = begin.x; i < end.x; i++)
+            grid.by(i, 0) += coeff.x * (grid.ez(i, 0) - grid.ez(i - 1, 0));
+        for (int j = begin.y; j < end.y; j++)
+            grid.bx(0, j) += -coeff.y * (grid.ez(0, j) - grid.ez(0, j - 1));
     }
 };
 
 template<typename Real>
 struct YeeSolver::Implementation<Three, Real> {
-    //static void updateE(YeeGrid<Three, Real>& grid, Real dt);
-    //static void updateB(YeeGrid<Three, Real>& grid, Real dt);
+    static void updateE(YeeGrid<Three, Real>& grid, Real dt)
+    {
+        typedef typename YeeGrid<Three, Real>::ValueType ValueType;
+        const ValueType coeffCurrent = -static_cast<ValueType>(4) * Constants<ValueType>::pi() * dt;
+        typedef typename YeeGrid<Three, Real>::StepsType StepsType;
+        const ValueType cdt = Constants<ValueType>::c() * dt;
+        const StepsType coeff = StepsType(cdt, cdt, cdt) / grid.getSteps();
+        typedef typename YeeGrid<Three, Real>::IndexType IndexType;
+        const IndexType begin(0, 0, 0);
+        const IndexType end = grid.getSize() - IndexType(1, 1, 1);
+        #pragma omp parallel for collapse(2)
+        for (int i = begin.x; i < end.x; i++)
+        for (int j = begin.y; j < end.y; j++)
+        for (int k = begin.z; k < end.z; k++) {
+            grid.ex(i, j, k) += coeffCurrent * grid.jx(i, j, k) +
+                coeff.y * (grid.bz(i, j + 1, k) - grid.bz(i, j, k)) -
+                coeff.z * (grid.by(i, j, k + 1) - grid.by(i, j, k));
+            grid.ey(i, j, k) += coeffCurrent * grid.jy(i, j, k) +
+                coeff.z * (grid.bx(i, j, k + 1) - grid.bx(i, j, k)) -
+                coeff.x * (grid.bz(i + 1, j, k) - grid.bz(i, j, k));
+            grid.ez(i, j, k) += coeffCurrent * grid.bz(i, j, k) +
+                coeff.x * (grid.by(i + 1, j, k) - grid.by(i, j, k)) -
+                coeff.y * (grid.bx(i, j + 1, k) - grid.bx(i, j, k));
+        }
+        // Edges
+        #pragma omp parallel for
+        for (int i = begin.x; i < end.x; i++)
+        for (int j = begin.y; j < end.y; j++)
+            grid.ez(i, j, end.z) += coeffCurrent * grid.bz(i, j, end.z) +
+                coeff.x * (grid.by(i + 1, j, end.z) - grid.by(i, j, end.z)) -
+                coeff.y * (grid.bx(i, j + 1, end.z) - grid.bx(i, j, end.z));
+        #pragma omp parallel for
+        for (int i = begin.x; i < end.x; i++)
+        for (int k = begin.z; k < end.z; k++)
+            grid.ey(i, end.y, k) += coeffCurrent * grid.jy(i, end.y, k) +
+                coeff.z * (grid.bx(i, end.y, k + 1) - grid.bx(i, end.y, k)) -
+                coeff.x * (grid.bz(i + 1, end.y, k) - grid.bz(i, end.y, k));
+        #pragma omp parallel for
+        for (int j = begin.y; j < end.y; j++)
+        for (int k = begin.z; k < end.z; k++)
+            grid.ex(end.x, j, k) += coeffCurrent * grid.jx(end.x, j, k) +
+                coeff.y * (grid.bz(end.x, j + 1, k) - grid.bz(end.x, j, k)) -
+                coeff.z * (grid.by(end.x, j, k + 1) - grid.by(end.x, j, k));
+    }
+
+    static void updateB(YeeGrid<Three, Real>& grid, Real dt)
+    {
+        typedef typename YeeGrid<Three, Real>::ValueType ValueType;
+        typedef typename YeeGrid<Three, Real>::StepsType StepsType;
+        const ValueType cdt = Constants<ValueType>::c() * dt;
+        const StepsType coeff = StepsType(cdt, cdt, cdt) / grid.getSteps();
+        typedef typename YeeGrid<Three, Real>::IndexType IndexType;
+        const IndexType begin(1, 1, 1);
+        const IndexType end = grid.getSize();
+        #pragma omp parallel for collapse(2)
+        for (int i = begin.x; i < end.x; i++)
+        for (int j = begin.y; j < end.y; j++)
+        for (int k = begin.z; k < end.z; k++) {
+            grid.bx(i, j, k) += coeff.z * (grid.ey(i, j, k) - grid.ey(i, j, k - 1)) -
+                coeff.y * (grid.ez(i, j, k) - grid.ez(i, j - 1, k));
+            grid.by(i, j, k) += coeff.x * (grid.ez(i, j, k) - grid.ez(i - 1, j, k)) -
+                coeff.z * (grid.ex(i, j, k) - grid.ex(i, j, k - 1));
+            grid.bz(i, j, k) += coeff.y * (grid.ex(i, j, k) - grid.ex(i, j - 1, k)) -
+                coeff.x * (grid.ey(i, j, k) - grid.ey(i - 1, j, k));
+        }
+        // Edges
+        #pragma omp parallel for
+        for (int i = begin.x; i < end.x; i++)
+        for (int j = begin.y; j < end.y; j++)
+            grid.bz(i, j, 0) += coeff.y * (grid.ex(i, j, 0) - grid.ex(i, j - 1, 0)) -
+                coeff.x * (grid.ey(i, j, 0) - grid.ey(i - 1, j, 0));
+        #pragma omp parallel for
+        for (int i = begin.x; i < end.x; i++)
+        for (int k = begin.z; k < end.z; k++)
+            grid.by(i, 0, k) += coeff.x * (grid.ez(i, 0, k) - grid.ez(i - 1, 0, k)) -
+                coeff.z * (grid.ex(i, 0, k) - grid.ex(i, 0, k - 1));
+        #pragma omp parallel for
+        for (int j = begin.y; j < end.y; j++)
+        for (int k = begin.z; k < end.z; k++)
+            grid.bx(0, j, k) += coeff.z * (grid.ey(0, j, k) - grid.ey(0, j, k - 1)) -
+                coeff.y * (grid.ez(0, j, k) - grid.ez(0, j - 1, k));
+    }
 };
 
 } // namespace pica

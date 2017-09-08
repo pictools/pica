@@ -40,7 +40,7 @@ TEST(YeeSolverTest, UpdateB2d)
     YeeGrid<Two, float> grid(Vector2<int>(5, 7));
     solver.updateB(grid, 0.1f);
 }
-/*
+
 TEST(YeeSolverTest, UpdateE3d)
 {
     YeeSolver solver;
@@ -53,4 +53,4 @@ TEST(YeeSolverTest, UpdateB3d)
     YeeSolver solver;
     YeeGrid<Three, double> grid(Vector3<int>(5, 7, 10));
     solver.updateB(grid, 0.2);
-}*/
+}

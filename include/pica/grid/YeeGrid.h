@@ -55,26 +55,26 @@ public:
     YeeGrid(const IndexType& size) :
         Grid_(size) {}
 
-    ValueType& ex(int i, int j, int k) { return Grid_<Two, Real>::ex(IndexType(i, j, k)); }
-    ValueType ex(int i, int j, int k) const { return Grid_<Two, Real>::ex(IndexType(i, j, k)); }
-    ValueType& ey(int i, int j, int k) { return Grid_<Two, Real>::ey(IndexType(i, j, k)); }
-    ValueType ey(int i, int j, int k) const { return Grid_<Two, Real>::ey(IndexType(i, j, k)); }
-    ValueType& ez(int i, int j, int k) { return Grid_<Two, Real>::ez(IndexType(i, j, k)); }
-    ValueType ez(int i, int j, int k) const { return Grid_<Two, Real>::ez(IndexType(i, j, k)); }
+    ValueType& ex(int i, int j, int k) { return Grid_<Three, Real>::ex(IndexType(i, j, k)); }
+    ValueType ex(int i, int j, int k) const { return Grid_<Three, Real>::ex(IndexType(i, j, k)); }
+    ValueType& ey(int i, int j, int k) { return Grid_<Three, Real>::ey(IndexType(i, j, k)); }
+    ValueType ey(int i, int j, int k) const { return Grid_<Three, Real>::ey(IndexType(i, j, k)); }
+    ValueType& ez(int i, int j, int k) { return Grid_<Three, Real>::ez(IndexType(i, j, k)); }
+    ValueType ez(int i, int j, int k) const { return Grid_<Three, Real>::ez(IndexType(i, j, k)); }
 
-    ValueType& bx(int i, int j, int k) { return Grid_<Two, Real>::bx(IndexType(i, j, k)); }
-    ValueType bx(int i, int j, int k) const { return Grid_<Two, Real>::bx(IndexType(i, j, k)); }
-    ValueType& by(int i, int j, int k) { return Grid_<Two, Real>::by(IndexType(i, j, k)); }
-    ValueType by(int i, int j, int k) const { return Grid_<Two, Real>::by(IndexType(i, j, k)); }
-    ValueType& bz(int i, int j, int k) { return Grid_<Two, Real>::bz(IndexType(i, j, k)); }
-    ValueType bz(int i, int j, int k) const { return Grid_<Two, Real>::bz(IndexType(i, j, k)); }
+    ValueType& bx(int i, int j, int k) { return Grid_<Three, Real>::bx(IndexType(i, j, k)); }
+    ValueType bx(int i, int j, int k) const { return Grid_<Three, Real>::bx(IndexType(i, j, k)); }
+    ValueType& by(int i, int j, int k) { return Grid_<Three, Real>::by(IndexType(i, j, k)); }
+    ValueType by(int i, int j, int k) const { return Grid_<Three, Real>::by(IndexType(i, j, k)); }
+    ValueType& bz(int i, int j, int k) { return Grid_<Three, Real>::bz(IndexType(i, j, k)); }
+    ValueType bz(int i, int j, int k) const { return Grid_<Three, Real>::bz(IndexType(i, j, k)); }
 
-    ValueType& jx(int i, int j, int k) { return Grid_<Two, Real>::jx(IndexType(i, j, k)); }
-    ValueType jx(int i, int j, int k) const { return Grid_<Two, Real>::jx(IndexType(i, j, k)); }
-    ValueType& jy(int i, int j, int k) { return Grid_<Two, Real>::jy(IndexType(i, j, k)); }
-    ValueType jy(int i, int j, int k) const { return Grid_<Two, Real>::jy(IndexType(i, j, k)); }
-    ValueType& jz(int i, int j, int k) { return Grid_<Two, Real>::jz(IndexType(i, j, k)); }
-    ValueType jz(int i, int j, int k) const { return Grid_<Two, Real>::jz(IndexType(i, j, k)); }
+    ValueType& jx(int i, int j, int k) { return Grid_<Three, Real>::jx(IndexType(i, j, k)); }
+    ValueType jx(int i, int j, int k) const { return Grid_<Three, Real>::jx(IndexType(i, j, k)); }
+    ValueType& jy(int i, int j, int k) { return Grid_<Three, Real>::jy(IndexType(i, j, k)); }
+    ValueType jy(int i, int j, int k) const { return Grid_<Three, Real>::jy(IndexType(i, j, k)); }
+    ValueType& jz(int i, int j, int k) { return Grid_<Three, Real>::jz(IndexType(i, j, k)); }
+    ValueType jz(int i, int j, int k) const { return Grid_<Three, Real>::jz(IndexType(i, j, k)); }
 };
 
 } // namespace pica
