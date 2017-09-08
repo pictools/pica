@@ -3,6 +3,7 @@
 
 
 #include "pica/utility/Assert.h"
+#include "pica/math/Dimension.h"
 #include "pica/math/Vectors.h"
 
 #include <vector>
@@ -152,7 +153,26 @@ private:
     IndexType size;
     std::vector<T> data;
 };
-    
+
+
+template<Dimension dimension, typename T>
+struct ArrayTypeHelper {
+};
+
+template<typename T>
+struct ArrayTypeHelper<One, T> {
+    typedef Array1d<T> Type;
+};
+
+template<typename T>
+struct ArrayTypeHelper<Two, T> {
+    typedef Array2d<T> Type;
+};
+
+template<typename T>
+struct ArrayTypeHelper<Three, T> {
+    typedef Array3d<T> Type;
+};
 
 } // namespace pica
 

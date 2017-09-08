@@ -414,23 +414,23 @@ inline FP dist(const FP3& v1, const FP3& v2)
 }
 
 
-template<Dimension dimension>
-struct VectorFPTraits {
+template<Dimension dimension, typename T>
+struct VectorTypeHelper {
 };
 
-template<>
-struct VectorFPTraits<One> {
-    typedef FP Type;
+template<typename T>
+struct VectorTypeHelper<One, T> {
+    typedef T Type;
 };
 
-template<>
-struct VectorFPTraits<Two> {
-    typedef Vector2<FP> Type;
+template<typename T>
+struct VectorTypeHelper<Two, T> {
+    typedef Vector2<T> Type;
 };
 
-template<>
-struct VectorFPTraits<Three> {
-    typedef Vector3<FP> Type;
+template<typename T>
+struct VectorTypeHelper<Three, T> {
+    typedef Vector3<T> Type;
 };
 
 

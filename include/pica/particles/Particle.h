@@ -20,7 +20,7 @@ class Particle_ {
 public:
 
     // Types for conforming ParticleInterface
-    typedef typename VectorFPTraits<dimension>::Type PositionType;
+    typedef typename VectorTypeHelper<dimension, FP>::Type PositionType;
     typedef FP3 MomentumType;
     typedef FP GammaType;
     typedef FP ChargeType;

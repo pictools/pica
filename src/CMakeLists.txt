@@ -11,7 +11,8 @@ add_library(pica
     ${PICA_HEADER_DIR}/fieldSolver/Fdtd.h
     ${PICA_HEADER_DIR}/fieldSolver/FieldSolver.h
     ${PICA_HEADER_DIR}/grid/Grid.h
-    ${PICA_HEADER_DIR}/grid/ScalarField.h	
+    ${PICA_HEADER_DIR}/grid/YeeGrid.h
+    ${PICA_HEADER_DIR}/grid/ScalarField.h
     ${PICA_HEADER_DIR}/math/Constants.h
     ${PICA_HEADER_DIR}/math/Dimension.h	
     ${PICA_HEADER_DIR}/math/FP.h
