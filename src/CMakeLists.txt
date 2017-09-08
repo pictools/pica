@@ -8,8 +8,6 @@ add_library(pica
     ${PICA_HEADER_DIR}/currentDeposition/CurrentDeposition.h
     ${PICA_HEADER_DIR}/fieldInterpolation/Formfactor.h
     ${PICA_HEADER_DIR}/fieldInterpolation/TileInterpolator.h	
-    ${PICA_HEADER_DIR}/fieldSolver/Fdtd.h
-    ${PICA_HEADER_DIR}/fieldSolver/FieldSolver.h
     ${PICA_HEADER_DIR}/fieldSolver/YeeSolver.h	
     ${PICA_HEADER_DIR}/grid/Grid.h
     ${PICA_HEADER_DIR}/grid/YeeGrid.h
@@ -33,8 +31,6 @@ add_library(pica
     ${PICA_HEADER_DIR}/Parameters.h
 
 	currentDeposition/CurrentDeposition.cpp
-	fieldSolver/Fdtd.cpp
-	fieldSolver/FieldSolver.cpp	
     grid/Grid.cpp	
     grid/ScalarField.cpp	
     particles/Ensemble.cpp
