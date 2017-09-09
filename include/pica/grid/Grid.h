@@ -17,7 +17,7 @@ public:
     typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
     typedef typename VectorTypeHelper<dimension, int>::Type IndexType;
 
-    Grid_(const IndexType& size) :
+    Grid_(const PositionType& origin, const PositionType& step, const IndexType& size) :
         exData(size),
         eyData(size),
         ezData(size),
@@ -26,10 +26,14 @@ public:
         bzData(size),
         jxData(size),
         jyData(size),
-        jzData(size) {}
+        jzData(size),
+        origin(origin),
+        step(step) {}
 
     IndexType getSize() const { return exData.getSize(); }
-    PositionType getSteps() const { return PositionType(); }
+    PositionType getOrigin() const { return origin; }
+    PositionType getStep() const { return step; }
+    IndexType getCellIndex(const PositionType& position) { return truncate((position - origin) / step); }
 
     ValueType& ex(const IndexType& index) { return exData(index); }
     ValueType ex(const IndexType& index) const { return exData(index); }
@@ -55,7 +59,7 @@ public:
 private:
     typedef typename ArrayTypeHelper<dimension, Real>::Type ArrayType;
     ArrayType exData, eyData, ezData, bxData, byData, bzData, jxData, jyData, jzData;
-
+    PositionType origin, step;
 };
 
 

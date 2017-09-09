@@ -395,25 +395,6 @@ inline const Vector3<T> cross(const Vector3<T>& v1, const Vector3<T>& v2)
 }
 
 
-typedef Vector3<int> Int3;
-typedef Vector3<FP> FP3;
-
-inline const Int3 truncate(const FP3& v)
-{
-    return Int3((int)v.x, (int)v.y, (int)v.z);
-}
-
-inline Int3 remainder(const Int3& v1, const Int3& v2)
-{
-    return Int3(v1.x % v2.x, v1.y % v2.y, v1.z % v2.z);
-}
-
-inline FP dist(const FP3& v1, const FP3& v2)
-{
-    return (v1 - v2).norm();
-}
-
-
 template<Dimension dimension, typename T>
 struct VectorTypeHelper {
 };
@@ -432,6 +413,40 @@ template<typename T>
 struct VectorTypeHelper<Three, T> {
     typedef Vector3<T> Type;
 };
+
+typedef Vector3<int> Int3;
+typedef Vector3<FP> FP3;
+
+template<typename Real>
+inline const int truncate(const Real& v)
+{
+    return (int)v;
+}
+
+template<typename Real>
+inline const Vector2<int> truncate(const Vector2<Real>& v)
+{
+    return Vector2<int>(static_cast<int>(v.x), static_cast<int>(v.y));
+}
+
+template<typename Real>
+inline const Vector3<int> truncate(const Vector3<Real>& v)
+{
+    return Vector3<int>(static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z));
+}
+
+inline Int3 remainder(const Int3& v1, const Int3& v2)
+{
+    return Int3(v1.x % v2.x, v1.y % v2.y, v1.z % v2.z);
+}
+
+inline FP dist(const FP3& v1, const FP3& v2)
+{
+    return (v1 - v2).norm();
+}
+
+
+
 
 
 } // namespace pica

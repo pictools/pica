@@ -13,18 +13,18 @@ namespace pica {
 //        Ey(i + 1 / 2, j, k + 1 / 2), Ez(i + 1 / 2, j + 1 / 2, k), same for the components of J,
 //        Bx(i + 1 / 2, j, k), By(i, j + 1 / 2, k), Bz(i, j, k + 1 / 2).
 template<Dimension dimension, typename Real = double>
-class YeeGrid: public Grid_<dimension, Real> {
+class YeeGrid : public Grid_<dimension, Real> {
 public:
-    YeeGrid(const IndexType& size) :
-        Grid_(size) {}
+    YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
+        Grid_(origin, step, size) {}
 };
 
 // This specialization adds overloads for accessing by two ints in addition to standard Vector2<int>
 template<typename Real>
 class YeeGrid<Two, Real> : public Grid_<Two, Real> {
 public:
-    YeeGrid(const IndexType& size) :
-        Grid_(size) {}
+    YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
+        Grid_(origin, step, size) {}
 
     ValueType& ex(int i, int j) { return Grid_<Two, Real>::ex(IndexType(i, j)); }
     ValueType ex(int i, int j) const { return Grid_<Two, Real>::ex(IndexType(i, j)); }
@@ -52,8 +52,8 @@ public:
 template<typename Real>
 class YeeGrid<Three, Real> : public Grid_<Three, Real> {
 public:
-    YeeGrid(const IndexType& size) :
-        Grid_(size) {}
+    YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
+        Grid_(origin, step, size) {}
 
     ValueType& ex(int i, int j, int k) { return Grid_<Three, Real>::ex(IndexType(i, j, k)); }
     ValueType ex(int i, int j, int k) const { return Grid_<Three, Real>::ex(IndexType(i, j, k)); }

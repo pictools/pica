@@ -44,7 +44,7 @@ struct YeeSolver::Implementation<One, Real> {
     {
         typedef typename YeeGrid<One, Real>::ValueType ValueType;
         const ValueType coeffCurrent = -static_cast<ValueType>(4) * Constants<ValueType>::pi() * dt;
-        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getSteps();
+        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getStep();
         typedef typename YeeGrid<One, Real>::IndexType IndexType;
         const IndexType begin = 0;
         const IndexType end = grid.getSize() - 1;
@@ -59,7 +59,7 @@ struct YeeSolver::Implementation<One, Real> {
     static void updateB(YeeGrid<One, Real>& grid, Real dt)
     {
         typedef typename YeeGrid<One, Real>::ValueType ValueType;
-        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getSteps();
+        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getStep();
         typedef typename YeeGrid<One, Real>::IndexType IndexType;
         const IndexType begin = 1;
         const IndexType end = grid.getSize();
@@ -79,7 +79,7 @@ struct YeeSolver::Implementation<Two, Real> {
         const ValueType coeffCurrent = -static_cast<ValueType>(4) * Constants<ValueType>::pi() * dt;
         typedef typename YeeGrid<Two, Real>::PositionType PositionType;
         const ValueType cdt = Constants<ValueType>::c() * dt;
-        const PositionType coeff = PositionType(cdt, cdt) / grid.getSteps();
+        const PositionType coeff = PositionType(cdt, cdt) / grid.getStep();
         typedef typename YeeGrid<Two, Real>::IndexType IndexType;
         const IndexType begin(0, 0);
         const IndexType end = grid.getSize() - IndexType(1, 1);
@@ -103,7 +103,7 @@ struct YeeSolver::Implementation<Two, Real> {
         typedef typename YeeGrid<Two, Real>::ValueType ValueType;
         typedef typename YeeGrid<Two, Real>::PositionType PositionType;
         const ValueType cdt = Constants<ValueType>::c() * dt;
-        const PositionType coeff = PositionType(cdt, cdt) / grid.getSteps();
+        const PositionType coeff = PositionType(cdt, cdt) / grid.getStep();
         typedef typename YeeGrid<Two, Real>::IndexType IndexType;
         const IndexType begin(1, 1);
         const IndexType end = grid.getSize();
@@ -131,7 +131,7 @@ struct YeeSolver::Implementation<Three, Real> {
         const ValueType coeffCurrent = -static_cast<ValueType>(4) * Constants<ValueType>::pi() * dt;
         typedef typename YeeGrid<Three, Real>::PositionType PositionType;
         const ValueType cdt = Constants<ValueType>::c() * dt;
-        const PositionType coeff = PositionType(cdt, cdt, cdt) / grid.getSteps();
+        const PositionType coeff = PositionType(cdt, cdt, cdt) / grid.getStep();
         typedef typename YeeGrid<Three, Real>::IndexType IndexType;
         const IndexType begin(0, 0, 0);
         const IndexType end = grid.getSize() - IndexType(1, 1, 1);
@@ -175,7 +175,7 @@ struct YeeSolver::Implementation<Three, Real> {
         typedef typename YeeGrid<Three, Real>::ValueType ValueType;
         typedef typename YeeGrid<Three, Real>::PositionType PositionType;
         const ValueType cdt = Constants<ValueType>::c() * dt;
-        const PositionType coeff = PositionType(cdt, cdt, cdt) / grid.getSteps();
+        const PositionType coeff = PositionType(cdt, cdt, cdt) / grid.getStep();
         typedef typename YeeGrid<Three, Real>::IndexType IndexType;
         const IndexType begin(1, 1, 1);
         const IndexType end = grid.getSize();
