@@ -435,6 +435,66 @@ inline const Vector3<int> truncate(const Vector3<Real>& v)
     return Vector3<int>(static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z));
 }
 
+template<typename Real>
+inline Real inverse(const Real a)
+{
+    return static_cast<Real>(1) / a;
+}
+
+template<typename Real>
+inline const Vector2<Real> inverse(const Vector2<Real>& v)
+{
+    return Vector2<Real>(static_cast<Real>(1) / v.x, static_cast<Real>(1) / v.y);
+}
+
+template<typename Real>
+inline const Vector3<Real> inverse(const Vector3<Real>& v)
+{
+    return Vector3<Real>(static_cast<Real>(1) / v.x, static_cast<Real>(1) / v.y, static_cast<Real>(1) / v.z);
+}
+
+template<Dimension dimension, typename T>
+struct OnesHelper {
+    static typename VectorTypeHelper<dimension, T>::Type get();
+};
+
+template<typename T>
+struct OnesHelper<One, T> {
+    static typename VectorTypeHelper<One, T>::Type get() { return static_cast<T>(1); }
+};
+
+template<typename T>
+struct OnesHelper<Two, T> {
+    static typename VectorTypeHelper<Two, T>::Type get() { return VectorTypeHelper<Two, T>::Type(static_cast<T>(1), static_cast<T>(1)); }
+};
+
+template<typename T>
+struct OnesHelper<Three, T> {
+    static typename VectorTypeHelper<Three, T>::Type get() { return VectorTypeHelper<Three, T>::Type(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1)); }
+};
+
+template<Dimension dimension, typename T>
+inline typename VectorTypeHelper<dimension, T>::Type ones()
+{
+    return OnesHelper<dimension, T>::get();
+}
+
+
+template<typename T>
+struct ScalarType {
+    typedef T Type;
+};
+
+template<typename T>
+struct ScalarType<Vector2<T> > {
+    typedef T Type;
+};
+
+template<typename T>
+struct ScalarType<Vector3<T> > {
+    typedef T Type;
+};
+
 inline Int3 remainder(const Int3& v1, const Int3& v2)
 {
     return Int3(v1.x % v2.x, v1.y % v2.y, v1.z % v2.z);

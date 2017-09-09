@@ -6,6 +6,7 @@ include_directories(
 	
 add_library(pica
     ${PICA_HEADER_DIR}/currentDeposition/CurrentDeposition.h
+    ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h	
     ${PICA_HEADER_DIR}/fieldInterpolation/Formfactor.h
     ${PICA_HEADER_DIR}/fieldInterpolation/TileInterpolator.h	
     ${PICA_HEADER_DIR}/fieldSolver/YeeSolver.h	

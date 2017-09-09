@@ -6,6 +6,7 @@ include_directories(
 	src)
 
 add_executable(tests
+    src/fieldInterpolation/FieldInterpolatorTests.cpp
     src/fieldInterpolation/FormfactorTests.cpp
 	src/fieldInterpolation/TileInterpolationTests.cpp
 	src/fieldSolver/YeeSolverTests.cpp
