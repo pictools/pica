@@ -19,6 +19,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/math/Vectors.h
     ${PICA_HEADER_DIR}/particles/Ensemble.h
     ${PICA_HEADER_DIR}/particles/Particle.h
+    ${PICA_HEADER_DIR}/particles/ParticleArray.h	
     ${PICA_HEADER_DIR}/particles/ParticleInterface.h
     ${PICA_HEADER_DIR}/particles/ParticleSystem.h
     ${PICA_HEADER_DIR}/particles/ParticleTraits.h
