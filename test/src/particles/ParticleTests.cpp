@@ -2,59 +2,12 @@
 
 #include "pica/math/Constants.h"
 #include "pica/particles/Particle.h"
-#include "pica/particles/ParticleTraits.h"
 
 using namespace pica;
 
 
 template <class ParticleType>
-class ParticleTest : public BaseFixture {
-public:
-    typedef ParticleType Particle;
-    typedef typename ParticleTraits<Particle>::PositionType PositionType;
-    typedef typename ParticleTraits<Particle>::MomentumType MomentumType;
-    typedef typename ParticleTraits<Particle>::GammaType GammaType;
-    typedef typename ParticleTraits<Particle>::MassType MassType;
-    typedef typename ParticleTraits<Particle>::ChargeType ChargeType;
-    typedef typename ParticleTraits<Particle>::FactorType FactorType;
-    typedef typename ScalarType<MomentumType>::Type Real;
-
-    int getDimension() const
-    {
-        return VectorDimensionHelper<PositionType>::dimension;;
-    }
-
-    int getMomentumDimension() const
-    {
-        return VectorDimensionHelper<MomentumType>::dimension;;
-    }
-
-    // Helper function to unify initialization of positions for 1d, 2d and 3d
-    // In 1d y, z are ignored, in 2d z is ignored
-    PositionType getPosition(Real x, Real y, Real z) const
-    {
-        Real positionArray[] = { x, y, z };
-        PositionType position;
-        for (int d = 0; d < getDimension(); d++)
-            position[d] = positionArray[d];
-        return position;
-    }
-
-    Particle randomParticle() const
-    {
-        Real minPosition = -10;
-        Real maxPosition = 10;
-        PositionType position = getPosition(urand(minPosition, maxPosition),
-            urand(minPosition, maxPosition), urand(minPosition, maxPosition));
-        Real minMomentum = -10;
-        Real maxMomentum = 10;
-        MomentumType momentum(urand(minMomentum, maxMomentum),
-            urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
-        FactorType factor = static_cast<FactorType>(urand(1e-5, 1e5));
-        return Particle(position, momentum, Constants<MassType>::electronMass(),
-            Constants<ChargeType>::electronCharge(), factor);
-    }
-
+class ParticleTest : public BaseParticleFixture_<ParticleType> {
 };
 
 typedef ::testing::Types<Particle1d, Particle2d, Particle3d> types;
@@ -64,9 +17,9 @@ TYPED_TEST(ParticleTest, DefaultConstructor)
 {
     Particle particle;
     particle.setMass(Constants<double>::electronMass());
-    ASSERT_EQ_VECTOR(PositionType(), particle.getPosition(), getDimension());
-    ASSERT_EQ_VECTOR(MomentumType(), particle.getMomentum(), getMomentumDimension());
-    ASSERT_EQ_VECTOR(MomentumType(), particle.getVelocity(), getMomentumDimension());
+    ASSERT_EQ_VECTOR(PositionType(), particle.getPosition(), dimension);
+    ASSERT_EQ_VECTOR(MomentumType(), particle.getMomentum(), momentumDimension);
+    ASSERT_EQ_VECTOR(MomentumType(), particle.getVelocity(), momentumDimension);
     ASSERT_EQ(static_cast<FactorType>(1.0), particle.getFactor());
     ASSERT_EQ(static_cast<GammaType>(1.0), particle.getGamma());
 }
@@ -77,11 +30,11 @@ TYPED_TEST(ParticleTest, Constructor)
     MomentumType momentum(-231.3e9, 0.0, 1.23e-5);
     MassType mass = Constants<MassType>::electronMass();
     ChargeType charge = Constants<ChargeType>::electronCharge();
-    FactorType factor = 1.4e2f;
+    FactorType factor = static_cast<FactorType>(1.4e2);
 
     Particle particle(position, momentum, mass, charge, factor);
-    ASSERT_EQ_VECTOR(position, particle.getPosition(), getDimension());
-    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), getMomentumDimension());
+    ASSERT_EQ_VECTOR(position, particle.getPosition(), dimension);
+    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), momentumDimension);
     ASSERT_EQ(mass, particle.getMass());
     ASSERT_EQ(charge, particle.getCharge());
     ASSERT_EQ(factor, particle.getFactor());
@@ -97,8 +50,8 @@ TYPED_TEST(ParticleTest, ConstructorDefaultFactor)
     MassType mass = Constants<MassType>::electronMass();
     ChargeType charge = Constants<ChargeType>::electronCharge();
     Particle particle(position, momentum, mass, charge);
-    ASSERT_EQ_VECTOR(position, particle.getPosition(), getDimension());
-    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), getMomentumDimension());
+    ASSERT_EQ_VECTOR(position, particle.getPosition(), dimension);
+    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), momentumDimension);
     ASSERT_EQ(mass, particle.getMass());
     ASSERT_EQ(charge, particle.getCharge());
     ASSERT_EQ(static_cast<FactorType>(1.0), particle.getFactor());
@@ -134,7 +87,7 @@ TYPED_TEST(ParticleTest, GetSetPosition)
     Particle particle = randomParticle();
     PositionType newPosition = getPosition(54.126, -431.35, 35.65);
     particle.setPosition(newPosition);
-    ASSERT_EQ_VECTOR(newPosition, particle.getPosition(), getDimension());
+    ASSERT_EQ_VECTOR(newPosition, particle.getPosition(), dimension);
 }
 
 TYPED_TEST(ParticleTest, GetSetMomentum)

@@ -5,6 +5,7 @@
 #include "pica/Parameters.h"
 #include "pica/math/Vectors.h"
 #include "pica/particles/Particle.h"
+#include "pica/particles/ParticleTraits.h"
 #include "pica/particles/ParticleSystem.h"
 
 #include "gtest/gtest.h"
@@ -82,6 +83,47 @@ protected:
     pica::Parameters parameters;
 };
 
+
+template<class ParticleType>
+class BaseParticleFixture_ : public BaseFixture {
+protected:
+    typedef ParticleType Particle;
+    typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
+    typedef typename pica::ParticleTraits<Particle>::MomentumType MomentumType;
+    typedef typename pica::ParticleTraits<Particle>::GammaType GammaType;
+    typedef typename pica::ParticleTraits<Particle>::MassType MassType;
+    typedef typename pica::ParticleTraits<Particle>::ChargeType ChargeType;
+    typedef typename pica::ParticleTraits<Particle>::FactorType FactorType;
+    typedef typename pica::ScalarType<MomentumType>::Type Real;
+    static const int dimension = pica::VectorDimensionHelper<PositionType>::dimension;
+    static const int momentumDimension = pica::VectorDimensionHelper<MomentumType>::dimension;
+
+    // Helper function to unify initialization of positions for 1d, 2d and 3d
+    // In 1d y, z are ignored, in 2d z is ignored
+    PositionType getPosition(Real x, Real y, Real z) const
+    {
+        Real positionArray[] = { x, y, z };
+        PositionType position;
+        for (int d = 0; d < dimension; d++)
+            position[d] = positionArray[d];
+        return position;
+    }
+
+    Particle randomParticle() const
+    {
+        Real minPosition = -10;
+        Real maxPosition = 10;
+        PositionType position = getPosition(urand(minPosition, maxPosition),
+            urand(minPosition, maxPosition), urand(minPosition, maxPosition));
+        Real minMomentum = -10;
+        Real maxMomentum = 10;
+        MomentumType momentum(urand(minMomentum, maxMomentum),
+            urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
+        FactorType factor = static_cast<FactorType>(urand(1e-5, 1e5));
+        return Particle(position, momentum, Constants<MassType>::electronMass(),
+            Constants<ChargeType>::electronCharge(), factor);
+    }
+};
 
 class BaseParticleFixture : public BaseFixture {
 protected:
