@@ -13,13 +13,37 @@ class ParticleTest: public BaseParticleFixture {
 
 };
 
+template <class ParticleType_>
+class ParticleTest_ : public BaseFixture {
+public:
+    typedef ParticleType_ Particle;
+    typedef typename Particle::PositionType PositionType;
+    typedef typename Particle::MomentumType MomentumType;
 
-TEST_F(ParticleTest, DefaultConstructor) {
-    Particle3d particle;
+    int getDimension() const
+    {
+        return VectorDimensionHelper<PositionType>::dimension;;
+    }
+
+    int getMomentumDimension() const
+    {
+        return VectorDimensionHelper<MomentumType>::dimension;;
+    }
+
+};
+
+
+typedef ::testing::Types</*Particle1d,*/ Particle2d, Particle3d> types;
+TYPED_TEST_CASE(ParticleTest_, types);
+
+
+TYPED_TEST(ParticleTest_, DefaultConstructor)
+{
+    Particle particle;
     particle.setMass(Constants<double>::electronMass());
-    ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getPosition());
-    ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getMomentum());
-    ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getVelocity());
+    ASSERT_EQ_VECTOR(PositionType(), particle.getPosition(), getDimension());
+    ASSERT_EQ_VECTOR(MomentumType(), particle.getMomentum(), getMomentumDimension());
+    ASSERT_EQ_VECTOR(MomentumType(), particle.getVelocity(), getMomentumDimension());
     ASSERT_EQ(1.0f, particle.getFactor());
     ASSERT_EQ(1.0, particle.getGamma());
 }

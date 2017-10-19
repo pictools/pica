@@ -22,6 +22,10 @@
     ASSERT_EQ(expected.y, actual.y); \
     ASSERT_EQ(expected.z, actual.z); \
 
+#define ASSERT_EQ_VECTOR(expected, actual, dimension) \
+    for (int d = 0; d < dimension; d++) \
+        ASSERT_EQ(expected[d], actual[d]); \
+
 // Assert two FP3s are nearly equal:
 // if expected value is not near zero, expect relative error is smaller than
 // m_maxRelativeError, else expect absolute error is smaller than
