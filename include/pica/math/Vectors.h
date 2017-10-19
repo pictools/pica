@@ -39,7 +39,7 @@ struct Vector1
 
     inline T& operator[](int )
     {
-        return *x;
+        return x;
     }
 
     inline T volume() const
