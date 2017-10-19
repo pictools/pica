@@ -130,8 +130,8 @@ public:
     ParticleRef operator[](int idx) { return ParticleRef(*this, idx); }
     ConstParticleRef operator[](int idx) const { return ConstParticleRef(*this, idx); }
 
-    ParticleRef back() { return (*this)(size() - 1); }
-    ConstParticleRef back() const { return (*this)(size() - 1); }
+    ParticleRef back() { return (*this)[size() - 1]; }
+    ConstParticleRef back() const { return (*this)[size() - 1]; }
 
     template<class ConstParticleRefType>
     void pushBack(ConstParticleRefType particle)
