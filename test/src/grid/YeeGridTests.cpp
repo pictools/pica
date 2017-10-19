@@ -41,9 +41,9 @@ TEST_F(YeeGridTest1d, GetSize)
 
 TEST_F(YeeGridTest1d, GetCellIndex)
 {
-    for (IndexType i = 0; i < grid->getSize(); i++) {
+    for (int i = 0; i < grid->getSize().x; i++) {
         PositionType position = grid->getOrigin() + grid->getStep() * (i + 0.5);
-        EXPECT_TRUE(i == grid->getCellIndex(position));
+        EXPECT_TRUE(IndexType(i) == grid->getCellIndex(position));
     }
 }
 

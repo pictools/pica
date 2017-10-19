@@ -15,25 +15,25 @@ TEST(Array1dTest, ValueType)
 TEST(Array1dTest, DefaultConstructor)
 {
     Array1d<double> a;
-    ASSERT_EQ(0, a.getSize());
+    ASSERT_EQ(0, a.getSize().x);
 }
 
 TEST(Array1dTest, Constructor)
 {
     Array1d<int> a(5);
-    ASSERT_EQ(5, a.getSize());
-    for (int i = 0; i < a.getSize(); i++)
+    ASSERT_EQ(5, a.getSize().x);
+    for (int i = 0; i < a.getSize().x; i++)
         ASSERT_EQ(0, a(i));
     Array1d<float> b(9, -3.0f);
-    ASSERT_EQ(9, b.getSize());
-    for (int i = 0; i < b.getSize(); i++)
+    ASSERT_EQ(9, b.getSize().x);
+    for (int i = 0; i < b.getSize().x; i++)
         ASSERT_EQ(-3.0f, b(i));
 }
 
 TEST(Array1dTest, GetSize)
 {
     const Array1d<double> a(6);
-    ASSERT_EQ(6, a.getSize()); 
+    ASSERT_EQ(6, a.getSize().x); 
 }
 
 TEST(Array1dTest, Access)

@@ -13,6 +13,185 @@
 
 namespace pica {
 
+
+// Vector of 1 component of arithmetic type T (T = int, double, etc.)
+// with access by .x, and [], provides basic arithmetic operations
+// This is essentially a wrapper around T with interface compatible with Vector2 and Vector3
+template <typename T>
+struct Vector1
+{
+    T x;
+
+    Vector1() :
+        x(0) {}
+
+    Vector1(T _x) :
+        x(_x) {}
+
+    template<typename U>
+    Vector1(const Vector1<U>& other) :
+        x(other.x) {}
+
+    inline T operator[](int ) const
+    {
+        return x;
+    }
+
+    inline T& operator[](int )
+    {
+        return *x;
+    }
+
+    inline T volume() const
+    {
+        return x;
+    }
+
+    inline T norm() const
+    {
+        return x * ((x > 0) ? static_cast<T>(1) : static_cast<T>(-1));
+    }
+
+    inline T norm2() const
+    {
+        return x * x;
+    }
+
+};
+
+template<typename T>
+inline const Vector1<T> operator + (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return Vector1<T>(v1.x + v2.x);
+}
+
+template<typename T>
+inline Vector1<T>& operator += (Vector1<T>& v1, const Vector1<T>& v2)
+{
+    v1.x += v2.x;
+    return v1;
+}
+
+template<typename T>
+inline const Vector1<T> operator - (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return Vector1<T>(v1.x - v2.x);
+}
+
+template<typename T>
+inline Vector1<T>& operator -= (Vector1<T>& v1, const Vector1<T>& v2)
+{
+    v1.x -= v2.x;
+    return v1;
+}
+
+template<typename T>
+inline const Vector1<T> operator * (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return Vector1<T>(v1.x * v2.x);
+}
+
+template<typename T>
+inline const Vector1<T> operator * (const Vector1<T>& v, T a)
+{
+    return Vector1<T>(v.x * a);
+}
+
+template<typename T>
+inline const Vector1<T> operator * (T a, const Vector1<T>& v)
+{
+    return Vector1<T>(v.x * a);
+}
+
+template<typename T>
+inline Vector1<T>& operator *= (Vector1<T>& v1, const Vector1<T>& v2)
+{
+    v1.x *= v2.x;
+    return v1;
+}
+
+template<typename T>
+inline Vector1<T>& operator *= (Vector1<T>& v, T a)
+{
+    v.x *= a;
+    return v;
+}
+
+template<typename T>
+inline const Vector1<T> operator / (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return Vector1<T>(v1.x / v2.x);
+}
+
+template<typename T>
+inline Vector1<T>& operator /= (Vector1<T>& v1, const Vector1<T>& v2)
+{
+    v1.x /= v2.x;
+    return v1;
+}
+
+template<typename T>
+inline const Vector1<T> operator / (const Vector1<T>& v, T a)
+{
+    return Vector1<T>(v.x / a);
+}
+
+template<typename T>
+inline Vector1<T>& operator /= (Vector1<T>& v, T a)
+{
+    v.x /= a;
+    return v;
+}
+
+template<typename T>
+inline bool operator == (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x == v2.x);
+}
+
+template<typename T>
+inline bool operator != (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x != v2.x);
+}
+
+template<typename T>
+inline bool operator < (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x < v2.x);
+}
+
+template<typename T>
+inline bool operator <= (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x <= v2.x);
+}
+
+template<typename T>
+inline bool operator > (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x > v2.x);
+}
+
+template<typename T>
+inline bool operator >= (const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return (v1.x >= v2.x);
+}
+
+template<typename T>
+inline std::ostream& operator<<(std::ostream& out, const Vector1<T>& v)
+{
+    return out << "(" << v.x << ")";
+}
+
+template<typename T>
+inline T dot(const Vector1<T>& v1, const Vector1<T>& v2)
+{
+    return v1.x * v2.x;
+}
+
+
 // Vector of 2 components of arithmetic type T (T = int, double, etc.)
 // with access by .x, .y, and [], provides basic arithmetic operations
 template <typename T>
@@ -112,7 +291,7 @@ inline const Vector2<T> operator * (T a, const Vector2<T>& v)
 }
 
 template<typename T>
-inline Vector2<T>& operator *= (Vector2<T>& v, int a)
+inline Vector2<T>& operator *= (Vector2<T>& v, T a)
 {
     v.x *= a;
     v.y *= a;
@@ -401,7 +580,7 @@ struct VectorTypeHelper {
 
 template<typename T>
 struct VectorTypeHelper<One, T> {
-    typedef T Type;
+    typedef Vector1<T> Type;
 };
 
 template<typename T>
@@ -417,6 +596,10 @@ struct VectorTypeHelper<Three, T> {
 
 template<typename Vector>
 struct VectorDimensionHelper {
+};
+
+template<typename T>
+struct VectorDimensionHelper<Vector1<T>> {
     static const int dimension = 1;
 };
 
@@ -434,9 +617,9 @@ typedef Vector3<int> Int3;
 typedef Vector3<FP> FP3;
 
 template<typename Real>
-inline const int truncate(const Real& v)
+inline const Vector1<int> truncate(const Vector1<Real>& v)
 {
-    return (int)v;
+    return Vector1<int>(static_cast<int>(v.x));
 }
 
 template<typename Real>
@@ -476,7 +659,7 @@ struct OnesHelper {
 
 template<typename T>
 struct OnesHelper<One, T> {
-    static typename VectorTypeHelper<One, T>::Type get() { return static_cast<T>(1); }
+    static typename VectorTypeHelper<One, T>::Type get() { return VectorTypeHelper<One, T>::Type(static_cast<T>(1)); }
 };
 
 template<typename T>
@@ -498,6 +681,10 @@ inline typename VectorTypeHelper<dimension, T>::Type ones()
 
 template<typename T>
 struct ScalarType {
+};
+
+template<typename T>
+struct ScalarType<Vector1<T> > {
     typedef T Type;
 };
 

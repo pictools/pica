@@ -44,29 +44,33 @@ struct YeeSolver::Implementation<One, Real> {
     {
         typedef typename YeeGrid<One, Real>::ValueType ValueType;
         const ValueType coeffCurrent = -static_cast<ValueType>(4) * Constants<ValueType>::pi() * dt;
-        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getStep();
+        typedef typename YeeGrid<One, Real>::PositionType PositionType;
+        const ValueType cdt = Constants<ValueType>::c() * dt;
+        const PositionType coeff = PositionType(cdt) / grid.getStep();
         typedef typename YeeGrid<One, Real>::IndexType IndexType;
         const IndexType begin = 0;
-        const IndexType end = grid.getSize() - 1;
+        const IndexType end = grid.getSize() - IndexType(1);
         #pragma omp parallel for
-        for (int i = begin; i < end; i++) {
+        for (int i = begin.x; i < end.x; i++) {
             grid.ex(i) += coeffCurrent * grid.jx(i);
-            grid.ey(i) += coeffCurrent * grid.jy(i) - coeff * (grid.bz(i + 1) - grid.bz(i));
-            grid.ez(i) += coeffCurrent * grid.jz(i) + coeff * (grid.by(i + 1) - grid.by(i));
+            grid.ey(i) += coeffCurrent * grid.jy(i) - coeff.x * (grid.bz(i + 1) - grid.bz(i));
+            grid.ez(i) += coeffCurrent * grid.jz(i) + coeff.x * (grid.by(i + 1) - grid.by(i));
         }
     }
 
     static void updateB(YeeGrid<One, Real>& grid, Real dt)
     {
         typedef typename YeeGrid<One, Real>::ValueType ValueType;
-        const ValueType coeff = Constants<ValueType>::c() * dt / grid.getStep();
+        typedef typename YeeGrid<One, Real>::PositionType PositionType;
+        const ValueType cdt = Constants<ValueType>::c() * dt;
+        const PositionType coeff = PositionType(cdt) / grid.getStep();
         typedef typename YeeGrid<One, Real>::IndexType IndexType;
-        const IndexType begin = 1;
+        const IndexType begin = IndexType(1);
         const IndexType end = grid.getSize();
         #pragma omp parallel for
-        for (int i = begin; i < end; i++) {
-            grid.by(i) += coeff * (grid.ez(i) - grid.ez(i - 1));
-            grid.bz(i) += -coeff * (grid.ey(i) - grid.ey(i - 1));
+        for (int i = begin.x; i < end.x; i++) {
+            grid.by(i) += coeff.x * (grid.ez(i) - grid.ez(i - 1));
+            grid.bz(i) += -coeff.x * (grid.ey(i) - grid.ey(i - 1));
         }
     }
 };

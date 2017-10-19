@@ -17,29 +17,41 @@ template<typename T>
 class Array1d {
 public:
     typedef T ValueType;
-    typedef int IndexType;
+    typedef Vector1<int> IndexType;
 
     // Create an empty vector
     Array1d() {}
 
     // Create an array of the given size with the given value of elements
     Array1d(IndexType size, ValueType value = 0) :
-        data(size, value) {}
+        data(size.x, value) {}
 
     // Get size of the vector
-    IndexType getSize() const { return static_cast<IndexType>(data.size()); }
+    IndexType getSize() const { return IndexType(static_cast<int>(data.size())); }
 
     // Access the value by index without checking the index
+    ValueType& operator()(int i)
+    {
+        PICA_ASSERT((i >= 0) && (i < getSize().x));
+        return data[i];
+    }
+
+    const ValueType& operator()(int i) const
+    {
+        PICA_ASSERT((i >= 0) && (i < getSize().x));
+        return data[i];
+    }
+
     ValueType& operator()(IndexType index)
     {
-        PICA_ASSERT((index >= 0) && (index < getSize()));
-        return data[index];
+        PICA_ASSERT((index.x >= 0) && (index.x < getSize().x));
+        return data[index.x];
     }
 
     const ValueType& operator()(IndexType index) const
     {
-        PICA_ASSERT((index >= 0) && (index < getSize()));
-        return data[index];
+        PICA_ASSERT((index.x >= 0) && (index.x < getSize().x));
+        return data[index.x];
     }
 
 private:

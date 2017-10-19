@@ -16,14 +16,14 @@ TEST(YeeSolverTest, Constructor)
 TEST(YeeSolverTest, UpdateE1d)
 {
     YeeSolver solver;
-    YeeGrid<One> grid(0.0, 0.1, 10);
+    YeeGrid<One> grid(Vector1<double>(0.0), Vector1<double>(0.1), Vector1<int>(10));
     solver.updateE(grid, 0.1);
 }
 
 TEST(YeeSolverTest, UpdateB1d)
 {
     YeeSolver solver;
-    YeeGrid<One> grid(0.0, 0.1, 10);
+    YeeGrid<One> grid(Vector1<double>(0.0), Vector1<double>(0.1), Vector1<int>(10));
     solver.updateB(grid, 0.1);
 }
 

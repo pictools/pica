@@ -49,10 +49,10 @@ public:
 private:
 
     typedef ValueType(GridType::*FieldComponent1d)(int) const;
-    ValueType interpolate(FieldComponent1d component, int baseIndex, ValueType coeff) const
+    ValueType interpolate(FieldComponent1d component, IndexType baseIndex, PositionType coeff) const
     {
-        return (grid.*component)(baseIndex) * (1.0 - coeff) +
-            (grid.*component)(baseIndex + 1) * coeff;
+        return (grid.*component)(baseIndex.x) * (1.0 - coeff.x) +
+            (grid.*component)(baseIndex.x + 1) * coeff.x;
     }
 
     typedef ValueType(GridType::*FieldComponent2d)(int, int) const;
