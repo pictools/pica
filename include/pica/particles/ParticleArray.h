@@ -140,11 +140,11 @@ public:
     void pushBack(ConstParticleRefType particle)
     {
         const ParticleRef::PositionType position = particle.getPosition();
-        for (int d = 0; d < dimension; d++)
-            positions[d].push_back = position[d];
+        for (int d = 0; d < ParticleRef::dimension; d++)
+            positions[d].push_back(position[d]);
         const ParticleRef::MomentumType momentum = particle.getMomentum();
-        for (int d = 0; d < momentumDimension; d++)
-            momentums[d].push_back = momentum[d];
+        for (int d = 0; d < ParticleRef::momentumDimension; d++)
+            momentums[d].push_back(momentum[d]);
         masses.push_back(particle.getMass());
         charges.push_back(particle.getCharge());
         factors.push_back(particle.getFactor());
