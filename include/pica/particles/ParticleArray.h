@@ -58,7 +58,7 @@ public:
         {}
 
         typedef typename ParticleTraits<ParticleType>::PositionType PositionType;
-        typedef typename ParticleTraits<ParticleType>::PositionType MomentumType;
+        typedef typename ParticleTraits<ParticleType>::MomentumType MomentumType;
         typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
         typedef typename ParticleTraits<ParticleType>::MassType MassType;
         typedef typename ParticleTraits<ParticleType>::ChargeType ChargeType;
