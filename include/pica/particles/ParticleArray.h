@@ -35,7 +35,7 @@ private:
 
 // Collection of particles with array-like semantics,
 // representation as structure of arrays
-template<typename PositionType, typename MomentumType>
+template<typename PositionType, typename MomentumType, typename MassType, typename ChargeType, typename FactorType>
 class ParticleArraySoA {
 public:
 
@@ -64,6 +64,9 @@ private:
 
     std::vector<ScalarType<PositionType> > positions[VectorDimensionHelper<PositionType>::dimension];
     std::vector<ScalarType<MomentumType> > momentums[VectorDimensionHelper<MomentumType>::dimension];
+    std::vector<MassType> masses;
+    std::vector<ChargeType> charges;
+    std::vector<FactorType> factors;
 
     friend class ParticleRef;
     friend class ConstParticleRef;

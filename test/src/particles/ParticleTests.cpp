@@ -1,9 +1,7 @@
 #include "TestingUtility.h"
 
 #include "pica/math/Constants.h"
-#include "pica/grid/Grid.h"
-#include "pica/particles/Ensemble.h"
-#include "pica/utility/Utility.h"
+#include "pica/particles/Particle.h"
 
 #include <iostream>
 
@@ -16,19 +14,14 @@ class ParticleTest: public BaseParticleFixture {
 };
 
 
-TEST_F(ParticleTest, StaticMembers) {
-    ASSERT_EQ(Particle::numTypes, Particle::typesVector.size());
-    ASSERT_EQ(Particle::types, ptr(Particle::typesVector));
-}
-
 TEST_F(ParticleTest, DefaultConstructor) {
-    Particle particle;
+    Particle3d particle;
+    particle.setMass(Constants<double>::electronMass());
     ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getPosition());
     ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getMomentum());
     ASSERT_EQ_FP3(FP3(0, 0, 0), particle.getVelocity());
     ASSERT_EQ(1.0f, particle.getFactor());
-    ASSERT_EQ(0, particle.getType());
-    ASSERT_EQ(1.0, particle.gamma());
+    ASSERT_EQ(1.0, particle.getGamma());
 }
 
 TEST_F(ParticleTest, Constructor) {
@@ -150,12 +143,4 @@ TEST_F(ParticleTest, GetSetFactor) {
     ASSERT_EQ(newFactor, particle.getFactor());
 }
 
-TEST_F(ParticleTest, GetOffsets) {
-    size_t offsets[6];
-    Particle::getOffsets(offsets);
-    for (int i = 1; i < sizeof(offsets) / sizeof(*offsets); i++) {
-        ASSERT_LE(offsets[i], sizeof(Particle));
-        ASSERT_LE(offsets[i - 1], offsets[i]);
-    }
-}
 

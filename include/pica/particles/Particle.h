@@ -20,36 +20,22 @@ class Particle_ {
 public:
 
     // Types for conforming ParticleInterface
-    typedef typename VectorTypeHelper<dimension, FP>::Type PositionType;
-    typedef FP3 MomentumType;
-    typedef FP GammaType;
-    typedef FP ChargeType;
-    typedef FP MassType;
-    typedef FP FactorType;
-
-    class SpeciesType {
-    public:
-        MassType getMass() const { return mass; }
-        ChargeType getCharge() const { return charge; }
-        std::string getName() const { return name; }
-    private:
-        ChargeType charge;
-        MassType mass;
-        std::string name;
-    };
+    typedef FP Real;
+    typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
+    typedef typename VectorTypeHelper<Three, Real>::Type MomentumType;
+    typedef Real GammaType;
+    typedef Real MassType;
+    typedef Real ChargeType;
+    typedef float FactorType;
 
     Particle_() :
-        factor(1) {}
+        factor(1),
+        mass(0.0),
+        charge(0.0) {}
 
     Particle_(const PositionType& position, const MomentumType& momentum,
-        const SpeciesType& species, FactorType factor) :
-        position(position), momentum(momentum), species(species), factor(factor) {}
-
-    MassType getMass() const { return getSpecies().getMass(); }
-    ChargeType getCharge() const { return getSpecies().getCharge(); }
-
-    SpeciesType getSpecies() const { return species; }
-    void setSpecies(const SpeciesType& newSpecies) { species = newSpecies; }
+        MassType mass, ChargeType charge, FactorType factor) :
+        position(position), momentum(momentum), mass(mass), charge(charge), factor(factor) {}
 
     PositionType getPosition() const { return position; }
     void setPosition(const PositionType& newPosition) { position = newPosition; }
@@ -62,14 +48,21 @@ public:
 
     GammaType getGamma() const { return sqrt(static_cast<FP>(1) / (static_cast<FP>(1) + (momentum / (getMass() * constants::c)).norm2())); }
 
-    FactorType getFactor() const { return factor; }
+    MassType getMass() const { return mass; }
+    void setMass(MassType newMass) { mass = newMass; }
+    
+    ChargeType getCharge() const { return charge; }
+    void setCharge(ChargeType newCharge) { charge = newCharge; }
+
+     FactorType getFactor() const { return factor; }
     void setFactor(FactorType newFactor) { factor = newFactor; }
 
 private:
 
     PositionType position;
     MomentumType momentum;
-    SpeciesType species;
+    MassType mass;
+    ChargeType charge;
     FactorType factor;
 
 };
