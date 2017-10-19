@@ -3,6 +3,7 @@
 
 
 #include "pica/math/Dimension.h"
+#include "pica/math/Vectors.h"
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
 
@@ -12,23 +13,7 @@
 namespace pica {
 
 
-enum ParticleRepresentation { ParticleRepresentation_AoS, ParticleRepresentation_SoA };
 
-// Traits class to provide a Type corresponding to array of particles
-// according to the given representation
-template<class Particle, ParticleRepresentation storage>
-struct ParticleArray {
-};
-
-template<class Particle, ParticleRepresentation_AoS>
-struct ParticleArray {
-    typedef ParticleArrayAoS<Particle> Type;
-};
-
-template<class Particle, ParticleRepresentation_SoA>
-struct ParticleArray {
-    typedef ParticleArraySoA<Particle> Type;
-};
 
   
 // Collection of particles with array-like semantics,
@@ -39,7 +24,7 @@ public:
     typedef Particle& ParticleRef;
     typedef const ParticleRef ConstParticleRef;
 
-    int size() const { return particles.size(); }
+    int size() const { return static_cast<int>(particles.size()); }
 
     ParticleRef operator[](int idx) { return particles[idx]; }
     ConstParticleRef operator[](int idx) const { return particles[idx]; }
@@ -75,8 +60,8 @@ public:
         typedef typename ParticleTraits<Particle>::MassType MassType;
         typedef typename ParticleTraits<Particle>::ChargeType ChargeType;
         typedef typename ParticleTraits<Particle>::FactorType FactorType;
-        const int dimension = VectorDimensionHelper<PositionType>::dimension;
-        const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
+        static const int dimension = VectorDimensionHelper<PositionType>::dimension;
+        static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
 
         PositionType getPosition() const {
             PositionType result;
@@ -140,10 +125,10 @@ public:
         int idx;
     };
 
-    int size() const { return positions.size(); }
+    int size() const { return static_cast<int>(masses.size()); }
 
-    ParticleRef operator[](int idx) { return ParticleRef(this, idx); }
-    ConstParticleRef operator[](int idx) const { return ConstParticleRef(this, idx); }
+    ParticleRef operator[](int idx) { return ParticleRef(*this, idx); }
+    ConstParticleRef operator[](int idx) const { return ConstParticleRef(*this, idx); }
 
     ParticleRef back() { return (*this)(size() - 1); }
     ConstParticleRef back() const { return (*this)(size() - 1); }
@@ -174,15 +159,35 @@ public:
 
 private:
 
-    std::vector<ScalarType<ParticleRef::PositionType> > positions[ParticleRef::dimension];
-    std::vector<ScalarType<ParticleRef::MomentumType> > momentums[ParticleRef::momentumDimension];
-    std::vector<ParticleRef::MassType> masses;
-    std::vector<ParticleRef::ChargeType> charges;
-    std::vector<ParticleRef::FactorType> factors;
+    std::vector<typename ScalarType<typename ParticleRef::PositionType>::Type> positions[ParticleRef::dimension];
+    std::vector<typename ScalarType<typename ParticleRef::MomentumType>::Type> momentums[ParticleRef::momentumDimension];
+    std::vector<typename ParticleRef::MassType> masses;
+    std::vector<typename ParticleRef::ChargeType> charges;
+    std::vector<typename ParticleRef::FactorType> factors;
 
     friend class ParticleRef;
     friend class ConstParticleRef;
 };
+
+
+enum ParticleRepresentation { ParticleRepresentation_AoS, ParticleRepresentation_SoA };
+
+// Traits class to provide a Type corresponding to array of particles
+// according to the given representation
+template<class Particle, ParticleRepresentation storage>
+struct ParticleArray {
+};
+
+template<class Particle>
+struct ParticleArray<Particle, ParticleRepresentation_AoS> {
+    typedef ParticleArrayAoS<Particle> Type;
+};
+
+template<class Particle>
+struct ParticleArray<Particle, ParticleRepresentation_SoA> {
+    typedef ParticleArraySoA<Particle> Type;
+};
+
 
 
 } // namespace pica
