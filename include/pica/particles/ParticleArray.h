@@ -12,20 +12,20 @@
 namespace pica {
 
 
-enum ParticleStorage { ParticleStorage_AoS, ParticleStorage_SoA };
+enum ParticleRepresentation { ParticleRepresentation_AoS, ParticleRepresentation_SoA };
 
 // Traits class to provide a Type corresponding to array of particles
-// according to the given storage
-template<class Particle, ParticleStorage storage>
+// according to the given representation
+template<class Particle, ParticleRepresentation storage>
 struct ParticleArray {
 };
 
-template<class Particle, ParticleStorage_AoS>
+template<class Particle, ParticleRepresentation_AoS>
 struct ParticleArray {
     typedef ParticleArrayAoS<Particle> Type;
 };
 
-template<class Particle, ParticleStorage_SoA>
+template<class Particle, ParticleRepresentation_SoA>
 struct ParticleArray {
     typedef ParticleArraySoA<Particle> Type;
 };
@@ -141,7 +141,19 @@ public:
     ParticleRef operator[](int idx) { return ParticleRef(this, idx); }
     ConstParticleRef operator[](int idx) const { return ConstParticleRef(this, idx); }
 
-    void pushBack(ConstParticleRef particle) { /*particles.push_back(particle);*/ throw; }
+    template<class ConstParticleRefType>
+    void pushBack(ConstParticleRefType particle)
+    {
+        const ParticleRef::PositionType position = particle.getPosition();
+        for (int d = 0; d < dimension; d++)
+            positions[d].push_back = position[d];
+        const ParticleRef::MomentumType momentum = particle.getMomentum();
+        for (int d = 0; d < momentumDimension; d++)
+            momentums[d].push_back = momentum[d];
+        masses.push_back(particle.getMass());
+        charges.push_back(particle.getCharge());
+        factors.push_back(particle.getFactor());
+    }
 
 private:
 
