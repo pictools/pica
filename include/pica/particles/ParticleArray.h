@@ -18,9 +18,10 @@ namespace pica {
   
 // Collection of particles with array-like semantics,
 // representation as array of structures
-template<class Particle>
+template<class ParticleType>
 class ParticleArrayAoS {
 public:
+    typedef ParticleType Particle;
     typedef Particle& ParticleRef;
     typedef const ParticleRef ConstParticleRef;
 
@@ -43,9 +44,11 @@ private:
 
 // Collection of particles with array-like semantics,
 // representation as structure of arrays
-template<class Particle>
+template<class ParticleType>
 class ParticleArraySoA {
 public:
+
+    typedef ParticleType Particle;
 
     class ConstParticleRef {
     public:
@@ -54,12 +57,12 @@ public:
             idx(idx)
         {}
 
-        typedef typename ParticleTraits<Particle>::PositionType PositionType;
-        typedef typename ParticleTraits<Particle>::PositionType MomentumType;
-        typedef typename ParticleTraits<Particle>::GammaType GammaType;
-        typedef typename ParticleTraits<Particle>::MassType MassType;
-        typedef typename ParticleTraits<Particle>::ChargeType ChargeType;
-        typedef typename ParticleTraits<Particle>::FactorType FactorType;
+        typedef typename ParticleTraits<ParticleType>::PositionType PositionType;
+        typedef typename ParticleTraits<ParticleType>::PositionType MomentumType;
+        typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
+        typedef typename ParticleTraits<ParticleType>::MassType MassType;
+        typedef typename ParticleTraits<ParticleType>::ChargeType ChargeType;
+        typedef typename ParticleTraits<ParticleType>::FactorType FactorType;
         static const int dimension = VectorDimensionHelper<PositionType>::dimension;
         static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
 
