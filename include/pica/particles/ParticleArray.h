@@ -11,6 +11,25 @@
 
 namespace pica {
 
+
+enum ParticleStorage { ParticleStorage_AoS, ParticleStorage_SoA };
+
+// Traits class to provide a Type corresponding to array of particles
+// according to the given storage
+template<class Particle, ParticleStorage storage>
+struct ParticleArray {
+};
+
+template<class Particle, ParticleStorage_AoS>
+struct ParticleArray {
+    typedef ParticleArrayAoS<Particle> Type;
+};
+
+template<class Particle, ParticleStorage_SoA>
+struct ParticleArray {
+    typedef ParticleArraySoA<Particle> Type;
+};
+
   
 // Collection of particles with array-like semantics,
 // representation as array of structures
