@@ -124,8 +124,8 @@ public:
             Constants<ChargeType>::electronCharge(), factor);
     }
 
-    template<class ConstParticleRef>
-    bool eqParticles(ConstParticleRef a, ConstParticleRef b) const
+    template<class ConstParticleRef1, class ConstParticleRef2>
+    bool eqParticles_(ConstParticleRef1 a, ConstParticleRef2 b) const
     {
         return (a.getPosition() == b.getPosition()) &&
             (a.getMomentum() == b.getMomentum()) &&

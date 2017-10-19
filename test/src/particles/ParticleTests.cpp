@@ -66,7 +66,7 @@ TYPED_TEST(ParticleTest, CopyConstructor)
     FactorType factor = 213.51f;
     Particle particle(position, momentum, mass, charge, factor);
     Particle copyParticle(particle);
-    ASSERT_TRUE(eqParticles(particle, copyParticle));
+    ASSERT_TRUE(eqParticles_(particle, copyParticle));
 }
 
 TYPED_TEST(ParticleTest, Assignment)
@@ -79,7 +79,7 @@ TYPED_TEST(ParticleTest, Assignment)
     Particle particle(position, momentum, mass, charge, factor);
     Particle copyParticle;
     copyParticle = particle;
-    ASSERT_TRUE(eqParticles(particle, copyParticle));
+    ASSERT_TRUE(eqParticles_(particle, copyParticle));
 }
  
 TYPED_TEST(ParticleTest, GetSetPosition)
