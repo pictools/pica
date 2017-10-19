@@ -417,17 +417,17 @@ struct VectorTypeHelper<Three, T> {
 
 template<typename Vector>
 struct VectorDimensionHelper {
-    const int dimension = 1;
+    static const int dimension = 1;
 };
 
 template<typename T>
 struct VectorDimensionHelper<Vector2<T>> {
-    const int dimension = 2;
+    static const int dimension = 2;
 };
 
 template<typename T>
 struct VectorDimensionHelper<Vector3<T>> {
-    const int dimension = 3;
+    static const int dimension = 3;
 };
 
 typedef Vector3<int> Int3;
