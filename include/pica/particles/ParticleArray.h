@@ -44,7 +44,11 @@ public:
     ParticleRef operator[](int idx) { return particles[idx]; }
     ConstParticleRef operator[](int idx) const { return particles[idx]; }
 
+    ParticleRef back() { return particles.back(); }
+    ConstParticleRef back() const { return particles.back(); }
+
     void pushBack(ConstParticleRef particle) { particles.push_back(particle); }
+    void popBack() { particles.pop_back(); }
 
 private:
 
@@ -141,6 +145,9 @@ public:
     ParticleRef operator[](int idx) { return ParticleRef(this, idx); }
     ConstParticleRef operator[](int idx) const { return ConstParticleRef(this, idx); }
 
+    ParticleRef back() { return (*this)(size() - 1); }
+    ConstParticleRef back() const { return (*this)(size() - 1); }
+
     template<class ConstParticleRefType>
     void pushBack(ConstParticleRefType particle)
     {
@@ -153,6 +160,16 @@ public:
         masses.push_back(particle.getMass());
         charges.push_back(particle.getCharge());
         factors.push_back(particle.getFactor());
+    }
+    void popBack()
+    {
+        for (int d = 0; d < ParticleRef::dimension; d++)
+            positions[d].pop_back();
+        for (int d = 0; d < ParticleRef::momentumDimension; d++)
+            momentums[d].pop_back();
+        masses.pop_back();
+        charges.pop_back();
+        factors.pop_back();
     }
 
 private:
