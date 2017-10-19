@@ -11,10 +11,7 @@
 
 
 namespace pica {
-
-
-
-
+   
   
 // Collection of particles with array-like semantics,
 // representation as array of structures
@@ -23,7 +20,7 @@ class ParticleArrayAoS {
 public:
     typedef ParticleType Particle;
     typedef Particle& ParticleRef;
-    typedef const ParticleRef ConstParticleRef;
+    typedef const Particle& ConstParticleRef;
 
     int size() const { return static_cast<int>(particles.size()); }
 
