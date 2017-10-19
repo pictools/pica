@@ -25,8 +25,10 @@ public:
 };
 
 typedef ::testing::Types<
+    ParticleArray<Particle1d, ParticleRepresentation_AoS>::Type,
     ParticleArray<Particle2d, ParticleRepresentation_AoS>::Type,
     ParticleArray<Particle3d, ParticleRepresentation_AoS>::Type,
+    ParticleArray<Particle1d, ParticleRepresentation_SoA>::Type,
     ParticleArray<Particle2d, ParticleRepresentation_SoA>::Type,
     ParticleArray<Particle3d, ParticleRepresentation_SoA>::Type
 > types;
@@ -44,5 +46,5 @@ TYPED_TEST(ParticleArrayTest, PushBack)
     //for (int i = 0; i < 17; i++)
     //    particles.pushBack(randomParticle());
     ParticleArray particlesCopy(particles);
-    ASSERT_TRUE(eqParticleArrays(particles, particlesCopy));
+    ASSERT_TRUE(eqParticleArrays(particles, particlesCopy)); 
 }

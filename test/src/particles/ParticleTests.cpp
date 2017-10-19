@@ -4,10 +4,7 @@
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
 
-#include <iostream>
-
 using namespace pica;
-using namespace std;
 
 
 template <class ParticleType>
@@ -53,14 +50,14 @@ public:
         Real maxMomentum = 10;
         MomentumType momentum(urand(minMomentum, maxMomentum),
             urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
-        FactorType factor = urand(1e-5, 1e5);
+        FactorType factor = static_cast<FactorType>(urand(1e-5, 1e5));
         return Particle(position, momentum, Constants<MassType>::electronMass(),
             Constants<ChargeType>::electronCharge(), factor);
     }
 
 };
 
-typedef ::testing::Types</*Particle1d,*/ Particle2d, Particle3d> types;
+typedef ::testing::Types<Particle1d, Particle2d, Particle3d> types;
 TYPED_TEST_CASE(ParticleTest, types);
 
 TYPED_TEST(ParticleTest, DefaultConstructor)
