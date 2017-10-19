@@ -11,23 +11,22 @@ class ParticleInterface {
 public:
 
     // Either provide the following types or specialization of ParticleTraits
-    typedef Vector3<double> PositionType;
+    typedef Vector3<double> PositionType; // or Vector2<double> or double
     typedef Vector3<double> MomentumType;
     typedef double GammaType;
-    typedef double ChargeType;
     typedef double MassType;
+    typedef double ChargeType;
     typedef double FactorType;
-    typedef int SpeciesType;
 
     ParticleInterface();
     ParticleInterface(const PositionType& position, const MomentumType& momentum,
-        const SpeciesType& species, FactorType factor);
+        MassType mass, ChargeType charge, FactorType factor);
 
     MassType getMass() const;
+    void setMass(MassType newMass);
+
     ChargeType getCharge() const;
-    
-    SpeciesType getSpecies() const;
-    void setSpecies(const SpeciesType& newSpecies);
+    void setCharge(ChargeType newCharge);
 
     PositionType getPosition() const;
     void setPosition(const PositionType& newPosition);
