@@ -86,7 +86,7 @@ protected:
 
 template<class ParticleType>
 class BaseParticleFixture_ : public BaseFixture {
-protected:
+public:
     typedef ParticleType Particle;
     typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
     typedef typename pica::ParticleTraits<Particle>::MomentumType MomentumType;
@@ -123,6 +123,16 @@ protected:
         return Particle(position, momentum, Constants<MassType>::electronMass(),
             Constants<ChargeType>::electronCharge(), factor);
     }
+
+    template<class ConstParticleRef>
+    bool eqParticles(ConstParticleRef a, ConstParticleRef b) const
+    {
+        return (a.getPosition() == b.getPosition()) &&
+            (a.getMomentum() == b.getMomentum()) &&
+            (a.getMass() == b.getMass()) &&
+            (a.getCharge() == b.getCharge()) &&
+            (a.getFactor() == b.getFactor());
+    }
 };
 
 class BaseParticleFixture : public BaseFixture {
@@ -135,16 +145,6 @@ protected:
 };
 
 bool eqParticles(const pica::Particle& a, const pica::Particle& b);
-
-template<class ConstParticleRef>
-bool eqParticles(ConstParticleRef a, ConstParticleRef b)
-{
-    return (a.getPosition() == b.getPosition()) &&
-        (a.getMomentum() == b.getMomentum()) &&
-        (a.getMass() == b.getMass()) &&
-        (a.getCharge() == b.getCharge()) &&
-        (a.getFactor() == b.getFactor());
-}
 
 bool eqParticleSystems(pica::ParticleSystem& a, pica::ParticleSystem& b);
 

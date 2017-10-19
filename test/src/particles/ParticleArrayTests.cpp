@@ -8,7 +8,7 @@ using namespace pica;
 
 
 template <class ParticleArrayType>
-class ParticleArrayTest : public BaseFixture {
+class ParticleArrayTest : public BaseParticleFixture_<typename ParticleArrayType::Particle> {
 public:
     typedef ParticleArrayType ParticleArray;
 
@@ -43,8 +43,8 @@ TYPED_TEST(ParticleArrayTest, DefaultConstructor)
 TYPED_TEST(ParticleArrayTest, PushBack)
 {
     ParticleArray particles;
-    //for (int i = 0; i < 17; i++)
-    //    particles.pushBack(randomParticle());
+    for (int i = 0; i < 17; i++)
+        particles.pushBack(randomParticle());
     ParticleArray particlesCopy(particles);
     ASSERT_TRUE(eqParticleArrays(particles, particlesCopy)); 
 }
