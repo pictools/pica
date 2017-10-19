@@ -34,7 +34,7 @@ bool BaseFixture::eqParticle(const Particle & a, const Particle & b) {
 }
 
 // Get uniformly distributed in [a, b) pseudo-random number.
-FP BaseFixture::urand(FP a, FP b) {
+FP BaseFixture::urand(FP a, FP b) const {
     return a + (b - a) * ((FP)rand()) / RAND_MAX;
 }
 

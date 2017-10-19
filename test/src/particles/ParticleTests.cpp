@@ -2,6 +2,7 @@
 
 #include "pica/math/Constants.h"
 #include "pica/particles/Particle.h"
+#include "pica/particles/ParticleTraits.h"
 
 #include <iostream>
 
@@ -9,16 +10,17 @@ using namespace pica;
 using namespace std;
 
 
-class ParticleTest: public BaseParticleFixture {
-
-};
-
-template <class ParticleType_>
-class ParticleTest_ : public BaseFixture {
+template <class ParticleType>
+class ParticleTest : public BaseFixture {
 public:
-    typedef ParticleType_ Particle;
-    typedef typename Particle::PositionType PositionType;
-    typedef typename Particle::MomentumType MomentumType;
+    typedef ParticleType Particle;
+    typedef typename ParticleTraits<Particle>::PositionType PositionType;
+    typedef typename ParticleTraits<Particle>::MomentumType MomentumType;
+    typedef typename ParticleTraits<Particle>::GammaType GammaType;
+    typedef typename ParticleTraits<Particle>::MassType MassType;
+    typedef typename ParticleTraits<Particle>::ChargeType ChargeType;
+    typedef typename ParticleTraits<Particle>::FactorType FactorType;
+    typedef typename ScalarType<MomentumType>::Type Real;
 
     int getDimension() const
     {
@@ -30,141 +32,164 @@ public:
         return VectorDimensionHelper<MomentumType>::dimension;;
     }
 
+    // Helper function to unify initialization of positions for 1d, 2d and 3d
+    // In 1d y, z are ignored, in 2d z is ignored
+    PositionType getPosition(Real x, Real y, Real z) const
+    {
+        Real positionArray[] = { x, y, z };
+        PositionType position;
+        for (int d = 0; d < getDimension(); d++)
+            position[d] = positionArray[d];
+        return position;
+    }
+
+    Particle randomParticle() const
+    {
+        Real minPosition = -10;
+        Real maxPosition = 10;
+        PositionType position = getPosition(urand(minPosition, maxPosition),
+            urand(minPosition, maxPosition), urand(minPosition, maxPosition));
+        Real minMomentum = -10;
+        Real maxMomentum = 10;
+        MomentumType momentum(urand(minMomentum, maxMomentum),
+            urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
+        FactorType factor = urand(1e-5, 1e5);
+        return Particle(position, momentum, Constants<MassType>::electronMass(),
+            Constants<ChargeType>::electronCharge(), factor);
+    }
+
 };
 
-
 typedef ::testing::Types</*Particle1d,*/ Particle2d, Particle3d> types;
-TYPED_TEST_CASE(ParticleTest_, types);
+TYPED_TEST_CASE(ParticleTest, types);
 
-
-TYPED_TEST(ParticleTest_, DefaultConstructor)
+TYPED_TEST(ParticleTest, DefaultConstructor)
 {
     Particle particle;
     particle.setMass(Constants<double>::electronMass());
     ASSERT_EQ_VECTOR(PositionType(), particle.getPosition(), getDimension());
     ASSERT_EQ_VECTOR(MomentumType(), particle.getMomentum(), getMomentumDimension());
     ASSERT_EQ_VECTOR(MomentumType(), particle.getVelocity(), getMomentumDimension());
-    ASSERT_EQ(1.0f, particle.getFactor());
-    ASSERT_EQ(1.0, particle.getGamma());
+    ASSERT_EQ(static_cast<FactorType>(1.0), particle.getFactor());
+    ASSERT_EQ(static_cast<GammaType>(1.0), particle.getGamma());
 }
 
-TEST_F(ParticleTest, Constructor) {
-    FP3 position(3.1, -32.1, 4.3e-5);
-    FP3 momentum(-231.3e9, 0.0, 1.23e-5);
-    int typeIndex = 1;
-    float factor = 1.4e2f;
-    Particle particle(position, momentum, typeIndex, factor);
-    ASSERT_EQ_FP3(position, particle.getPosition());
-    ASSERT_EQ_FP3(momentum, particle.getMomentum());
-    ASSERT_EQ(typeIndex, particle.getType());
+TYPED_TEST(ParticleTest, Constructor)
+{
+    PositionType position = getPosition(3.1, -32.1, 4.3e-5);
+    MomentumType momentum(-231.3e9, 0.0, 1.23e-5);
+    MassType mass = Constants<MassType>::electronMass();
+    ChargeType charge = Constants<ChargeType>::electronCharge();
+    FactorType factor = 1.4e2f;
+
+    Particle particle(position, momentum, mass, charge, factor);
+    ASSERT_EQ_VECTOR(position, particle.getPosition(), getDimension());
+    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), getMomentumDimension());
+    ASSERT_EQ(mass, particle.getMass());
+    ASSERT_EQ(charge, particle.getCharge());
     ASSERT_EQ(factor, particle.getFactor());
-    double expectedGamma = sqrt((FP)1 + momentum.norm2() / sqr(particle.mass() * constants::c));
+    Real expectedGamma = sqrt((FP)1 + momentum.norm2() / sqr(mass * Constants<double>::c()));
     maxRelativeError = 1e-12;
-    ASSERT_NEAR_FP(expectedGamma, particle.gamma());
+    ASSERT_NEAR_FP(expectedGamma, particle.getGamma());
 }
 
-TEST_F(ParticleTest, ConstructorDefaultFactor) {
-    FP3 position(-12.34, 0.2, 423.12e-2);
-    FP3 momentum(3254.23, -123.324, 1.23e5);
-    int typeIndex = 0;
-    Particle particle(position, momentum, typeIndex);
-    ASSERT_EQ_FP3(position, particle.getPosition());
-    ASSERT_EQ_FP3(momentum, particle.getMomentum());
-    ASSERT_EQ(typeIndex, particle.getType());
-    ASSERT_EQ(1.0f, particle.getFactor());
+TYPED_TEST(ParticleTest, ConstructorDefaultFactor)
+{
+    PositionType position = getPosition(-12.34, 0.2, 423.12e-2);
+    MomentumType momentum(3254.23, -123.324, 1.23e5);
+    MassType mass = Constants<MassType>::electronMass();
+    ChargeType charge = Constants<ChargeType>::electronCharge();
+    Particle particle(position, momentum, mass, charge);
+    ASSERT_EQ_VECTOR(position, particle.getPosition(), getDimension());
+    ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), getMomentumDimension());
+    ASSERT_EQ(mass, particle.getMass());
+    ASSERT_EQ(charge, particle.getCharge());
+    ASSERT_EQ(static_cast<FactorType>(1.0), particle.getFactor());
 }
 
-TEST_F(ParticleTest, CopyConstructor) {
-    FP3 position(-134.12, 412.6342, 2346.562);
-    FP3 momentum(-4531.23e5, 6534.123e3, 12.32);
-    int typeIndex = 1;
-    float factor = 213.51f;
-    Particle particle(position, momentum, typeIndex, factor);
+TYPED_TEST(ParticleTest, CopyConstructor)
+{
+    PositionType position = getPosition(-134.12, 412.6342, 2346.562);
+    MomentumType momentum(-4531.23e5, 6534.123e3, 12.32);
+    MassType mass = Constants<MassType>::electronMass();
+    ChargeType charge = Constants<ChargeType>::electronCharge();
+    FactorType factor = 213.51f;
+    Particle particle(position, momentum, mass, charge, factor);
     Particle copyParticle(particle);
     ASSERT_TRUE(eqParticles(particle, copyParticle));
 }
 
-TEST_F(ParticleTest, Assignment) {
-    FP3 position(432.453, -3452.15, -15.125);
-    FP3 momentum(431.124, -54.12, 5643.176);
-    int typeIndex = 0;
-    float factor = 1.9945f;
-    Particle particle(position, momentum, typeIndex, factor);
+TYPED_TEST(ParticleTest, Assignment)
+{
+    PositionType position = getPosition(432.453, -3452.15, -15.125);
+    MomentumType momentum(431.124, -54.12, 5643.176);
+    MassType mass = Constants<MassType>::electronMass();
+    ChargeType charge = Constants<ChargeType>::electronCharge();
+    FactorType factor = 1.9945f;
+    Particle particle(position, momentum, mass, charge, factor);
     Particle copyParticle;
     copyParticle = particle;
     ASSERT_TRUE(eqParticles(particle, copyParticle));
 }
-
-TEST_F(ParticleTest, Mass) {
+ 
+TYPED_TEST(ParticleTest, GetSetPosition)
+{
     Particle particle = randomParticle();
-    ASSERT_EQ(Particle::types[particle.getType()].mass, particle.mass());
-}
-
-TEST_F(ParticleTest, Charge) {
-    Particle particle = randomParticle();
-    ASSERT_EQ(Particle::types[particle.getType()].charge, particle.charge());
-}
-
-TEST_F(ParticleTest, GetType) {
-    for (int i = 0; i < Particle::numTypes; i++) {
-        FP3 position(-34.34, -45.12e3, 43.65e-2);
-        FP3 momentum(231.123, -231.12, -432.12);
-        Particle particle(position, momentum, i);
-        ASSERT_EQ(i, particle.getType());
-    }
-}
-
-TEST_F(ParticleTest, SetType) {
-    for (int i = 0; i < Particle::numTypes; i++) {
-        Particle particle = randomParticle();
-        int newType = i;
-        particle.setType(newType);
-        ASSERT_EQ(newType, particle.getType());
-        ASSERT_EQ(Particle::types[newType].mass, particle.mass());
-        ASSERT_EQ(Particle::types[newType].charge, particle.charge());
-    }
-}
-
-TEST_F(ParticleTest, GetSetPosition) {
-    Particle particle = randomParticle();
-    FP3 newPosition(54.126, -431.35, 35.65);
+    PositionType newPosition = getPosition(54.126, -431.35, 35.65);
     particle.setPosition(newPosition);
-    ASSERT_EQ_FP3(newPosition, particle.getPosition());
+    ASSERT_EQ_VECTOR(newPosition, particle.getPosition(), getDimension());
 }
 
-TEST_F(ParticleTest, GetSetMomentum) {
+TYPED_TEST(ParticleTest, GetSetMomentum)
+{
     Particle particle = randomParticle();
-    FP3 newMomentum(54.12e+4, -543.63e-2, 643.165e5);
+    MomentumType newMomentum(54.12e+4, -543.63e-2, 643.165e5);
     particle.setMomentum(newMomentum);
     maxRelativeError = 1e-12;
-    ASSERT_NEAR_FP3(newMomentum, particle.getMomentum());
-    double expectedGamma = sqrt((FP)1 + newMomentum.norm2() / sqr(particle.mass() * constants::c));
-    ASSERT_NEAR_FP(expectedGamma, particle.gamma());
+    ASSERT_NEAR_VECTOR(newMomentum, particle.getMomentum());
+    double expectedGamma = sqrt((FP)1 + newMomentum.norm2() / sqr(particle.getMass() * constants::c));
+    ASSERT_NEAR_FP(expectedGamma, particle.getGamma());
 }
 
-TEST_F(ParticleTest, GetSetVelocity) {
+TYPED_TEST(ParticleTest, GetSetVelocity)
+{
     Particle particle = randomParticle();
-    FP3 newVelocity(5243.1654, -56.23e5, -65.237e-4);
+    MomentumType newVelocity(5243.1654, -56.23e5, -65.237e-4);
     particle.setVelocity(newVelocity);
     maxRelativeError = 1e-12;
-    ASSERT_NEAR_FP3(newVelocity, particle.getVelocity());
-    ///double expectedGamma = sqrt((FP)1 + newMomentum.norm2() / sqr(particle.mass() * Constants::c));
-    ///ASSERT_NEAR_FP(expectedGamma, particle.gamma());
+    MomentumType v = particle.getVelocity();
+    ASSERT_NEAR_VECTOR(newVelocity, particle.getVelocity());
 }
 
-TEST_F(ParticleTest, Gamma) {
+TYPED_TEST(ParticleTest, GetGamma)
+{
     Particle particle = randomParticle();
-    double expectedGamma = sqrt((FP)1 + particle.getMomentum().norm2() /
-                                        sqr(particle.mass() * constants::c));
+    GammaType expectedGamma = sqrt(static_cast<GammaType>(1.0) + particle.getMomentum().norm2() /
+        sqr(particle.getMass() * Constants<GammaType>::c()));
     maxRelativeError = 1e-12;
-    ASSERT_NEAR_FP(expectedGamma, particle.gamma());
+    ASSERT_NEAR_FP(expectedGamma, particle.getGamma());
 }
 
-TEST_F(ParticleTest, GetSetFactor) {
+TYPED_TEST(ParticleTest, GetSetMass)
+{
     Particle particle = randomParticle();
-    float newFactor = 6523.54f;
+    MassType newMass = 1.3e-10;
+    particle.setMass(newMass);
+    ASSERT_EQ(newMass, particle.getMass());
+}
+
+TYPED_TEST(ParticleTest, GetSetCharge)
+{
+    Particle particle = randomParticle();
+    ChargeType newCharge = -5.7e-13;
+    particle.setCharge(newCharge);
+    ASSERT_EQ(newCharge, particle.getCharge());
+}
+
+TYPED_TEST(ParticleTest, GetSetFactor) 
+{
+    Particle particle = randomParticle();
+    FactorType newFactor = 6523.54f;
     particle.setFactor(newFactor);
     ASSERT_EQ(newFactor, particle.getFactor());
 }
-
-

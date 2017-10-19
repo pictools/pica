@@ -30,6 +30,12 @@
 // if expected value is not near zero, expect relative error is smaller than
 // m_maxRelativeError, else expect absolute error is smaller than
 // m_maxAbsoluteError.
+#define ASSERT_NEAR_VECTOR(expected, actual) \
+    if (expected.norm() > maxAbsoluteError) \
+        ASSERT_LE(dist(expected, actual) / expected.norm(), maxRelativeError); \
+    else \
+        ASSERT_LE(dist(expected, actual), maxAbsoluteError);
+
 #define ASSERT_NEAR_FP3(expected, actual) \
     if (expected.norm() > maxAbsoluteError) \
         ASSERT_LE(dist(expected, actual) / expected.norm(), maxRelativeError); \
@@ -55,7 +61,7 @@ protected:
     bool eqParticle(const pica::Particle & a, const pica::Particle & b);
 
     // Get uniformly distributed in [a, b) pseudo-random number.
-    pica::FP urand(pica::FP a, pica::FP b);
+    pica::FP urand(pica::FP a, pica::FP b) const;
     int urandInt(int a, int b);
     // Get distributed in [a, b) pseudo-random vector.
     pica::FP3 urandFP3(pica::FP3 a, pica::FP3 b);
@@ -87,6 +93,17 @@ protected:
 };
 
 bool eqParticles(const pica::Particle& a, const pica::Particle& b);
+
+template<class ConstParticleRef>
+bool eqParticles(ConstParticleRef a, ConstParticleRef b)
+{
+    return (a.getPosition() == b.getPosition()) &&
+        (a.getMomentum() == b.getMomentum()) &&
+        (a.getMass() == b.getMass()) &&
+        (a.getCharge() == b.getCharge()) &&
+        (a.getFactor() == b.getFactor());
+}
+
 bool eqParticleSystems(pica::ParticleSystem& a, pica::ParticleSystem& b);
 
 

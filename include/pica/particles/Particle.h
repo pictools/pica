@@ -34,7 +34,7 @@ public:
         charge(0.0) {}
 
     Particle_(const PositionType& position, const MomentumType& momentum,
-        MassType mass, ChargeType charge, FactorType factor) :
+        MassType mass, ChargeType charge, FactorType factor = 1) :
         position(position), momentum(momentum), mass(mass), charge(charge), factor(factor) {}
 
     PositionType getPosition() const { return position; }
@@ -44,9 +44,9 @@ public:
     void setMomentum(const MomentumType& newMomentum) { momentum = newMomentum; }
 
     MomentumType getVelocity() const { return momentum / sqrt(sqr(getMass()) + (momentum / Constants<FP>::c()).norm2()); }
-    void setVelocity(const MomentumType& newVelocity) { momentum = getMass() * Constants<FP>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2()); }
+    void setVelocity(const MomentumType& newVelocity) { momentum = newVelocity * getMass() / sqrt(static_cast<Real>(1.0) - (newVelocity / constants::c).norm2()); }
 
-    GammaType getGamma() const { return sqrt(static_cast<FP>(1) / (static_cast<FP>(1) + (momentum / (getMass() * constants::c)).norm2())); }
+    GammaType getGamma() const { return sqrt(static_cast<FP>(1.0) + (momentum / (getMass() * Constants<GammaType>::c())).norm2()); }
 
     MassType getMass() const { return mass; }
     void setMass(MassType newMass) { mass = newMass; }
