@@ -4,14 +4,14 @@
 
 #include "pica/math/Dimension.h"
 #include "pica/particles/Particle.h"
+#include "pica/particles/ParticleTraits.h"
 
 #include <vector>
 
 
 namespace pica {
 
-
-    
+  
 // Collection of particles with array-like semantics,
 // representation as array of structures
 template<class Particle>
@@ -35,23 +35,87 @@ private:
 
 // Collection of particles with array-like semantics,
 // representation as structure of arrays
-template<typename PositionType, typename MomentumType, typename MassType, typename ChargeType, typename FactorType>
+template<class Particle>
 class ParticleArraySoA {
 public:
 
-    class ParticleRef {
+    class ConstParticleRef {
     public:
-        ParticleRef(ParticleArraySoA& particleArray, int idx) :
-            particleArray(particleArray),
+        ConstParticleRef(const ParticleArraySoA& particles, int idx):
+            particles(particles),
             idx(idx)
         {}
 
-        // ... (Implementation of particle-compatible interface)
+        typedef typename ParticleTraits<Particle>::PositionType PositionType;
+        typedef typename ParticleTraits<Particle>::PositionType MomentumType;
+        typedef typename ParticleTraits<Particle>::GammaType GammaType;
+        typedef typename ParticleTraits<Particle>::MassType MassType;
+        typedef typename ParticleTraits<Particle>::ChargeType ChargeType;
+        typedef typename ParticleTraits<Particle>::FactorType FactorType;
+        const int dimension = VectorDimensionHelper<PositionType>::dimension;
+        const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
+
+        PositionType getPosition() const {
+            PositionType result;
+            for (int d = 0; d < dimension; d++)
+                result[d] = particles.positions[d][idx];
+            return result;
+        }
+
+        MomentumType getMomentum() const {
+            MomentumType result;
+            for (int d = 0; d < momentumDimension; d++)
+                result[d] = particles.momentums[d][idx];
+            return result;
+        }
+
+        MomentumType getVelocity() const { return getMomentum() / sqrt(sqr(getMass()) + (momentum / Constants<FP>::c()).norm2()); }
+ 
+        GammaType getGamma() const { return sqrt(static_cast<GammaType>(1) / (static_cast<GammaType>(1) + (getMomentum() / (getMass() * constants::c)).norm2())); }
+
+        MassType getMass() const { return particles.masses[idx]; }
+ 
+        ChargeType getCharge() const { return particles.charges[idx]; }
+ 
+        FactorType getFactor() const { return particles.factors[idx]; }
+
     private:
-        ParticleArraySoA& particleArray;
+        const ParticleArraySoA& particles;
         int idx;
     };
-    typedef const ParticleRef ConstParticleRef;
+
+    class ParticleRef : public ConstParticleRef {
+    public:
+
+        ParticleRef(ParticleArraySoA& particles, int idx) :
+            ConstParticleRef(particles, idx),
+            particles(particles),
+            idx(idx)
+        {}
+
+        void setPosition(const PositionType& newPosition) {
+            for (int d = 0; d < dimension; d++)
+                particles.positions[d][idx] = newPosition[d];
+        }
+
+        void setMomentum(const MomentumType& newMomentum) { 
+            for (int d = 0; d < momentumDimension; d++)
+                particles.momentums[d][idx] = newMomentum[d];
+        }
+
+        void setVelocity(const MomentumType& newVelocity) { setMomentum(getMass() * Constants<GammaType>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2())); }
+
+        void setMass(MassType newMass) { particles.masses[idx] = newMass; }
+
+        void setCharge(ChargeType newCharge) { particles.charges[idx] = newCharge; }
+
+        void setFactor(FactorType newFactor) { particles.factors[idx] = newFactor; }
+
+    private:
+        // These intentionally overshadow members of ConstParticleRef
+        ParticleArraySoA& particles;
+        int idx;
+    };
 
     int size() const { return positions.size(); }
 
@@ -62,11 +126,11 @@ public:
 
 private:
 
-    std::vector<ScalarType<PositionType> > positions[VectorDimensionHelper<PositionType>::dimension];
-    std::vector<ScalarType<MomentumType> > momentums[VectorDimensionHelper<MomentumType>::dimension];
-    std::vector<MassType> masses;
-    std::vector<ChargeType> charges;
-    std::vector<FactorType> factors;
+    std::vector<ScalarType<ParticleRef::PositionType> > positions[ParticleRef::dimension];
+    std::vector<ScalarType<ParticleRef::MomentumType> > momentums[ParticleRef::momentumDimension];
+    std::vector<ParticleRef::MassType> masses;
+    std::vector<ParticleRef::ChargeType> charges;
+    std::vector<ParticleRef::FactorType> factors;
 
     friend class ParticleRef;
     friend class ConstParticleRef;
