@@ -3,14 +3,16 @@ include_directories(
 	src)
 
 add_executable(benchmark
+    src/Output.h
     src/Parameters.h
     src/Parser.h
     src/PerformanceTracker.h
     src/Timer.h
-	
+
     src/Main.cpp
+    src/Output.cpp
 	src/Parser.cpp
-    src/PerformanceTracker.cpp	
+    src/PerformanceTracker.cpp
     src/Timer.cpp)
 	
 if (APPLE)
