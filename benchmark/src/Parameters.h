@@ -8,10 +8,8 @@
 // in lower dimensions some components are not used
 struct Parameters {
     int dimension;
-    pica::Vector3<double> minPosition, maxPosition;
     pica::Vector3<int> numCells;
     int numIterations;
-    double dt;
 };
 
 
