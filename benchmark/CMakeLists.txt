@@ -4,8 +4,10 @@ include_directories(
 
 add_executable(benchmark
     src/Parameters.h
+    src/Parser.h
 	
-    src/Main.cpp)
+    src/Main.cpp
+	src/Parser.cpp)
 	
 if (APPLE)
     target_link_libraries(benchmark

@@ -2,6 +2,7 @@
 #include "pica/threading/OpenMPHelper.h"
 
 #include "Parameters.h"
+#include "Parser.h"
 
 #include <iostream>
 #include <string>
@@ -32,7 +33,7 @@ int realMain(int argc, char* argv[])
         message += "OpenMP disabled.";
     cout << message << "\n\n";
 
-    Parameters parameters;
+    Parameters parameters = readParameters(argc, argv);
 
     return 0;
 }
