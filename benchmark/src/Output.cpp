@@ -16,6 +16,11 @@ using namespace std;
 
 map<PerformanceTracker::Stage, string> getStageNames();
 
+string getPrefix()
+{
+    return "   ";
+}
+
 void printHeader()
 {
     string message = "pica benchmark, ";
@@ -28,19 +33,21 @@ void printHeader()
 
 void printParameters(const Parameters& parameters)
 {
+    string prefix = getPrefix();
     cout << "\nParameters:\n";
-    cout << "Dimension = " << parameters.dimension << "\n";
-    cout << "Grid size = " << toString(parameters.numCells) << "\n";
-    cout << parameters.numIterations << " time steps\n";
+    cout << prefix << "Dimension = " << parameters.dimension << "\n";
+    cout << prefix << "Grid size = " << toString(parameters.numCells) << "\n";
+    cout << prefix << parameters.numIterations << " time steps\n";
 }
 
 void printPerformance(const PerformanceTracker& tracker)
 {
+    string prefix = getPrefix();
     cout << "\nPerformance results:\n";
     map<PerformanceTracker::Stage, string> stageNames = getStageNames();
     PerformanceTracker::StageTime stageTime = tracker.getStageTime();
     for (PerformanceTracker::StageTime::iterator i = stageTime.begin(); i != stageTime.end(); i++)
-        cout << stageNames[i->first] << ": " << i->second << " sec.\n";
+        cout << prefix << stageNames[i->first] << ": " << i->second << " sec.\n";
 }
 
 map<PerformanceTracker::Stage, string> getStageNames()
