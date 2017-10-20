@@ -113,8 +113,15 @@ public:
     {
         Real minPosition = -10;
         Real maxPosition = 10;
-        PositionType position = getPosition(urand(minPosition, maxPosition),
-            urand(minPosition, maxPosition), urand(minPosition, maxPosition));
+        return randomParticle(getPosition(minPosition, minPosition, minPosition),
+            getPosition(maxPosition, maxPosition, maxPosition));
+    }
+
+    Particle randomParticle(PositionType minPosition, PositionType maxPosition) const
+    {
+        PositionType position;
+        for (int d = 0; d < dimension; d++)
+            position[d] = urand(minPosition[d], maxPosition[d]);
         Real minMomentum = -10;
         Real maxMomentum = 10;
         MomentumType momentum(urand(minMomentum, maxMomentum),

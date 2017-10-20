@@ -3,12 +3,85 @@
 
 
 #include "pica/particles/Particle.h"
+#include "pica/particles/ParticleTraits.h"
 #include "pica/particles/ParticleSystem.h"
 #include "pica/threading/OpenMPHelper.h"
 
+#include <algorithm>
 #include <vector>
 
 namespace pica {
+
+
+
+// Representation of particles in an unordered array
+// Particle are stored by ParticleArray class
+template<class ParticleArray>
+class EnsembleUnordered {
+public:
+    typedef typename ParticleArray::Particle Particle;
+    typedef typename ParticleTraits<Particle>::PositionType PositionType;
+
+    EnsembleUnordered(PositionType minPosition, PositionType maxPosition) :
+        minPosition(minPosition),
+        maxPosition(maxPosition)
+    {}
+
+    int size() const { return particles.size(); }
+
+    template<class ConstParticleRef>
+    void add(ConstParticleRef particle) { particles.pushBack(particle); }
+
+protected:
+    ParticleArray particles;
+    PositionType minPosition, maxPosition;
+};
+
+
+// Representation of particles in an unordered array
+// Particle are stored by ParticleArray class
+template<class ParticleArray>
+class EnsembleOrdered : public EnsembleUnordered<ParticleArray> {
+public:
+    EnsembleOrdered(PositionType minPosition, PositionType maxPosition):
+        EnsembleUnordered(minPosition, maxPosition)
+    {}
+
+    void reorder()
+    {
+        struct ParticleIndexComparator {
+            ParticleIndexComparator(const ParticleArray& particles) :
+                particles(particles),
+                dimension(VectorDimensionHelper<PositionType>::dimension)
+            {}
+
+            bool operator()(int first, int second)
+            {
+                for (int d = 0; d < dimension; d++)
+                    if (particles[first].getPosition()[d] < particles[second].getPosition()[d])
+                        return true;
+                    else if (particles[first].getPosition()[d] > particles[second].getPosition()[d])
+                        return false;
+                return false;
+            }
+
+        private:
+            const ParticleArray& particles;
+            const int dimension;
+        };
+
+        std::vector<int> indexes(particles.size());
+        for (int i = 0; i < indexes.size(); i++)
+            indexes[i] = i;
+        std::sort(indexes.begin(), indexes.end(), ParticleIndexComparator(particles));
+        ParticleArray newParticles;
+        for (int i = 0; i < indexes.size(); i++)
+            newParticles.pushBack(particles[indexes[i]]);
+        particles = newParticles;
+    }
+};
+
+
 
 // Class for accessing to particles via internal iterator.
 class Ensemble
