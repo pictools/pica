@@ -86,6 +86,11 @@ if (MSVC)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(benchmark)
+add_custom_target(post_benchmark ALL DEPENDS benchmark
+			      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:benchmark>
+                                                                ${ROOT_DIR}/bin/$<TARGET_FILE_NAME:benchmark>)
+set_target_properties(post_benchmark PROPERTIES FOLDER BuildInfrastructure)
 
 if (USE_TESTS)
 	add_subdirectory(test)
@@ -96,12 +101,12 @@ if (USE_TESTS)
 
 	add_custom_target(post_tests ALL DEPENDS tests
 					  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:tests>
-                                                                ${ROOT_DIR}/test/${TESTS})
+                                                                ${ROOT_DIR}/bin/${TESTS})
 	set_target_properties(post_tests PROPERTIES FOLDER BuildInfrastructure)
 
 	if (NOT USE_MIC)
 		add_custom_target(run_tests ALL DEPENDS post_tests
-                          COMMAND ${ROOT_DIR}/test/${TESTS})
+                          COMMAND ${ROOT_DIR}/bin/${TESTS})
 		set_target_properties(run_tests PROPERTIES FOLDER BuildInfrastructure)
 	endif()
 endif()
