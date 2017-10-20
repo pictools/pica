@@ -10,6 +10,7 @@ struct Parameters {
     int dimension;
     pica::Vector3<int> numCells;
     int numIterations;
+    int numThreads;
 };
 
 

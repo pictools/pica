@@ -23,21 +23,20 @@ string getPrefix()
 
 void printHeader()
 {
-    string message = "pica benchmark, ";
-    if (useOpenMP())
-        message += toString(getNumThreads()) + " OpenMP threads.";
-    else
-        message += "OpenMP disabled.";
-    cout << message << "\n";
+    cout << "pica benchmark\n";
 }
 
 void printParameters(const Parameters& parameters)
 {
     string prefix = getPrefix();
     cout << "\nParameters:\n";
-    cout << prefix << "Dimension = " << parameters.dimension << "\n";
-    cout << prefix << "Grid size = " << toString(parameters.numCells) << "\n";
-    cout << prefix << parameters.numIterations << " time steps\n";
+    if (useOpenMP())
+        cout << prefix << toString(getNumThreads()) + " OpenMP threads\n";
+    else
+        cout << prefix << "OpenMP is disabled\n";
+    cout << prefix << "Dimension: " << parameters.dimension << "\n";
+    cout << prefix << "Grid size: " << toString(parameters.numCells) << "\n";
+    cout << prefix << "Time iterations: " << parameters.numIterations << "\n";
 }
 
 void printPerformance(const PerformanceTracker& tracker)

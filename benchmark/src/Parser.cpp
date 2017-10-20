@@ -1,6 +1,6 @@
 #include "Parser.h"
 
-#include "pica/math/Constants.h"
+#include "pica/threading/OpenMPHelper.h"
 
 using namespace pica;
 
@@ -12,5 +12,6 @@ Parameters readParameters(int argc, char* argv[])
     parameters.dimension = 3;
     parameters.numCells = Vector3<int>(32, 32, 32);
     parameters.numIterations = 100;
+    parameters.numThreads = getNumThreads();
     return parameters;
 }
