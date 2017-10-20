@@ -1,13 +1,38 @@
-#include <iostream>
+#include "pica/utility/Utility.h"
+#include "pica/threading/OpenMPHelper.h"
 
-#include "pica/particles/Ensemble.h"
+#include "Parameters.h"
+
+#include <iostream>
+#include <string>
 
 using namespace pica;
 using namespace std;
 
 
-int main()
+int realMain(int argc, char* argv[]);
+
+int main(int argc, char* argv[])
 {
-    cout << "pica benchmark: \n";
+    try {
+        return realMain(argc, argv);
+    }
+    catch (...) {
+        cout << "ERROR: Unhandled exception\n";
+        return EXIT_FAILURE;
+    }
+}
+
+int realMain(int argc, char* argv[])
+{
+    string message = "pica benchmark, ";
+    if (useOpenMP())
+        message += toString(getNumThreads()) + " OpenMP threads.";
+    else
+        message += "OpenMP disabled.";
+    cout << message << "\n\n";
+
+    Parameters parameters;
+
     return 0;
 }

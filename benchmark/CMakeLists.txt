@@ -3,6 +3,8 @@ include_directories(
 	src)
 
 add_executable(benchmark
+    src/Parameters.h
+	
     src/Main.cpp)
 	
 if (APPLE)
