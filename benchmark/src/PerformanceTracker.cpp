@@ -5,6 +5,7 @@
 
 PerformanceTracker::PerformanceTracker()
 {
+    stageTimer.reset(createStopwatch());
     for (int i = 0; i < numStages; i++)
         stageTime[Stage(i)] = 0.0;
 }
