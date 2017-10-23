@@ -11,7 +11,7 @@ Parameters readParameters(int argc, char* argv[])
     Parameters parameters;
     parameters.dimension = 3;
     parameters.numCells = Vector3<int>(32, 32, 32);
-    parameters.numIterations = 100;
+    parameters.numIterations = 10;
     parameters.numThreads = getNumThreads();
     return parameters;
 }

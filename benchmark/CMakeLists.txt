@@ -3,6 +3,7 @@ include_directories(
 	src)
 
 add_executable(benchmark
+    src/GridHelper.h
     src/Output.h
     src/Parameters.h
     src/Parser.h
