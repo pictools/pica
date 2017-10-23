@@ -5,6 +5,7 @@
 #include "pica/grid/YeeGrid.h"
 #include "pica/math/Dimension.h"
 #include "pica/math/Vectors.h"
+#include "pica/threading/OpenMPHelper.h"
 
 #include <memory>
 
@@ -72,8 +73,9 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Two, Real>> {
         int numGhostCells = getNumGhostCells();
         IndexType numCells = grid.getSize();
         IndexType numInternalCells = getNumInternalCells(grid, numGhostCells);
-        for (int i = 0; i < numGhostCells; i++)
-            for (int j = 0; j < numCells.y; j++) {
+        #pragma omp parallel for
+        for (int j = 0; j < numCells.y; j++)
+            for (int i = 0; i < numGhostCells; i++) {
                 grid.ex(i, j) = grid.ex(i + numInternalCells.x, j);
                 grid.ey(i, j) = grid.ey(i + numInternalCells.x, j);
                 grid.ez(i, j) = grid.ez(i + numInternalCells.x, j);
@@ -81,6 +83,7 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Two, Real>> {
                 grid.ey(numInternalCells.x + numGhostCells + i, j) = grid.ey(numGhostCells + i, j);
                 grid.ez(numInternalCells.x + numGhostCells + i, j) = grid.ez(numGhostCells + i, j);
             }
+        #pragma omp parallel for
         for (int i = 0; i < numCells.x; i++)
             for (int j = 0; j < numGhostCells; j++) {
                 grid.ex(i, j) = grid.ex(i, j + numInternalCells.y);
@@ -101,9 +104,10 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Three, Real>> {
         int numGhostCells = getNumGhostCells();
         IndexType numCells = grid.getSize();
         IndexType numInternalCells = getNumInternalCells(grid, numGhostCells);
-        for (int i = 0; i < numGhostCells; i++)
-            for (int j = 0; j < numCells.y; j++)
-                for (int k = 0; k < numCells.z; k++) {
+        #pragma omp parallel for collapse(2)
+        for (int j = 0; j < numCells.y; j++)
+            for (int k = 0; k < numCells.z; k++)
+                for (int i = 0; i < numGhostCells; i++) {
                     grid.ex(i, j, k) = grid.ex(i + numInternalCells.x, j, k);
                     grid.ey(i, j, k) = grid.ey(i + numInternalCells.x, j, k);
                     grid.ez(i, j, k) = grid.ez(i + numInternalCells.x, j, k);
@@ -111,9 +115,10 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Three, Real>> {
                     grid.ey(numInternalCells.x + numGhostCells + i, j, k) = grid.ey(numGhostCells + i, j, k);
                     grid.ez(numInternalCells.x + numGhostCells + i, j, k) = grid.ez(numGhostCells + i, j, k);
                 }
+        #pragma omp parallel for collapse(2)
         for (int i = 0; i < numCells.x; i++)
-            for (int j = 0; j < numGhostCells; j++)
-                for (int k = 0; k < numCells.z; k++) {
+            for (int k = 0; k < numCells.z; k++)
+                for (int j = 0; j < numGhostCells; j++) {
                     grid.ex(i, j, k) = grid.ex(i, j + numInternalCells.y, k);
                     grid.ey(i, j, k) = grid.ey(i, j + numInternalCells.y, k);
                     grid.ez(i, j, k) = grid.ez(i, j + numInternalCells.y, k);
@@ -121,6 +126,7 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Three, Real>> {
                     grid.ey(i, numInternalCells.y + numGhostCells + j, k) = grid.ey(i, numGhostCells + j, k);
                     grid.ez(i, numInternalCells.y + numGhostCells + j, k) = grid.ez(i, numGhostCells + j, k);
                 }
+        #pragma omp parallel for collapse(2)
         for (int i = 0; i < numCells.x; i++)
             for (int j = 0; j < numCells.y; j++)
                 for (int k = 0; k < numGhostCells; k++) {
