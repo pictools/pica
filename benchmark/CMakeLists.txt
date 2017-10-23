@@ -7,12 +7,14 @@ add_executable(benchmark
     src/Parameters.h
     src/Parser.h
     src/PerformanceTracker.h
+    src/Simulation.h
     src/Timer.h
 
     src/Main.cpp
     src/Output.cpp
 	src/Parser.cpp
     src/PerformanceTracker.cpp
+    src/Simulation.cpp	
     src/Timer.cpp)
 	
 if (APPLE)

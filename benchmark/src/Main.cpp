@@ -2,6 +2,7 @@
 #include "Parameters.h"
 #include "Parser.h"
 #include "PerformanceTracker.h"
+#include "Simulation.h"
 
 #include <iostream>
 #include <map>
@@ -30,6 +31,7 @@ int realMain(int argc, char* argv[])
     Parameters parameters = readParameters(argc, argv);
     printParameters(parameters);
     PerformanceTracker tracker;
+    runSimulation(parameters, tracker);
     printPerformance(tracker);
     return 0;
 }
