@@ -33,6 +33,7 @@ typedef void* omp_lock_t;
 inline int omp_get_max_threads() { return 1; }
 inline int omp_get_thread_num() { return 0; }
 inline int omp_get_num_threads() { return 1; }
+inline void omp_set_num_threads() {}
 inline void omp_init_lock(omp_lock_t *) {}
 inline void omp_set_lock(omp_lock_t *) {}
 inline void omp_unset_lock(omp_lock_t *) {}
