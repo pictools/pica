@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <string>
 
 using namespace pica;
@@ -18,6 +19,11 @@ int main(int argc, char* argv[])
 {
     try {
         return realMain(argc, argv);
+    }
+    catch (std::exception& e) {
+        cout << "ERROR: Unhandled exception with message '" << e.what()
+            << "', benchmark terminated\n";
+        return EXIT_FAILURE;
     }
     catch (...) {
         cout << "ERROR: Unhandled exception, benchmark terminated\n";
