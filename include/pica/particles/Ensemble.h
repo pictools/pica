@@ -20,6 +20,8 @@ template<class ParticleArray>
 class EnsembleUnordered {
 public:
     typedef typename ParticleArray::Particle Particle;
+    typedef typename ParticleArray::ParticleRef ParticleRef;
+    typedef typename ParticleArray::ConstParticleRef ConstParticleRef;
     typedef typename ParticleTraits<Particle>::PositionType PositionType;
 
     EnsembleUnordered(PositionType minPosition, PositionType maxPosition) :
@@ -31,6 +33,10 @@ public:
 
     template<class ConstParticleRef>
     void add(ConstParticleRef particle) { particles.pushBack(particle); }
+
+    // Specific to this class
+    ParticleRef operator[](int idx) { return particles[idx]; }
+    ConstParticleRef operator[](int idx) const { return particles[idx]; }
 
 protected:
     ParticleArray particles;
