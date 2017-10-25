@@ -7,6 +7,7 @@ add_executable(benchmark
     src/Output.h
     src/Parameters.h
     src/Parser.h
+    src/ParticleProcessing.h	
     src/PerformanceTracker.h
     src/Simulation.h
     src/Timer.h

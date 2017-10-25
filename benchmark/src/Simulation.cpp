@@ -2,6 +2,7 @@
 
 #include "GridHelper.h"
 #include "Parameters.h"
+#include "ParticleProcessing.h"
 #include "PerformanceTracker.h"
 
 #include "pica/fieldSolver/YeeSolver.h"
@@ -25,19 +26,24 @@ using namespace pica;
 template<class Grid, class FieldSolver>
 void updateField(Grid& grid, FieldSolver& fieldSolver, double dt, PerformanceTracker& tracker)
 {
-    tracker.start(PerformanceTracker::Stage_FieldSolver);
     fieldSolver.updateB(grid, dt / 2.0);
     fieldSolver.updateE(grid, dt);
     FieldBoundaryConditions<Grid>().apply(grid);
     fieldSolver.updateB(grid, dt / 2.0);
-    tracker.finish(PerformanceTracker::Stage_FieldSolver);
 }
 
 
-template<class Grid, class FieldSolver>
-void runIteration(Grid& grid, FieldSolver& fieldSolver, double dt, PerformanceTracker& tracker)
+template<class Ensemble, class Grid, class ParticleProcessing, class FieldSolver>
+void runIteration(Ensemble& ensemble, Grid& grid, ParticleProcessing& particleProcessing,
+    FieldSolver& fieldSolver, double dt, PerformanceTracker& tracker)
 {
+    tracker.start(PerformanceTracker::Stage_FieldSolver);
     updateField(grid, fieldSolver, dt, tracker);
+    tracker.finish(PerformanceTracker::Stage_FieldSolver);
+
+    tracker.start(PerformanceTracker::Stage_ParticleLoop);
+    particleProcessing.process(ensemble, grid, dt);
+    tracker.finish(PerformanceTracker::Stage_ParticleLoop);
 }
 
 
@@ -66,13 +72,17 @@ double getNormal()
 
 
 template<class Ensemble>
-void createParticles(const Parameters& parameters, typename Ensemble::PositionType minPosition,
-    typename Ensemble::PositionType maxPosition, Ensemble& ensemble)
+void createParticles(const Parameters& parameters, Ensemble& ensemble)
 {
     srand(0);
     typedef typename Ensemble::PositionType PositionType;
     typedef typename ParticleTraits<typename Ensemble::Particle>::MomentumType MomentumType;
-    int numParticles = parameters.numCells.volume() * parameters.particlesPerCell;
+    int numCells = 1;
+    for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+        numCells *= parameters.numCells[d];
+    int numParticles = numCells * parameters.particlesPerCell;
+    PositionType minPosition = ensemble.getMinPosition();
+    PositionType maxPosition = ensemble.getMaxPosition();
     for (int i = 0; i < numParticles; i++) {
         typename Ensemble::Particle particle;
         particle.setMass(constants::electronMass);
@@ -114,12 +124,13 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
     PositionType step = (maxPosition - minPosition) / PositionType(numCells);
     std::auto_ptr<Grid> grid = createGrid<Grid>(minPosition, maxPosition, numCells);
     Ensemble ensemble(minPosition, maxPosition);
-    createParticles(parameters, minPosition, maxPosition, ensemble);
+    createParticles(parameters, ensemble);
+    ParticleProcessing<Ensemble, Grid> particleProcessing(parameters);
     YeeSolver fieldSolver;
     Real timeStep = getTimeStep<PositionType, Real>(step);
     omp_set_num_threads(parameters.numThreads);
     for (int i = 0; i < parameters.numIterations; i++)
-        runIteration(*grid, fieldSolver, timeStep, tracker);
+        runIteration(ensemble, *grid, particleProcessing, fieldSolver, timeStep, tracker);
 }
 
 template<Dimension dimension, class Particle, class ParticleArray>
