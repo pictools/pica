@@ -77,7 +77,7 @@ public:
             return result;
         }
 
-        MomentumType getVelocity() const { return getMomentum() / sqrt(sqr(getMass()) + (momentum / Constants<FP>::c()).norm2()); }
+        MomentumType getVelocity() const { return getMomentum() / sqrt(sqr(getMass()) + (getMomentum() / Constants<FP>::c()).norm2()); }
  
         GammaType getGamma() const { return sqrt(static_cast<GammaType>(1) / (static_cast<GammaType>(1) + (getMomentum() / (getMass() * constants::c)).norm2())); }
 
