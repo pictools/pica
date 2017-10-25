@@ -54,6 +54,8 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Dimension: " << parameters.dimension << "\n";
     cout << prefix << "Grid size: " << toString(parameters.numCells) << "\n";
     cout << prefix << "Time iterations: " << parameters.numIterations << "\n";
+    cout << prefix << "Particles per cell: " << parameters.particlesPerCell << "\n";
+    cout << prefix << "Particles temperature: " << parameters.temperature << "\n";
     cout << prefix << "Particle representation: " << toString(parameters.particleRepresentation) << "\n";
     cout << prefix << "Ensemble representation: " << toString(parameters.ensembleRepresentation) << "\n";
 }
