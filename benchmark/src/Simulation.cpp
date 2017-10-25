@@ -10,9 +10,12 @@
 #include "pica/math/Constants.h"
 #include "pica/math/Vectors.h"
 #include "pica/particles/Particle.h"
+#include "pica/particles/ParticleTraits.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"
 
+#include <cstdlib>
+#include <limits>
 #include <memory>
 #include <stdexcept>
 
@@ -48,7 +51,55 @@ Real getTimeStep(Position step)
 }
 
 
-template<Dimension dimension, class Particle, class ParticleArray>
+double getNormal()
+{
+    double result;
+    do
+    {
+        double u1 = (double)rand() / (double)RAND_MAX;
+        double u2 = (double)rand() / (double)RAND_MAX;
+        result = std::sqrt(-2 * std::log(u1)) * std::cos(2 * constants::pi * u2);
+    } while (!(result <= std::numeric_limits<double>::max()
+        && result >= -std::numeric_limits<double>::max()));
+    return result;
+}
+
+
+template<class Ensemble>
+void createParticles(const Parameters& parameters, typename Ensemble::PositionType minPosition,
+    typename Ensemble::PositionType maxPosition, Ensemble& ensemble)
+{
+    srand(0);
+    typedef typename Ensemble::PositionType PositionType;
+    typedef typename ParticleTraits<typename Ensemble::Particle>::MomentumType MomentumType;
+    int numParticles = parameters.numCells.volume() * parameters.particlesPerCell;
+    for (int i = 0; i < numParticles; i++) {
+        typename Ensemble::Particle particle;
+        particle.setMass(constants::electronMass);
+        particle.setCharge(constants::electronCharge);
+        particle.setFactor(1.0);
+        PositionType position;
+        for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+            position[d] = minPosition[d] + (maxPosition[d] - minPosition[d]) *
+                (double)rand() / (double)RAND_MAX;
+        particle.setPosition(position);
+        // The standard deviation is sqrt(1/(2*alpha)), where alpha is
+        // 3/2 * ((T/mc^2 + 1)^2 - 1)^(-1)
+        double alpha = parameters.temperature / particle.getMass() / constants::c / constants::c + 1;
+        alpha = 1.5 / (alpha * alpha - 1);
+        double sigma = sqrt(0.5 / alpha) * particle.getMass() * constants::c;
+        // Initial particle momentum is combination of given initial
+        // momentum based on coords and random term in N(0, sigma)
+        MomentumType momentum;
+        for (int d = 0; d < VectorDimensionHelper<MomentumType>::dimension; d++)
+            momentum[d] = getNormal() * sigma;
+        particle.setMomentum(momentum);
+        ensemble.add(particle);
+    }
+}
+
+
+template<Dimension dimension, class Particle, class ParticleArray, class Ensemble>
 void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 {
     typedef YeeGrid<dimension> Grid;
@@ -62,12 +113,32 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
         numCells[d] = parameters.numCells[d];
     PositionType step = (maxPosition - minPosition) / PositionType(numCells);
     std::auto_ptr<Grid> grid = createGrid<Grid>(minPosition, maxPosition, numCells);
+    Ensemble ensemble(minPosition, maxPosition);
+    createParticles(parameters, minPosition, maxPosition, ensemble);
     YeeSolver fieldSolver;
     Real timeStep = getTimeStep<PositionType, Real>(step);
     omp_set_num_threads(parameters.numThreads);
     for (int i = 0; i < parameters.numIterations; i++)
         runIteration(*grid, fieldSolver, timeStep, tracker);
 }
+
+template<Dimension dimension, class Particle, class ParticleArray>
+void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
+{
+    switch (parameters.ensembleRepresentation) {
+        case EnsembleRepresentation_Unordered:
+            runSimulation<dimension, Particle, ParticleArray,
+                Ensemble_<ParticleArray, EnsembleRepresentation_Unordered>::Type>(parameters, tracker);
+            break;
+        case EnsembleRepresentation_Ordered:
+            runSimulation<dimension, Particle, ParticleArray,
+                Ensemble_<ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
+            break;
+        default:
+            throw std::invalid_argument("wrong value of ensemble representation");
+    }
+}
+
 
 template<Dimension dimension, class Particle>
 void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
