@@ -82,6 +82,24 @@ public:
 };
 
 
+enum EnsembleRepresentation { EnsembleRepresentation_Unordered, EnsembleRepresentation_Ordered };
+
+// Traits class to provide a Type corresponding to array of particles
+// according to the given representation
+template<class ParticleArray, EnsembleRepresentation storage>
+struct Ensemble_ {
+};
+
+template<class ParticleArray>
+struct Ensemble_<ParticleArray, EnsembleRepresentation_Unordered> {
+    typedef EnsembleUnordered<ParticleArray> Type;
+};
+
+template<class ParticleArray>
+struct Ensemble_<ParticleArray, EnsembleRepresentation_Ordered> {
+    typedef EnsembleOrdered<ParticleArray> Type;
+};
+
 
 // Class for accessing to particles via internal iterator.
 class Ensemble
