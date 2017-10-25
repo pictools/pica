@@ -29,6 +29,9 @@ public:
         maxPosition(maxPosition)
     {}
 
+    PositionType getMinPosition() const { return minPosition; }
+    PositionType getMaxPosition() const { return maxPosition; }
+
     int size() const { return particles.size(); }
 
     template<class ConstParticleRef>
