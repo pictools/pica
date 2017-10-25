@@ -158,7 +158,7 @@ public:
     const ValueType& operator()(IndexType index) const
     {
         PICA_ASSERT((index.x >= 0) && (index.x < size.x) && (index.y >= 0) && (index.y < size.y) && (index.z >= 0) && (index.z < size.z));
-        return raw[(index.x * size.y + index.y) * size.z + index.z];
+        return data[(index.x * size.y + index.y) * size.z + index.z];
     }
 
 private:
