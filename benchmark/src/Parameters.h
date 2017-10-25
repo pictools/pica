@@ -1,7 +1,10 @@
 #ifndef PICA_BENCHMARK_PARAMETERS_H
 #define PICA_BENCHMARK_PARAMETERS_H
 
+
 #include "pica/math/Vectors.h"
+#include "pica/particles/Ensemble.h"
+#include "pica/particles/ParticleArray.h"
 
 
 // All parameters are given as in 3D,
@@ -11,6 +14,8 @@ struct Parameters {
     pica::Vector3<int> numCells;
     int numIterations;
     int numThreads;
+    pica::ParticleRepresentation particleRepresentation;
+    pica::EnsembleRepresentation ensembleRepresentation;
 };
 
 

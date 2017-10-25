@@ -1,5 +1,6 @@
 #include "Output.h"
 
+#include "Parameters.h"
 #include "Parser.h"
 #include "PerformanceTracker.h"
 
@@ -26,6 +27,22 @@ void printHeader()
     cout << "pica benchmark\n";
 }
 
+string toString(ParticleRepresentation particleRepresentation)
+{
+    map<ParticleRepresentation, string> names;
+    names[ParticleRepresentation_AoS] = "AoS";
+    names[ParticleRepresentation_SoA] = "SoA";
+    return names[particleRepresentation];
+}
+
+string toString(EnsembleRepresentation ensembleRepresentation)
+{
+    map<EnsembleRepresentation, string> names;
+    names[EnsembleRepresentation_Unordered] = "unordered";
+    names[EnsembleRepresentation_Ordered] = "ordered";
+    return names[ensembleRepresentation];
+}
+
 void printParameters(const Parameters& parameters)
 {
     string prefix = getPrefix();
@@ -37,6 +54,8 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Dimension: " << parameters.dimension << "\n";
     cout << prefix << "Grid size: " << toString(parameters.numCells) << "\n";
     cout << prefix << "Time iterations: " << parameters.numIterations << "\n";
+    cout << prefix << "Particle representation: " << toString(parameters.particleRepresentation) << "\n";
+    cout << prefix << "Ensemble representation: " << toString(parameters.ensembleRepresentation) << "\n";
 }
 
 void printPerformance(const PerformanceTracker& tracker)

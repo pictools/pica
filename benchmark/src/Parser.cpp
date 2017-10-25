@@ -13,5 +13,7 @@ Parameters readParameters(int argc, char* argv[])
     parameters.numCells = Vector3<int>(32, 32, 32);
     parameters.numIterations = 10;
     parameters.numThreads = getNumThreads();
+    parameters.particleRepresentation = ParticleRepresentation_AoS;
+    parameters.ensembleRepresentation = EnsembleRepresentation_Unordered;
     return parameters;
 }

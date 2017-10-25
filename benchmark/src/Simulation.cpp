@@ -9,6 +9,7 @@
 #include "pica/grid/YeeGrid.h"
 #include "pica/math/Constants.h"
 #include "pica/math/Vectors.h"
+#include "pica/particles/Particle.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"
 
@@ -47,7 +48,7 @@ Real getTimeStep(Position step)
 }
 
 
-template<Dimension dimension>
+template<Dimension dimension, class Particle, class ParticleArray>
 void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 {
     typedef YeeGrid<dimension> Grid;
@@ -68,18 +69,33 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
         runIteration(*grid, fieldSolver, timeStep, tracker);
 }
 
+template<Dimension dimension, class Particle>
+void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
+{
+    switch (parameters.particleRepresentation) {
+        case ParticleRepresentation_AoS:
+            runSimulation<dimension, Particle, ParticleArray<Particle, ParticleRepresentation_AoS>::Type>(parameters, tracker);
+            break;
+        case ParticleRepresentation_SoA:
+            runSimulation<dimension, Particle, ParticleArray<Particle, ParticleRepresentation_SoA>::Type>(parameters, tracker);
+            break;
+        default:
+            throw std::invalid_argument("wrong value of particle representation");
+    }
+}
+
 
 void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 {
     switch (parameters.dimension) {
         case 1:
-            runSimulation<One>(parameters, tracker);
+            runSimulation<One, Particle1d>(parameters, tracker);
             break;
         case 2:
-            runSimulation<Two>(parameters, tracker);
+            runSimulation<Two, Particle2d>(parameters, tracker);
             break;
         case 3:
-            runSimulation<Three>(parameters, tracker);
+            runSimulation<Three, Particle3d>(parameters, tracker);
             break;
         default:
             throw std::invalid_argument("wrong value of dimension: " + toString(parameters.dimension));
