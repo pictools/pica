@@ -11,6 +11,8 @@
 #include "pica/particlePush/BorisPusher.h"
 #include "pica/threading/OpenMPHelper.h"
 
+#include <algorithm>
+
 
 template<class Ensemble, class Grid>
 struct ParticleProcessing {
@@ -19,31 +21,33 @@ struct ParticleProcessing {
 };
 
 
-template<class ParticleArray, class Grid>
-struct ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
-    typedef pica::EnsembleUnordered<ParticleArray> Ensemble;
+namespace internal {
+
+template<class Ensemble, class ParticleArray, class Grid>
+class ParticleArrayProcessing {
+public:
     typedef typename Ensemble::Particle Particle;
     typedef typename Ensemble::ParticleRef ParticleRef;
     typedef typename pica::ParticleTraits<Particle>::MomentumType MomentumType;
     typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
 
-    ParticleProcessing(const Parameters&) {}
-    void process(Ensemble& ensemble, Grid& grid, double dt)
+    ParticleArrayProcessing(const Ensemble& ensemble) :
+        minPosition(ensemble.getMinPosition()),
+        maxPosition(ensemble.getMaxPosition())
+    {}
+
+    void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
     {
         pica::BorisPusher pusher;
         pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
-        PositionType minPosition = ensemble.getMinPosition();
-        PositionType maxPosition = ensemble.getMaxPosition();
-        const int numParticles = ensemble.size();
-        #pragma omp parallel for
-        for (int i = 0; i < numParticles; i++) {
+        for (int i = beginIdx; i < endIdx; i++) {
             MomentumType e, b;
-            fieldInterpolator.get(ensemble[i].getPosition(), e, b);
-            pusher.push<ParticleRef, MomentumType, PositionType, double>(ensemble[i], e, b, dt);
+            fieldInterpolator.get(particles[i].getPosition(), e, b);
+            pusher.push<ParticleRef, MomentumType, PositionType, double>(particles[i], e, b, dt);
 
             // reflecting boundary conditions
-            PositionType position = ensemble[i].getPosition();
-            MomentumType momentum = ensemble[i].getMomentum();
+            PositionType position = particles[i].getPosition();
+            MomentumType momentum = particles[i].getMomentum();
             for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
                 if (position[d] < minPosition[d]) {
                     position[d] = 2 * minPosition[d] - position[d];
@@ -53,10 +57,47 @@ struct ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
                     position[d] = 2 * maxPosition[d] - position[d];
                     momentum[d] = -momentum[d];
                 }
-            ensemble[i].setPosition(position);
-            ensemble[i].setMomentum(momentum);
+            particles[i].setPosition(position);
+            particles[i].setMomentum(momentum);
         }
     }
+
+private:
+    PositionType minPosition, maxPosition;
+
+};
+
+}
+
+
+template<class ParticleArray, class Grid>
+struct ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
+    typedef pica::EnsembleUnordered<ParticleArray> Ensemble;
+
+    ParticleProcessing(const Parameters& ) {}
+
+    void process(Ensemble& ensemble, Grid& grid, double dt)
+    {
+        internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid> particleArrayProcessing(ensemble);
+        process(particleArrayProcessing, ensemble, grid, dt);
+    }
+
+private:
+
+    template<class ParticleArrayProcessing>
+    void process(ParticleArrayProcessing& particleArrayProcessing, Ensemble& ensemble, Grid& grid, double dt)
+    {
+        const int numParticles = ensemble.size();
+        const int numTiles = getNumThreads();
+        const int tileSize = (numParticles + numTiles - 1) / numTiles;
+        #pragma omp parallel for
+        for (int tileIdx = 0; tileIdx < numTiles; tileIdx++) {
+            const int beginIdx = tileIdx * tileSize;
+            const int endIdx = std::min(beginIdx + tileSize, numParticles);
+            particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
+        }
+    }
+
 };
 
 
