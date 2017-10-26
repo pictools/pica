@@ -594,6 +594,26 @@ struct VectorTypeHelper<Three, T> {
 };
 
 
+template<int dimension, typename T>
+struct VectorIntTypeHelper {
+};
+
+template<typename T>
+struct VectorIntTypeHelper<1, T> {
+    typedef Vector1<T> Type;
+};
+
+template<typename T>
+struct VectorIntTypeHelper<2, T> {
+    typedef Vector2<T> Type;
+};
+
+template<typename T>
+struct VectorIntTypeHelper<3, T> {
+    typedef Vector3<T> Type;
+};
+
+
 template<typename Vector>
 struct VectorDimensionHelper {
 };
