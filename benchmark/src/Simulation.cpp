@@ -139,11 +139,11 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
     switch (parameters.ensembleRepresentation) {
         case EnsembleRepresentation_Unordered:
             runSimulation<dimension, Particle, ParticleArray,
-                Ensemble_<dimension, ParticleArray, EnsembleRepresentation_Unordered>::Type>(parameters, tracker);
+                Ensemble_<ParticleArray, EnsembleRepresentation_Unordered>::Type>(parameters, tracker);
             break;
         case EnsembleRepresentation_Ordered:
             runSimulation<dimension, Particle, ParticleArray,
-                Ensemble_<dimension, ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
+                Ensemble_<ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
             break;
         default:
             throw std::invalid_argument("wrong value of ensemble representation");
