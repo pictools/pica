@@ -40,8 +40,6 @@ public:
     // Specific to this class
     ParticleArray& getParticles() { return particles; }
     const ParticleArray& getParticles() const { return particles; }
-    ParticleRef operator[](int idx) { return particles[idx]; }
-    ConstParticleRef operator[](int idx) const { return particles[idx]; }
 
 protected:
     ParticleArray particles;
