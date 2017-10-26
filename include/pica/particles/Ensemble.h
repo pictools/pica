@@ -2,6 +2,7 @@
 #define PICA_ENSEMBLE_H
 
 
+#include "pica/math/Dimension.h"
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
 #include "pica/particles/ParticleSystem.h"
@@ -95,17 +96,17 @@ enum EnsembleRepresentation { EnsembleRepresentation_Unordered, EnsembleRepresen
 
 // Traits class to provide a Type corresponding to array of particles
 // according to the given representation
-template<class ParticleArray, EnsembleRepresentation storage>
+template<Dimension dimension, class ParticleArray, EnsembleRepresentation storage>
 struct Ensemble_ {
 };
 
-template<class ParticleArray>
-struct Ensemble_<ParticleArray, EnsembleRepresentation_Unordered> {
+template<Dimension dimension, class ParticleArray>
+struct Ensemble_<dimension, ParticleArray, EnsembleRepresentation_Unordered> {
     typedef EnsembleUnordered<ParticleArray> Type;
 };
 
-template<class ParticleArray>
-struct Ensemble_<ParticleArray, EnsembleRepresentation_Ordered> {
+template<Dimension dimension, class ParticleArray>
+struct Ensemble_<dimension, ParticleArray, EnsembleRepresentation_Ordered> {
     typedef EnsembleOrdered<ParticleArray> Type;
 };
 
