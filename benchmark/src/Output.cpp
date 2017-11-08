@@ -48,7 +48,7 @@ void printParameters(const Parameters& parameters)
     string prefix = getPrefix();
     cout << "\nParameters:\n";
     if (useOpenMP())
-        cout << prefix << toString(getNumThreads()) + " OpenMP threads\n";
+        cout << prefix << toString(parameters.numThreads) + " OpenMP threads\n";
     else
         cout << prefix << "OpenMP is disabled\n";
     cout << prefix << "Dimension: " << parameters.dimension << "\n";
