@@ -7,7 +7,9 @@
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
 
+#include <map>
 #include <vector>
+#include <string>
 
 
 namespace pica {
@@ -171,6 +173,15 @@ private:
 
 
 enum ParticleRepresentation { ParticleRepresentation_AoS, ParticleRepresentation_SoA };
+
+inline std::string toString(ParticleRepresentation particleRepresentation)
+{
+    std::map<ParticleRepresentation, std::string> names;
+    names[ParticleRepresentation_AoS] = "AoS";
+    names[ParticleRepresentation_SoA] = "SoA";
+    return names[particleRepresentation];
+}
+
 
 // Traits class to provide a Type corresponding to array of particles
 // according to the given representation

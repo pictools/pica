@@ -27,22 +27,6 @@ void printHeader()
     cout << "pica benchmark\n";
 }
 
-string toString(ParticleRepresentation particleRepresentation)
-{
-    map<ParticleRepresentation, string> names;
-    names[ParticleRepresentation_AoS] = "AoS";
-    names[ParticleRepresentation_SoA] = "SoA";
-    return names[particleRepresentation];
-}
-
-string toString(EnsembleRepresentation ensembleRepresentation)
-{
-    map<EnsembleRepresentation, string> names;
-    names[EnsembleRepresentation_Unordered] = "unordered";
-    names[EnsembleRepresentation_Ordered] = "ordered";
-    return names[ensembleRepresentation];
-}
-
 void printParameters(const Parameters& parameters)
 {
     string prefix = getPrefix();

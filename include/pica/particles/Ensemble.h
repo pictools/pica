@@ -4,6 +4,7 @@
 
 #include "pica/math/Dimension.h"
 #include "pica/particles/EnsembleOrdered.h"
+#include "pica/particles/EnsembleSupercells.h"
 #include "pica/particles/EnsembleUnordered.h"
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
@@ -11,13 +12,25 @@
 #include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>
+#include <map>
+#include <string>
 #include <vector>
 
 
 namespace pica {
 
 
-enum EnsembleRepresentation { EnsembleRepresentation_Unordered, EnsembleRepresentation_Ordered };
+enum EnsembleRepresentation { EnsembleRepresentation_Unordered, EnsembleRepresentation_Ordered,
+    EnsembleRepresentation_Supercells };
+
+inline std::string toString(EnsembleRepresentation ensembleRepresentation)
+{
+    std::map<EnsembleRepresentation, std::string> names;
+    names[EnsembleRepresentation_Unordered] = "unordered";
+    names[EnsembleRepresentation_Ordered] = "ordered";
+    names[EnsembleRepresentation_Supercells] = "supercells";
+    return names[ensembleRepresentation];
+}
 
 // Traits class to provide a Type corresponding to array of particles
 // according to the given representation
@@ -33,6 +46,11 @@ struct Ensemble_<ParticleArray, EnsembleRepresentation_Unordered> {
 template<class ParticleArray>
 struct Ensemble_<ParticleArray, EnsembleRepresentation_Ordered> {
     typedef EnsembleOrdered<ParticleArray> Type;
+};
+
+template<class ParticleArray>
+struct Ensemble_<ParticleArray, EnsembleRepresentation_Supercells> {
+    typedef EnsembleSupercells<ParticleArray> Type;
 };
 
 
