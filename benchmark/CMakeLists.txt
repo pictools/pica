@@ -1,6 +1,7 @@
 include_directories(
     ../include
-	src)
+	src
+	cmdline)
 
 add_executable(benchmark
     src/GridHelper.h
