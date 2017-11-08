@@ -52,7 +52,10 @@ void printParameters(const Parameters& parameters)
     else
         cout << prefix << "OpenMP is disabled\n";
     cout << prefix << "Dimension: " << parameters.dimension << "\n";
-    cout << prefix << "Grid size: " << toString(parameters.numCells) << "\n";
+    cout << prefix << "Grid size: ";
+    for (int d = 0; d < parameters.dimension - 1; d++)
+        cout << parameters.numCells[d] << "x";
+    cout << parameters.numCells[parameters.dimension - 1] << "\n";
     cout << prefix << "Time iterations: " << parameters.numIterations << "\n";
     cout << prefix << "Particles per cell: " << parameters.particlesPerCell << "\n";
     cout << prefix << "Particles temperature: " << parameters.temperature << "\n";
