@@ -186,6 +186,27 @@ struct ArrayTypeHelper<Three, T> {
     typedef Array3d<T> Type;
 };
 
+
+template<int dimension, typename T>
+struct ArrayIntTypeHelper {
+};
+
+template<typename T>
+struct ArrayIntTypeHelper<1, T> {
+    typedef Array1d<T> Type;
+};
+
+template<typename T>
+struct ArrayIntTypeHelper<2, T> {
+    typedef Array2d<T> Type;
+};
+
+template<typename T>
+struct ArrayIntTypeHelper<3, T> {
+    typedef Array3d<T> Type;
+};
+
+
 } // namespace pica
 
 
