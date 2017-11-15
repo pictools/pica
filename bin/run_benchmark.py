@@ -4,6 +4,7 @@ import os
 import subprocess
 
 # Modify parameters here
+benchmark_path = "benchmark"
 out_directory = datetime.datetime.now().strftime('benchmark_%Y-%m-%d_%H-%M-%S')
 dimension = 3
 size = 50
@@ -20,7 +21,7 @@ combination_values = list(itertools.product(representations, storages))
 # Enumerate all combinations of parameters and run
 if not os.path.exists(out_directory):
     os.makedirs(out_directory)
-args_base = ("benchmark", "-d", str(dimension), "-g", str(size), "-p", str(ppc), "-t", str(temperature), "-i", str(iterations))
+args_base = (benchmark_path, "-d", str(dimension), "-g", str(size), "-p", str(ppc), "-t", str(temperature), "-i", str(iterations))
 for i in range(0, len(combination_values)):
     file_name = ""
     args_combination = ()
