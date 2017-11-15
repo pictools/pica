@@ -8,9 +8,9 @@ benchmark_path = "benchmark"
 out_directory = datetime.datetime.now().strftime('benchmark_%Y-%m-%d_%H-%M-%S')
 dimension = 3
 size = 50
-ppc = 1
+ppc = 100
 temperature = 0.0
-iterations = 1
+iterations = 100
 representations = ["SoA", "AoS"]
 storages = ["unordered", "ordered"]
 # add other combinations here
