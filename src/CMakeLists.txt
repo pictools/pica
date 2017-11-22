@@ -25,8 +25,7 @@ add_library(pica
     ${PICA_HEADER_DIR}/particles/ParticleInterface.h
     ${PICA_HEADER_DIR}/particles/ParticleSystem.h
     ${PICA_HEADER_DIR}/particles/ParticleTraits.h
-    ${PICA_HEADER_DIR}/particlePush/BorisPusher.h	
-    ${PICA_HEADER_DIR}/particlePush/ParticlePush.h
+    ${PICA_HEADER_DIR}/particlePush/BorisPusher.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
 	${PICA_HEADER_DIR}/utility/Array.h	
 	${PICA_HEADER_DIR}/utility/Assert.h	
@@ -38,5 +37,4 @@ add_library(pica
     particles/Ensemble.cpp
     particles/Particle.cpp
     particles/ParticleSystem.cpp
-	particlePush/ParticlePush.cpp	
 	utility/Utility.cpp)
