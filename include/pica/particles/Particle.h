@@ -16,7 +16,7 @@ namespace pica {
 
 
 template<Dimension dimension>
-class Particle_ {
+class Particle {
 public:
 
     // Types for conforming ParticleInterface
@@ -28,12 +28,12 @@ public:
     typedef Real ChargeType;
     typedef float FactorType;
 
-    Particle_() :
+    Particle() :
         factor(1),
         mass(0.0),
         charge(0.0) {}
 
-    Particle_(const PositionType& position, const MomentumType& momentum,
+    Particle(const PositionType& position, const MomentumType& momentum,
         MassType mass, ChargeType charge, FactorType factor = 1) :
         position(position), momentum(momentum), mass(mass), charge(charge), factor(factor) {}
 
@@ -67,9 +67,9 @@ private:
 
 };
 
-typedef Particle_<One> Particle1d;
-typedef Particle_<Two> Particle2d;
-typedef Particle_<Three> Particle3d;
+typedef Particle<One> Particle1d;
+typedef Particle<Two> Particle2d;
+typedef Particle<Three> Particle3d;
 
 
 } // namespace pica
