@@ -34,21 +34,21 @@ inline std::string toString(EnsembleRepresentation ensembleRepresentation)
 // Traits class to provide a Type corresponding to array of particles
 // according to the given representation
 template<class ParticleArray, EnsembleRepresentation storage>
-struct Ensemble_ {
+struct Ensemble {
 };
 
 template<class ParticleArray>
-struct Ensemble_<ParticleArray, EnsembleRepresentation_Unordered> {
+struct Ensemble<ParticleArray, EnsembleRepresentation_Unordered> {
     typedef EnsembleUnordered<ParticleArray> Type;
 };
 
 template<class ParticleArray>
-struct Ensemble_<ParticleArray, EnsembleRepresentation_Ordered> {
+struct Ensemble<ParticleArray, EnsembleRepresentation_Ordered> {
     typedef EnsembleOrdered<ParticleArray> Type;
 };
 
 template<class ParticleArray>
-struct Ensemble_<ParticleArray, EnsembleRepresentation_Supercells> {
+struct Ensemble<ParticleArray, EnsembleRepresentation_Supercells> {
     typedef EnsembleSupercells<ParticleArray> Type;
 };
 
