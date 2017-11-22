@@ -5,7 +5,6 @@ include_directories(
     ${PICA_INCLUDE_DIR})
 	
 add_library(pica
-    ${PICA_HEADER_DIR}/currentDeposition/CurrentDeposition.h
     ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h	
     ${PICA_HEADER_DIR}/fieldInterpolation/Formfactor.h
     ${PICA_HEADER_DIR}/fieldInterpolation/TileInterpolator.h	
@@ -34,7 +33,6 @@ add_library(pica
 	${PICA_HEADER_DIR}/utility/Utility.h	
     ${PICA_HEADER_DIR}/Parameters.h
 
-	currentDeposition/CurrentDeposition.cpp
     grid/Grid.cpp	
     grid/ScalarField.cpp	
     particles/Ensemble.cpp
