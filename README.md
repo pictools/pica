@@ -18,4 +18,4 @@ The library is based on the [core of the PICADOR particle-in-cell code](http://w
 
 ## How to use
 
-*pica* is currently in the early alpha version and currently contains only implementations for shared memory systems. It is being extended with more data structures and routines, communications and load balancing for distributed memory. We plan to release a beta version along with a skeleton code based on the library on October 2017.
+*pica* is currently in the early alpha version and currently contains only implementations for shared memory systems. It is being extended with more data structures and routines, communications and load balancing for distributed memory. We plan to release a beta version along with a skeleton code based on the library on December 2017.
