@@ -23,7 +23,7 @@ struct ParticleProcessing {
 
 namespace internal {
 
-template<class Ensemble, class ParticleArray, class Grid>
+template<class Ensemble, class ParticleArray, class Grid, int tileSize = 8>
 class ParticleArrayProcessing {
 public:
     typedef typename Ensemble::Particle Particle;
@@ -38,36 +38,58 @@ public:
 
     void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
     {
-        pica::BorisPusher pusher;
-        pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
-        for (int i = beginIdx; i < endIdx; i++) {
-            MomentumType e, b;
-            fieldInterpolator.get(particles[i].getPosition(), e, b);
-            pusher.push<ParticleRef, MomentumType, PositionType, double>(particles[i], e, b, dt);
-
-            // reflecting boundary conditions
-            PositionType position = particles[i].getPosition();
-            MomentumType momentum = particles[i].getMomentum();
-            for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
-                if (position[d] < minPosition[d]) {
-                    position[d] = 2 * minPosition[d] - position[d];
-                    momentum[d] = -momentum[d];
-                }
-                else if (position[d] > maxPosition[d]) {
-                    position[d] = 2 * maxPosition[d] - position[d];
-                    momentum[d] = -momentum[d];
-                }
-            particles[i].setPosition(position);
-            particles[i].setMomentum(momentum);
+        const int numParticles = endIdx - beginIdx;
+        const int numTiles = (numParticles + tileSize - 1) / tileSize;
+        for (int tileIdx = 0; tileIdx < numTiles; tileIdx++) {
+            const int tileBeginIdx = beginIdx + tileIdx * tileSize;
+            const int tileEndIdx = std::min(tileBeginIdx + tileSize, endIdx);
+            processTile(particles, tileBeginIdx, tileEndIdx, grid, dt);
         }
     }
 
 private:
     PositionType minPosition, maxPosition;
 
+    void processTile(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    {
+        const int numParticles = endIdx - beginIdx;
+
+        // Field interpolation
+        MomentumType interpolatedE[tileSize];
+        MomentumType interpolatedB[tileSize];
+        pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
+        for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
+            fieldInterpolator.get(particles[particleIdx].getPosition(),
+                interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx]);
+
+        // Particle push
+        pica::BorisPusher pusher;
+        for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
+            pusher.push<ParticleRef, MomentumType, PositionType, double>(particles[particleIdx],
+                interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
+
+        // Reflecting boundary conditions
+        for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
+            PositionType position = particles[particleIdx].getPosition();
+            MomentumType momentum = particles[particleIdx].getMomentum();
+            for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+                if (position[d] < minPosition[d]) {
+                    position[d] = 2 * minPosition[d] - position[d];
+                    momentum[d] = -momentum[d];
+                }
+                else
+                    if (position[d] > maxPosition[d]) {
+                        position[d] = 2 * maxPosition[d] - position[d];
+                        momentum[d] = -momentum[d];
+                    }
+            particles[particleIdx].setPosition(position);
+            particles[particleIdx].setMomentum(momentum);
+        }
+    }
+
 };
 
-}
+} // namespace internal
 
 
 template<class ParticleArray, class Grid>
@@ -88,12 +110,12 @@ private:
     void process(ParticleArrayProcessing& particleArrayProcessing, Ensemble& ensemble, Grid& grid, double dt)
     {
         const int numParticles = ensemble.size();
-        const int numTiles = getNumThreads();
-        const int tileSize = (numParticles + numTiles - 1) / numTiles;
+        const int numThreads = getNumThreads();
+        const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
         #pragma omp parallel for
-        for (int tileIdx = 0; tileIdx < numTiles; tileIdx++) {
-            const int beginIdx = tileIdx * tileSize;
-            const int endIdx = std::min(beginIdx + tileSize, numParticles);
+        for (int idx = 0; idx < numThreads; idx++) {
+            const int beginIdx = idx * particlesPerThread;
+            const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
             particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
         }
     }
