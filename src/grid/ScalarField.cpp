@@ -1,6 +1,5 @@
 #include "pica/grid/ScalarField.h"
 
-#include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"
 
@@ -57,12 +56,12 @@ FP ScalarField::interpolateCIC(const Int3& baseIdx, const FP3& coeffs) const
 FP ScalarField::interpolateTSC(const Int3& baseIdx, const FP3& coeffs) const
 {
     FP c[3][3];
-    for (int i = 0; i < 3; i++)
+/*    for (int i = 0; i < 3; i++)
         c[0][i] = formfactorTSC(FP(i - 1) - coeffs.x);
     for (int j = 0; j < 3; j++)
         c[1][j] = formfactorTSC(FP(j - 1) - coeffs.y);
     for (int k = 0; k < 3; k++)
-        c[2][k] = formfactorTSC(FP(k - 1) - coeffs.z);
+        c[2][k] = formfactorTSC(FP(k - 1) - coeffs.z);*/
     return interpolateThreePoints(baseIdx, c);
 }
 
@@ -111,9 +110,9 @@ FP ScalarField::interpolateFourthOrder(const Int3& baseIdx, const FP3& coeffs) c
     if ((base >= minAllowedIdx) && (base <= maxAllowedIdx) == false)
         return interpolateTSC(baseIdx, coeffs);
     FP c[3][5];
-    formfactorFourthOrder(coeffs.x, c[0]);
-    formfactorFourthOrder(coeffs.y, c[1]);
-    formfactorFourthOrder(coeffs.z, c[2]);
+    //formfactorFourthOrder(coeffs.x, c[0]);
+    //formfactorFourthOrder(coeffs.y, c[1]);
+    //formfactorFourthOrder(coeffs.z, c[2]);
     for (int d = 0; d < 3; d++)
         if (!dimensionCoeffInt[d]) {
             c[d][0] = 0;
@@ -136,7 +135,7 @@ FP ScalarField::interpolateFourthOrder(const Int3& baseIdx, const FP3& coeffs) c
 FP ScalarField::interpolatePCS(const Int3& baseIdx, const FP3& coeffs) const
 {
     FP c[3][4];
-    for (int i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
         c[0][i] = formfactorPCS(FP(i - 1) - coeffs.x);
     for (int j = 0; j < 4; j++)
         c[1][j] = formfactorPCS(FP(j - 1) - coeffs.y);
@@ -148,7 +147,7 @@ FP ScalarField::interpolatePCS(const Int3& baseIdx, const FP3& coeffs) const
             c[d][1] = 0;
             c[d][2] = 0;
             c[d][3] = 0;
-        }
+        }*/
     FP result = 0;
     Int3 base = (baseIdx - Int3(1, 1, 1)) * dimensionCoeffInt;
     Int3 minIndex = Int3(0, 0, 0);
@@ -181,12 +180,12 @@ void ScalarField::depositCIC(FP value, const Int3& baseIdx, const FP3& coeffs)
 void ScalarField::depositTSC(FP value, const Int3& baseIdx, const FP3& coeffs)
 {
     FP c[3][3];
-    for (int i = 0; i < 3; i++)
+    /*for (int i = 0; i < 3; i++)
         c[0][i] = formfactorTSC(FP(i - 1) - coeffs.x);
     for (int j = 0; j < 3; j++)
         c[1][j] = formfactorTSC(FP(j - 1) - coeffs.y);
     for (int k = 0; k < 3; k++)
-        c[2][k] = formfactorTSC(FP(k - 1) - coeffs.z);
+        c[2][k] = formfactorTSC(FP(k - 1) - coeffs.z);*/
     Int3 minIndex = Int3(-1, -1, -1) * dimensionCoeffInt;
     Int3 maxIndex = Int3(1, 1, 1) * dimensionCoeffInt;
     for (int d = 0; d < 3; d++)
@@ -207,12 +206,12 @@ void ScalarField::depositTSC(FP value, const Int3& baseIdx, const FP3& coeffs)
 void ScalarField::depositPCS(FP value, const Int3& baseIdx, const FP3& coeffs)
 {
     FP c[3][4];
-    for (int i = 0; i < 4; i++)
+    /*for (int i = 0; i < 4; i++)
         c[0][i] = formfactorPCS(FP(i - 1) - coeffs.x);
     for (int j = 0; j < 4; j++)
         c[1][j] = formfactorPCS(FP(j - 1) - coeffs.y);
     for (int k = 0; k < 4; k++)
-        c[2][k] = formfactorPCS(FP(k - 1) - coeffs.z);
+        c[2][k] = formfactorPCS(FP(k - 1) - coeffs.z);*/
     for (int d = 0; d < 3; d++)
         if (!dimensionCoeffInt[d]) {
             c[d][0] = 1.0;

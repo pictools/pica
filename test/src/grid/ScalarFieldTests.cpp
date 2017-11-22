@@ -77,46 +77,6 @@ TEST_F(ScalarFieldTest, depositCIC) {
     }
 }
 
-TEST_F(ScalarFieldTest, depositTSC) {
-    Int3 size(5, 8, 6);
-    ScalarField f(size);
-    FP old = 0;
-    for (int testIdx = 0; testIdx < 100; testIdx++) {
-        Int3 base = urandInt3(Int3(1, 1, 1), size - Int3(2, 2, 2));
-        FP3 coeffs = urandFP3(FP3(0, 0, 0), FP3(1, 1, 1));
-        FP value = urand(1, 10);
-        f.depositTSC(value, base, coeffs);
-        FP actual = 0;
-        for(int i = 0; i < size.x; i++)
-        for(int j = 0; j < size.y; j++)
-        for(int k = 0; k < size.z; k++)
-            actual += f(i, j, k);
-        FP diff = actual - old;
-        ASSERT_NEAR_FP(value, diff);
-        old = actual;
-    }
-}
-
-TEST_F(ScalarFieldTest, depositPCS) {
-    Int3 size(7, 10, 9);
-    ScalarField f(size);
-    FP old = 0;
-    for (int testIdx = 0; testIdx < 100; testIdx++) {
-        Int3 base = urandInt3(Int3(1, 1, 1), size - Int3(3, 3, 3));
-        FP3 coeffs = urandFP3(FP3(0, 0, 0), FP3(1, 1, 1));
-        FP value = urand(1, 10);
-        f.depositPCS(value, base, coeffs);
-        FP actual = 0;
-        for(int i = 0; i < size.x; i++)
-        for(int j = 0; j < size.y; j++)
-        for(int k = 0; k < size.z; k++)
-            actual += f(i, j, k);
-        FP diff = actual - old;
-        ASSERT_NEAR_FP(value, diff);
-        old = actual;
-    }
-}
-
 TEST_F(ScalarFieldTest, Zeroize) {
     Int3 size(5, 3, 8);
     ScalarField f(createScalarField(size));

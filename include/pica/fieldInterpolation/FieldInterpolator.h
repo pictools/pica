@@ -2,7 +2,6 @@
 #define PICA_FIELD_INTERPOLATOR_H
 
 
-#include "pica/fieldInterpolation/Formfactor.h"
 #include "pica/grid/YeeGrid.h"
 
 
