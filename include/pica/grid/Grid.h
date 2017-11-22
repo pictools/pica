@@ -10,13 +10,13 @@ namespace pica {
 
 
 template<Dimension dimension, typename Real = double>
-class Grid_ {
+class Grid {
 public:
     typedef Real ValueType;
     typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
     typedef typename VectorTypeHelper<dimension, int>::Type IndexType;
 
-    Grid_(const PositionType& origin, const PositionType& step, const IndexType& size) :
+    Grid(const PositionType& origin, const PositionType& step, const IndexType& size) :
         exData(size),
         eyData(size),
         ezData(size),
