@@ -26,6 +26,5 @@ add_library(pica
 	${PICA_HEADER_DIR}/utility/Array.h	
 	${PICA_HEADER_DIR}/utility/Assert.h	
 	${PICA_HEADER_DIR}/utility/Utility.h	
-    ${PICA_HEADER_DIR}/Parameters.h
-
-	utility/Utility.cpp)
+    ${PICA_HEADER_DIR}/Parameters.h)
+set_target_properties(pica PROPERTIES LINKER_LANGUAGE CXX)	

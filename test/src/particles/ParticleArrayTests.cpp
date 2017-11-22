@@ -8,7 +8,7 @@ using namespace pica;
 
 
 template <class ParticleArrayType>
-class ParticleArrayTest : public BaseParticleFixture_<typename ParticleArrayType::Particle> {
+class ParticleArrayTest : public BaseParticleFixture<typename ParticleArrayType::Particle> {
 public:
     typedef ParticleArrayType ParticleArray;
 

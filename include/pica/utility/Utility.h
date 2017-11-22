@@ -2,9 +2,11 @@
 #define PICA_UTILITY_H
 
 
+#include <limits>
 #include <string>
 #include <sstream>
 #include <vector>
+
 
 namespace pica {
 
@@ -26,7 +28,11 @@ const T * ptr(const std::vector<T> & v)
 
 // Check if a number is finite (e.g. not an infinity or NaN). Poor man's
 // isfinite() from C99.
-bool isNumberFinite(double x);
+inline bool isNumberFinite(double x)
+{
+    return x <= std::numeric_limits<double>::max()
+        && x >= -std::numeric_limits<double>::max();
+}
 
 // Convert to string value of type T which can be written to ostream 
 template<typename T>

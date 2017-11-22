@@ -7,7 +7,7 @@ using namespace pica;
 
 
 template <class ParticleType>
-class ParticleTest : public BaseParticleFixture_<ParticleType> {
+class ParticleTest : public BaseParticleFixture<ParticleType> {
 };
 
 typedef ::testing::Types<Particle1d, Particle2d, Particle3d> types;

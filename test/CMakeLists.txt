@@ -13,10 +13,8 @@ add_executable(tests
     src/math/DimensionTests.cpp
     src/math/FPTests.cpp
     src/math/VectorsTests.cpp
-    src/particles/EnsembleTests.cpp
     src/particles/ParticleTests.cpp
     src/particles/ParticleArrayTests.cpp
-    src/particlePush/ParticleMoveTests.cpp
 	src/threading/OpenMPHelperTests.cpp
 	src/utility/ArrayTests.cpp
 	src/utility/UtilityTests.cpp
@@ -28,16 +26,13 @@ if (APPLE)
     target_link_libraries(tests
         -Wl,-all_load
         gtest
-        pica
         -Wl,-noall_load)
 elseif (UNIX)
     target_link_libraries(tests
         -Wl,-whole-archive
         gtest
-        pica
         -Wl,-no-whole-archive)
 else()
     target_link_libraries(tests
-        gtest
-        pica)
+        gtest)
 endif()

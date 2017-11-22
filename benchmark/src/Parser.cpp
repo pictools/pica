@@ -1,8 +1,9 @@
 #include "Parser.h"
 
-#include "cmdline.h"
 #include "pica/threading/OpenMPHelper.h"
 #include "pica/utility/Utility.h"
+
+#include "cmdline.h"
 
 #include <stdexcept>
 #include <string>

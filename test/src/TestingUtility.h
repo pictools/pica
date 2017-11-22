@@ -6,7 +6,6 @@
 #include "pica/math/Vectors.h"
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
-#include "pica/particles/ParticleSystem.h"
 
 #include "gtest/gtest.h"
 
@@ -58,8 +57,6 @@ protected:
 
     // Return whether two FP3s have coords differ by not larger than eps each.
     bool nearFP3(const pica::FP3 & a, const pica::FP3 & b, const pica::FP eps);
-    // Return whether two particles have equal position, momentum and type index.
-    bool eqParticle(const pica::Particle & a, const pica::Particle & b);
 
     // Get uniformly distributed in [a, b) pseudo-random number.
     pica::FP urand(pica::FP a, pica::FP b) const;
@@ -85,7 +82,7 @@ protected:
 
 
 template<class ParticleType>
-class BaseParticleFixture_ : public BaseFixture {
+class BaseParticleFixture : public BaseFixture {
 public:
     typedef ParticleType Particle;
     typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
@@ -141,19 +138,6 @@ public:
             (a.getFactor() == b.getFactor());
     }
 };
-
-class BaseParticleFixture : public BaseFixture {
-protected:
-
-    virtual void SetUp();
-    pica::Particle randomParticle();
-
-    pica::Parameters parameters;
-};
-
-bool eqParticles(const pica::Particle& a, const pica::Particle& b);
-
-bool eqParticleSystems(pica::ParticleSystem& a, pica::ParticleSystem& b);
 
 
 #endif
