@@ -8,7 +8,6 @@ include_directories(
 add_executable(tests
     src/fieldInterpolation/FieldInterpolatorTests.cpp
 	src/fieldSolver/YeeSolverTests.cpp
-    src/grid/ScalarFieldTests.cpp
     src/grid/YeeGridTests.cpp
     src/math/ConstantsTests.cpp
     src/math/DimensionTests.cpp
