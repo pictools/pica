@@ -31,6 +31,7 @@ Parameters readParameters(int argc, char* argv[])
         " or " + toString(EnsembleRepresentation_Supercells), false, toString(EnsembleRepresentation_Ordered),
         cmdline::oneof<string>(toString(EnsembleRepresentation_Unordered),
         toString(EnsembleRepresentation_Ordered), toString(EnsembleRepresentation_Supercells)));
+    parser.add<int>("tilesize", 's', "size of tile for particle processing", false, 8);
     parser.parse_check(argc, argv);
 
     // For now just hardcode
@@ -61,5 +62,6 @@ Parameters readParameters(int argc, char* argv[])
         parameters.ensembleRepresentation = EnsembleRepresentation_Supercells;
     else
         throw std::invalid_argument("wrong value of ensemble representation");
+    parameters.tileSize = parser.get<int>("tilesize");
     return parameters;
 }

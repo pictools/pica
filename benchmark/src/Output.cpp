@@ -45,6 +45,7 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Particles temperature: " << parameters.temperature << "\n";
     cout << prefix << "Particle representation: " << toString(parameters.particleRepresentation) << "\n";
     cout << prefix << "Ensemble representation: " << toString(parameters.ensembleRepresentation) << "\n";
+    cout << prefix << "Tile size: " << toString(parameters.tileSize) << "\n";
 }
 
 void printPerformance(const PerformanceTracker& tracker)

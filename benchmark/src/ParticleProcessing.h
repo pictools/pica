@@ -12,6 +12,7 @@
 #include "pica/threading/OpenMPHelper.h"
 
 #include <algorithm>
+#include <memory>
 
 
 template<class Ensemble, class Grid>
@@ -23,7 +24,7 @@ struct ParticleProcessing {
 
 namespace internal {
 
-template<class Ensemble, class ParticleArray, class Grid, int tileSize = 8>
+template<class Ensemble, class ParticleArray, class Grid, int tileSize>
 class ParticleArrayProcessing {
 public:
     typedef typename Ensemble::Particle Particle;
@@ -96,28 +97,81 @@ template<class ParticleArray, class Grid>
 struct ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
     typedef pica::EnsembleUnordered<ParticleArray> Ensemble;
 
-    ParticleProcessing(const Parameters& ) {}
+    ParticleProcessing(const Parameters& parameters) :
+        pImpl(createImplementation(parameters))
+    {
+    }
 
     void process(Ensemble& ensemble, Grid& grid, double dt)
     {
-        internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid> particleArrayProcessing(ensemble);
-        process(particleArrayProcessing, ensemble, grid, dt);
+        pImpl->process(ensemble, grid, dt);
     }
 
 private:
 
-    template<class ParticleArrayProcessing>
-    void process(ParticleArrayProcessing& particleArrayProcessing, Ensemble& ensemble, Grid& grid, double dt)
-    {
-        const int numParticles = ensemble.size();
-        const int numThreads = getNumThreads();
-        const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
-        #pragma omp parallel for
-        for (int idx = 0; idx < numThreads; idx++) {
-            const int beginIdx = idx * particlesPerThread;
-            const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
-            particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
+    class ImplementationBase {
+    public:
+        virtual ~ImplementationBase() {}
+        virtual void process(Ensemble& ensemble, Grid& grid, double dt) = 0;
+    };
+
+    template<int tileSize>
+    class Implementation : public ImplementationBase {
+    public:
+
+        virtual void process(Ensemble& ensemble, Grid& grid, double dt)
+        {
+            typedef internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid, tileSize> ParticleArrayProcessing;
+            ParticleArrayProcessing particleArrayProcessing(ensemble);
+            const int numParticles = ensemble.size();
+            const int numThreads = getNumThreads();
+            const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
+            #pragma omp parallel for
+            for (int idx = 0; idx < numThreads; idx++) {
+                const int beginIdx = idx * particlesPerThread;
+                const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
+                particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
+            }
         }
+    };
+
+    std::auto_ptr<ImplementationBase> pImpl;
+
+    ImplementationBase* createImplementation(const Parameters& parameters)
+    {
+        const int tileSize = parameters.tileSize;
+        if (tileSize <= 8)
+            return new Implementation<8>;
+        else if (tileSize <= 16)
+            return new Implementation<16>;
+        else if (tileSize <= 24)
+            return new Implementation<24>;
+        else if (tileSize <= 32)
+            return new Implementation<32>;
+        else if (tileSize <= 40)
+            return new Implementation<40>;
+        else if (tileSize <= 48)
+            return new Implementation<48>;
+        else if (tileSize <= 56)
+            return new Implementation<56>;
+        else if (tileSize <= 64)
+            return new Implementation<64>;
+        else if (tileSize <= 72)
+            return new Implementation<72>;
+        else if (tileSize <= 80)
+            return new Implementation<80>;
+        else if (tileSize <= 88)
+            return new Implementation<88>;
+        else if (tileSize <= 96)
+            return new Implementation<96>;
+        else if (tileSize <= 104)
+            return new Implementation<104>;
+        else if (tileSize <= 112)
+            return new Implementation<112>;
+        else if (tileSize <= 120)
+            return new Implementation<120>;
+        else
+            return new Implementation<128>;
     }
 
 };
