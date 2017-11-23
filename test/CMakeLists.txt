@@ -36,3 +36,6 @@ else()
     target_link_libraries(tests
         gtest)
 endif()
+
+set_target_properties(gtest PROPERTIES FOLDER Tests)
+set_target_properties(tests PROPERTIES FOLDER Tests)
