@@ -48,14 +48,19 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Tile size: " << toString(parameters.tileSize) << "\n";
 }
 
-void printPerformance(const PerformanceTracker& tracker)
+void printPerformance(const PerformanceTracker& tracker, long numParticleUpdates)
 {
     string prefix = getPrefix();
     cout << "\nPerformance results:\n";
     map<PerformanceTracker::Stage, string> stageNames = getStageNames();
     PerformanceTracker::StageTime stageTime = tracker.getStageTime();
-    for (PerformanceTracker::StageTime::iterator i = stageTime.begin(); i != stageTime.end(); i++)
+    double overallTime = 0.0;
+    for (PerformanceTracker::StageTime::iterator i = stageTime.begin(); i != stageTime.end(); i++) {
         cout << prefix << stageNames[i->first] << ": " << i->second << " sec.\n";
+        overallTime += i->second;
+    }
+    double nsPerParticleUpdate = overallTime * 1e9 / numParticleUpdates;
+    cout << prefix << nsPerParticleUpdate << " ns per particle update\n";
 }
 
 map<PerformanceTracker::Stage, string> getStageNames()

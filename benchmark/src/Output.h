@@ -7,7 +7,7 @@ class PerformanceTracker;
 
 void printHeader();
 void printParameters(const Parameters& parameters);
-void printPerformance(const PerformanceTracker& tracker);
+void printPerformance(const PerformanceTracker& tracker, long numParticleUpdates);
 
 
 #endif
