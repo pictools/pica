@@ -125,7 +125,7 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
     std::auto_ptr<Grid> grid = createGrid<Grid>(minPosition, maxPosition, numCells);
     Ensemble ensemble(minPosition, maxPosition);
     createParticles(parameters, ensemble);
-    ParticleProcessing<Ensemble, Grid> particleProcessing(parameters);
+    ParticleProcessing<Ensemble, Grid> particleProcessing(parameters, ensemble, *grid);
     YeeSolver fieldSolver;
     Real timeStep = getTimeStep<PositionType, Real>(step);
     omp_set_num_threads(parameters.numThreads);
@@ -170,12 +170,12 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 {
     switch (parameters.dimension) {
-        case 1:
+        /*case 1:
             runSimulation<One, Particle1d>(parameters, tracker);
             break;
         case 2:
             runSimulation<Two, Particle2d>(parameters, tracker);
-            break;
+            break;*/
         case 3:
             runSimulation<Three, Particle3d>(parameters, tracker);
             break;

@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <memory>
+#include <vector>
 
 
 template<class Ensemble, class Grid>
@@ -40,23 +41,28 @@ public:
 
     void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
     {
+        process(particles, beginIdx, endIdx, grid, grid, dt);
+    }
+
+    void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, Grid& currentDepositionGrid, double dt)
+    {
         const int numParticles = endIdx - beginIdx;
         const int numTiles = (numParticles + tileSize - 1) / tileSize;
         for (int tileIdx = 0; tileIdx < numTiles; tileIdx++) {
             const int tileBeginIdx = beginIdx + tileIdx * tileSize;
             const int tileEndIdx = std::min(tileBeginIdx + tileSize, endIdx);
-            processTile(particles, tileBeginIdx, tileEndIdx, grid, dt);
+            processTile(particles, tileBeginIdx, tileEndIdx, grid, currentDepositionGrid, dt);
         }
     }
 
 private:
     PositionType minPosition, maxPosition;
 
-    void processTile(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    void processTile(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, Grid& currentDepositionGrid, double dt)
     {
         pushParticles(particles, beginIdx, endIdx, grid, dt);
         applyBoundaryConditions(particles, beginIdx, endIdx, grid, dt);
-        depositCurrents(particles, beginIdx, endIdx, grid, dt);
+        depositCurrents(particles, beginIdx, endIdx, currentDepositionGrid, dt);
     }
 
     void pushParticles(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
@@ -117,9 +123,10 @@ template<class ParticleArray, class Grid>
 struct ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
     typedef pica::EnsembleUnordered<ParticleArray> Ensemble;
 
-    ParticleProcessing(const Parameters& parameters) :
+    ParticleProcessing(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) :
         pImpl(createImplementation(parameters))
     {
+        pImpl->init(parameters, ensemble, grid);
     }
 
     void process(Ensemble& ensemble, Grid& grid, double dt)
@@ -131,6 +138,7 @@ private:
 
     class ImplementationBase {
     public:
+        virtual void init(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) {}
         virtual ~ImplementationBase() {}
         virtual void process(Ensemble& ensemble, Grid& grid, double dt) = 0;
     };
@@ -139,17 +147,34 @@ private:
     class Implementation : public ImplementationBase {
     public:
 
+        virtual void init(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid)
+        {
+            threadGridCopies.resize(pica::getNumThreads(), grid);
+        }
+
         virtual void process(Ensemble& ensemble, Grid& grid, double dt)
         {
-            zeroizeCurrents(grid);
+            zeroizeCurrents();
             processParticles(ensemble, grid, dt);
             finalizeCurrents(grid);
         }
 
     private:
 
-        void zeroizeCurrents(Grid& grid)
+        void zeroizeCurrents()
         {
+            #pragma omp parallel for
+            for (int threadIdx = 0; threadIdx < threadGridCopies.size(); threadIdx++) {
+                Grid& grid = threadGridCopies[threadIdx];
+                // The following is for 3D only
+                for (int i = 0; i < grid.getSize().x; i++)
+                for (int j = 0; j < grid.getSize().y; j++)
+                for (int k = 0; k < grid.getSize().z; k++) {
+                    grid.jx(i, j, k) = 0.0;
+                    grid.jy(i, j, k) = 0.0;
+                    grid.jz(i, j, k) = 0.0;
+                }
+            }
         }
 
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
@@ -163,13 +188,35 @@ private:
             for (int idx = 0; idx < numThreads; idx++) {
                 const int beginIdx = idx * particlesPerThread;
                 const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
-                particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
+                particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid,
+                    threadGridCopies[omp_get_thread_num()], dt);
             }
         }
 
         void finalizeCurrents(Grid& grid)
         {
+            // The following is for 3D only
+            double normalization = 1.0 / grid.getStep().volume();
+            #pragma omp parallel for collapse(2)
+            for (int i = 0; i < grid.getSize().x; i++)
+            for (int j = 0; j < grid.getSize().y; j++)
+            for (int k = 0; k < grid.getSize().z; k++) {
+                grid.jx(i, j, k) = 0.0;
+                grid.jy(i, j, k) = 0.0;
+                grid.jz(i, j, k) = 0.0;
+                for (int threadIdx = 0; threadIdx < threadGridCopies.size(); threadIdx++) {
+                    const Grid& currentGrid = threadGridCopies[threadIdx];
+                    grid.jx(i, j, k) += currentGrid.jx(i, j, k);
+                    grid.jy(i, j, k) += currentGrid.jy(i, j, k);
+                    grid.jz(i, j, k) += currentGrid.jz(i, j, k);
+                }
+                grid.jx(i, j, k) *= normalization;
+                grid.jy(i, j, k) *= normalization;
+                grid.jz(i, j, k) *= normalization;
+            }
         }
+
+        std::vector<Grid> threadGridCopies;
 
     };
 
@@ -219,8 +266,8 @@ template<class ParticleArray, class Grid>
 struct ParticleProcessing<pica::EnsembleOrdered<ParticleArray>, Grid> : 
         ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
 
-    ParticleProcessing(const Parameters& parameters) :
-        ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid>(parameters),
+    ParticleProcessing(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) :
+        ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid>(parameters, ensemble, grid),
         iteration(0),
         sortingPeriod(100)
     {}
