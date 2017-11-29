@@ -91,6 +91,8 @@ set(PICA_INCLUDE_DIR include)
 set(PICA_HEADER_DIR ${PICA_INCLUDE_DIR}/pica)
 set(pica_headers
     ${PICA_HEADER_DIR}/currentDeposition/CurrentDepositor.h
+    ${PICA_HEADER_DIR}/currentDeposition/CurrentDepositorInterface.h
+    ${PICA_HEADER_DIR}/currentDeposition/CurrentDepositorYeeGrid.h	
     ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h
     ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolatorInterface.h
     ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolatorYeeGrid.h	
