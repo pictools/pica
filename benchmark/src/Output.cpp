@@ -66,7 +66,6 @@ void printPerformance(const PerformanceTracker& tracker, long numParticleUpdates
 map<PerformanceTracker::Stage, string> getStageNames()
 {
     map<PerformanceTracker::Stage, string> names;
-    names[PerformanceTracker::Stage_CurrentDeposition] = "Current deposition";
     names[PerformanceTracker::Stage_FieldSolver] = "Field solver";
     names[PerformanceTracker::Stage_ParticleLoop] = "Particle loop";
     return names;

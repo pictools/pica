@@ -14,8 +14,7 @@ public:
     PerformanceTracker();
     ~PerformanceTracker();
 
-    enum Stage { Stage_CurrentDeposition, Stage_FieldSolver,
-        Stage_ParticleLoop, numStages };
+    enum Stage { Stage_FieldSolver, Stage_ParticleLoop, numStages };
     void start(Stage stage);
     void finish(Stage stage);
 

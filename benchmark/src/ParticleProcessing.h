@@ -4,6 +4,7 @@
 
 #include "Parameters.h"
 
+#include "pica/currentDeposition/CurrentDepositor.h"
 #include "pica/fieldInterpolation/FieldInterpolator.h"
 #include "pica/math/Vectors.h"
 #include "pica/particles/Ensemble.h"
@@ -53,9 +54,13 @@ private:
 
     void processTile(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
     {
-        const int numParticles = endIdx - beginIdx;
+        pushParticles(particles, beginIdx, endIdx, grid, dt);
+        applyBoundaryConditions(particles, beginIdx, endIdx, grid, dt);
+        depositCurrents(particles, beginIdx, endIdx, grid, dt);
+    }
 
-        // Field interpolation
+    void pushParticles(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    {
         MomentumType interpolatedE[tileSize];
         MomentumType interpolatedB[tileSize];
         pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
@@ -63,12 +68,14 @@ private:
             fieldInterpolator.get(particles[particleIdx].getPosition(),
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx]);
 
-        // Particle push
         pica::BorisPusher pusher;
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
             pusher.push<ParticleRef, MomentumType, PositionType, double>(particles[particleIdx],
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
+    }
 
+    void applyBoundaryConditions(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    {
         // Reflecting boundary conditions
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
             PositionType position = particles[particleIdx].getPosition();
@@ -85,6 +92,19 @@ private:
                     }
             particles[particleIdx].setPosition(position);
             particles[particleIdx].setMomentum(momentum);
+        }
+    }
+
+    void depositCurrents(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    {
+        const double halfDt = 0.5 * dt;
+        pica::CurrentDepositorCIC<Grid> currentDepositor(grid);
+        for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
+            PositionType position = particles[particleIdx].getPosition();
+            for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+                position[d] -= particles[particleIdx].getVelocity()[d] * halfDt;
+            MomentumType current = particles[particleIdx].getVelocity() * particles[particleIdx].getCharge() * (double)particles[particleIdx].getFactor();
+            currentDepositor.deposit(position, current);
         }
     }
 
@@ -121,6 +141,19 @@ private:
 
         virtual void process(Ensemble& ensemble, Grid& grid, double dt)
         {
+            zeroizeCurrents(grid);
+            processParticles(ensemble, grid, dt);
+            finalizeCurrents(grid);
+        }
+
+    private:
+
+        void zeroizeCurrents(Grid& grid)
+        {
+        }
+
+        void processParticles(Ensemble& ensemble, Grid& grid, double dt)
+        {
             typedef internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid, tileSize> ParticleArrayProcessing;
             ParticleArrayProcessing particleArrayProcessing(ensemble);
             const int numParticles = ensemble.size();
@@ -133,6 +166,11 @@ private:
                 particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid, dt);
             }
         }
+
+        void finalizeCurrents(Grid& grid)
+        {
+        }
+
     };
 
     std::auto_ptr<ImplementationBase> pImpl;
