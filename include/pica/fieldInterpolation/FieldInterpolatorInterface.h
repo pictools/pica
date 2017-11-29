@@ -2,6 +2,9 @@
 #define PICA_FIELD_INTERPOLATOR_INTERFACE_H
 
 
+#include "pica/math/Vectors.h"
+
+
 namespace pica {
 
 
