@@ -54,7 +54,7 @@ public:
     ChargeType getCharge() const { return charge; }
     void setCharge(ChargeType newCharge) { charge = newCharge; }
 
-     FactorType getFactor() const { return factor; }
+    FactorType getFactor() const { return factor; }
     void setFactor(FactorType newFactor) { factor = newFactor; }
 
 private:

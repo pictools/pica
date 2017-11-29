@@ -90,6 +90,7 @@ add_library(pica_interface INTERFACE)
 set(PICA_INCLUDE_DIR include)	
 set(PICA_HEADER_DIR ${PICA_INCLUDE_DIR}/pica)
 set(pica_headers
+    ${PICA_HEADER_DIR}/currentDeposition/CurrentDepositor.h
     ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h
     ${PICA_HEADER_DIR}/fieldSolver/YeeSolver.h
     ${PICA_HEADER_DIR}/grid/Grid.h
