@@ -85,17 +85,17 @@ if (MSVC)
     add_definitions("/wd4068")
 endif()
 
+# In order for pica files to be shown in IDE, create two targets for it
+add_library(pica_interface INTERFACE)
 set(PICA_INCLUDE_DIR include)	
 set(PICA_HEADER_DIR ${PICA_INCLUDE_DIR}/pica)
-include_directories(
-    ${PICA_INCLUDE_DIR})
-add_library(pica
-    ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h	
-    ${PICA_HEADER_DIR}/fieldSolver/YeeSolver.h	
+set(pica_headers
+    ${PICA_HEADER_DIR}/fieldInterpolation/FieldInterpolator.h
+    ${PICA_HEADER_DIR}/fieldSolver/YeeSolver.h
     ${PICA_HEADER_DIR}/grid/Grid.h
     ${PICA_HEADER_DIR}/grid/YeeGrid.h
     ${PICA_HEADER_DIR}/math/Constants.h
-    ${PICA_HEADER_DIR}/math/Dimension.h	
+    ${PICA_HEADER_DIR}/math/Dimension.h
     ${PICA_HEADER_DIR}/math/FP.h
     ${PICA_HEADER_DIR}/math/Vectors.h
     ${PICA_HEADER_DIR}/particles/Ensemble.h
@@ -108,11 +108,11 @@ add_library(pica
     ${PICA_HEADER_DIR}/particles/ParticleTraits.h
     ${PICA_HEADER_DIR}/particlePush/BorisPusher.h
 	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
-	${PICA_HEADER_DIR}/utility/Array.h	
-	${PICA_HEADER_DIR}/utility/Assert.h	
-	${PICA_HEADER_DIR}/utility/Utility.h	
+	${PICA_HEADER_DIR}/utility/Array.h
+	${PICA_HEADER_DIR}/utility/Assert.h
+	${PICA_HEADER_DIR}/utility/Utility.h
     ${PICA_HEADER_DIR}/Parameters.h)
-set_target_properties(pica PROPERTIES LINKER_LANGUAGE CXX)
+add_custom_target(pica SOURCES ${pica_headers})
 
 add_subdirectory(benchmark)
 add_custom_target(post_benchmark ALL DEPENDS benchmark
