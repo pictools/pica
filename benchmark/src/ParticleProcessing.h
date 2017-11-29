@@ -154,7 +154,7 @@ private:
 
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
         {
-            typedef internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid, tileSize> ParticleArrayProcessing;
+            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid, tileSize> ParticleArrayProcessing;
             ParticleArrayProcessing particleArrayProcessing(ensemble);
             const int numParticles = ensemble.size();
             const int numThreads = getNumThreads();
