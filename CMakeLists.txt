@@ -86,6 +86,7 @@ if (MSVC)
 endif()
 
 # In order for pica files to be shown in IDE, create two targets for it
+include_directories(include)
 add_library(pica_interface INTERFACE)
 set(PICA_INCLUDE_DIR include)	
 set(PICA_HEADER_DIR ${PICA_INCLUDE_DIR}/pica)
