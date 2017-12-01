@@ -25,29 +25,41 @@ public:
     EnsembleSupercells(PositionType minPosition, PositionType maxPosition,
         IndexType numCells, IndexType numCellsPerSupercell) :
         minPosition(minPosition), maxPosition(maxPosition), numCells(numCells),
-        numCellsPerSupercell(numCellsPerSupercell) {}
+        numCellsPerSupercell(numCellsPerSupercell)
+    {
+        PositionType cellSize = (maxPosition - minPosition) / PositionType(numCells);
+        supercellInvSize = PositionType(numCellsPerSupercell) / cellSize;
+    }
 
     PositionType getMinPosition() const { return minPosition; }
     PositionType getMaxPosition() const { return maxPosition; }
 
-    int size() const { return 0; /* !!! */ }
+    int size() const { throw "not implemented"; /* !!! */ }
 
     template<class ConstParticleRef>
     void add(ConstParticleRef particle)
     {
-        /* !!! */
+        supercells(getSupercellIndex(particle)).pushBack(particle);
     }
 
     // Specific to this class
     IndexType getNumSupercells() const { return supercells.getSize(); }
+    IndexType getNumCells() const { return numCells; }
+    IndexType getNumCellsPerSupercell() const { return numCellsPerSupercell; }
     ParticleArray& getParticles(IndexType supercellIdx) { return supercells(supercellIdx); }
     const ParticleArray& getParticles(IndexType supercellIdx) const { return supercells(supercellIdx); }
+    template<class ConstParticleRef>
+    IndexType getSupercellIndex(ConstParticleRef particle)
+    {
+        return truncate((particle.getPosition() - minPosition) * supercellInvSize);
+    }
 
 private:
     PositionType minPosition;
     PositionType maxPosition;
     IndexType numCells;
     IndexType numCellsPerSupercell;
+    PositionType supercellInvSize;
 
     typedef typename ArrayIntTypeHelper<dimension, ParticleArray>::Type Supercells;
     Supercells supercells;
