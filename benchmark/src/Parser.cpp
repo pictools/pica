@@ -33,6 +33,12 @@ Parameters readParameters(int argc, char* argv[])
         toString(EnsembleRepresentation_Ordered), toString(EnsembleRepresentation_Supercells)));
     parser.add<int>("sortingperiod", 0, "period of time steps to perform ordering, only used for ordered representation",
         false, 100);
+    parser.add<int>("ncellssupercellx", 0, "number of cells per supercells in x, only used for supercells representation",
+        false, 2);
+    parser.add<int>("ncellssupercelly", 0, "number of cells per supercells in y, only used for supercells representation and dimension >= 2",
+        false, 2);
+    parser.add<int>("ncellssupercellz", 0, "number of cells per supercells in z, only used for supercells representation and dimension = 3",
+        false, 2);
     parser.add<int>("tilesize", 0, "size of tile for particle processing", false, 8);
     if (useOpenMP())
         parser.add<int>("nthreads", 0, "number of OpenMP threads, default value is based on system settings", false, getNumThreads());
@@ -64,6 +70,9 @@ Parameters readParameters(int argc, char* argv[])
     else
         throw std::invalid_argument("wrong value of particle ordering");
     parameters.sortingPeriod = parser.get<int>("sortingperiod");
+    parameters.numCellsPerSupercell.x = parser.get<int>("ncellssupercellx");
+    parameters.numCellsPerSupercell.y = parser.get<int>("ncellssupercelly");
+    parameters.numCellsPerSupercell.z = parser.get<int>("ncellssupercellz");
     parameters.tileSize = parser.get<int>("tilesize");
     if (useOpenMP())
         parameters.numThreads = parser.get<int>("nthreads");

@@ -17,8 +17,8 @@ struct Parameters {
     double temperature;
     pica::ParticleRepresentation particleRepresentation;
     pica::EnsembleRepresentation ensembleRepresentation;
-    int sortingPeriod;
-    pica::Vector3<int> numCellsPerSupercell;
+    int sortingPeriod; // used only for ordered ensemble representation
+    pica::Vector3<int> numCellsPerSupercell; // used only for supercell ensemble representation
     int tileSize;
     int numThreads;
 };
