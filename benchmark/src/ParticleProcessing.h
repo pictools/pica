@@ -26,7 +26,9 @@ struct ParticleProcessing {
 
 namespace internal {
 
-template<class Ensemble, class ParticleArray, class Grid, int tileSize>
+// This class implements processing of array of particles
+// Processing is tiled according to given tileSize
+template<class Ensemble, class ParticleArray, int tileSize>
 class ParticleArrayProcessing {
 public:
     typedef typename Ensemble::Particle Particle;
@@ -39,37 +41,37 @@ public:
         maxPosition(ensemble.getMaxPosition())
     {}
 
-    void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
-    {
-        process(particles, beginIdx, endIdx, grid, grid, dt);
-    }
-
-    void process(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, Grid& currentDepositionGrid, double dt)
+    template<class FieldInterpolator, class CurrentDepositor>
+    void process(ParticleArray& particles, int beginIdx, int endIdx,
+        FieldInterpolator& fieldInterpolator, CurrentDepositor& currentDepositor, double dt)
     {
         const int numParticles = endIdx - beginIdx;
         const int numTiles = (numParticles + tileSize - 1) / tileSize;
         for (int tileIdx = 0; tileIdx < numTiles; tileIdx++) {
             const int tileBeginIdx = beginIdx + tileIdx * tileSize;
             const int tileEndIdx = std::min(tileBeginIdx + tileSize, endIdx);
-            processTile(particles, tileBeginIdx, tileEndIdx, grid, currentDepositionGrid, dt);
+            processTile(particles, tileBeginIdx, tileEndIdx, fieldInterpolator, currentDepositor, dt);
         }
     }
 
 private:
     PositionType minPosition, maxPosition;
 
-    void processTile(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, Grid& currentDepositionGrid, double dt)
+    template<class FieldInterpolator, class CurrentDepositor>
+    void processTile(ParticleArray& particles, int beginIdx, int endIdx,
+        FieldInterpolator& fieldInterpolator, CurrentDepositor& currentDepositor, double dt)
     {
-        pushParticles(particles, beginIdx, endIdx, grid, dt);
-        applyBoundaryConditions(particles, beginIdx, endIdx, grid, dt);
-        depositCurrents(particles, beginIdx, endIdx, currentDepositionGrid, dt);
+        pushParticles(particles, beginIdx, endIdx, fieldInterpolator, dt);
+        applyBoundaryConditions(particles, beginIdx, endIdx);
+        depositCurrents(particles, beginIdx, endIdx, currentDepositor, dt);
     }
 
-    void pushParticles(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    template<class FieldInterpolator>
+    void pushParticles(ParticleArray& particles, int beginIdx, int endIdx,
+        FieldInterpolator& fieldInterpolator, double dt)
     {
         MomentumType interpolatedE[tileSize];
         MomentumType interpolatedB[tileSize];
-        pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
             fieldInterpolator.get(particles[particleIdx].getPosition(),
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx]);
@@ -80,7 +82,7 @@ private:
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
     }
 
-    void applyBoundaryConditions(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    void applyBoundaryConditions(ParticleArray& particles, int beginIdx, int endIdx)
     {
         // Reflecting boundary conditions
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
@@ -101,10 +103,11 @@ private:
         }
     }
 
-    void depositCurrents(ParticleArray& particles, int beginIdx, int endIdx, Grid& grid, double dt)
+    template<class CurrentDepositor>
+    void depositCurrents(ParticleArray& particles, int beginIdx, int endIdx,
+        CurrentDepositor& currentDepositor, double dt)
     {
         const double halfDt = 0.5 * dt;
-        pica::CurrentDepositorCIC<Grid> currentDepositor(grid);
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
             PositionType position = particles[particleIdx].getPosition();
             for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
@@ -179,17 +182,19 @@ private:
 
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
         {
-            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, Grid, tileSize> ParticleArrayProcessing;
+            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, tileSize> ParticleArrayProcessing;
             ParticleArrayProcessing particleArrayProcessing(ensemble);
             const int numParticles = ensemble.size();
             const int numThreads = getNumThreads();
             const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
             #pragma omp parallel for
             for (int idx = 0; idx < numThreads; idx++) {
+                pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
+                pica::CurrentDepositorCIC<Grid> currentDepositor(threadGridCopies[omp_get_thread_num()]);
                 const int beginIdx = idx * particlesPerThread;
                 const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
-                particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx, grid,
-                    threadGridCopies[omp_get_thread_num()], dt);
+                particleArrayProcessing.process(ensemble.getParticles(), beginIdx, endIdx,
+                    fieldInterpolator, currentDepositor, dt);
             }
         }
 
