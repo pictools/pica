@@ -15,25 +15,25 @@ using namespace std;
 Parameters readParameters(int argc, char* argv[])
 {
     cmdline::parser parser;
-    if (useOpenMP())
-        parser.add<int>("nthreads", 'n', "number of OpenMP threads", false, getNumThreads());
-    parser.add<int>("dimension", 'd', "dimension", false, 3);
+    parser.add<int>("dimension", 0, "dimension", false, 3);
     parser.add<int>("ncellsx", 0, "number of grid cells in x", false, 40);
     parser.add<int>("ncellsy", 0, "number of grid cells in y, only used for dimension >= 2", false, 40);
     parser.add<int>("ncellsz", 0, "number of grid cells in z, only used for dimension = 3", false, 40);
-    parser.add<int>("ppc", 'p', "particles per cell", false, 100);
-    parser.add<double>("temperature", 't', "initial temperature", false, 0.0);
-    parser.add<int>("iterations", 'i', "number of time iterations", false, 100);
-    parser.add<string>("representation_particles", 'r', "representation of particles in arrays: " +
+    parser.add<int>("nppc", 0, "number of particles per cell", false, 50);
+    parser.add<double>("temperature", 0, "initial temperature", false, 0.0);
+    parser.add<int>("niterations", 0, "number of time iterations", false, 100);
+    parser.add<string>("layout", 0, "layout of particles in arrays: " +
         toString(ParticleRepresentation_SoA) + " or " + toString(ParticleRepresentation_AoS), false,
         toString(ParticleRepresentation_SoA), cmdline::oneof<string>(toString(ParticleRepresentation_SoA),
         toString(ParticleRepresentation_AoS)));
-    parser.add<string>("ensemble_storage", 'e', "storage of particles in ensemble: " +
+    parser.add<string>("ordering", 0, "ordering of particles in ensemble: " +
         toString(EnsembleRepresentation_Unordered) + " or " + toString(EnsembleRepresentation_Ordered) +
         " or " + toString(EnsembleRepresentation_Supercells), false, toString(EnsembleRepresentation_Ordered),
         cmdline::oneof<string>(toString(EnsembleRepresentation_Unordered),
         toString(EnsembleRepresentation_Ordered), toString(EnsembleRepresentation_Supercells)));
-    parser.add<int>("tilesize", 's', "size of tile for particle processing", false, 8);
+    parser.add<int>("tilesize", 0, "size of tile for particle processing", false, 8);
+    if (useOpenMP())
+        parser.add<int>("nthreads", 0, "number of OpenMP threads, default value is based on system settings", false, getNumThreads());
     parser.parse_check(argc, argv);
 
     // For now just hardcode
@@ -42,21 +42,17 @@ Parameters readParameters(int argc, char* argv[])
     parameters.numCells.x = parser.get<int>("ncellsx");
     parameters.numCells.y = parser.get<int>("ncellsy");
     parameters.numCells.z = parser.get<int>("ncellsz");
-    parameters.numIterations = parser.get<int>("iterations");
-    if (useOpenMP())
-        parameters.numThreads = parser.get<int>("nthreads");
-    else
-        parameters.numThreads = 1;
-    parameters.particlesPerCell = parser.get<int>("ppc");
+    parameters.particlesPerCell = parser.get<int>("nppc");
     parameters.temperature = parser.get<double>("temperature");
-    string representationParticles = parser.get<string>("representation_particles");
+    parameters.numIterations = parser.get<int>("niterations");
+    string representationParticles = parser.get<string>("layout");
     if (representationParticles == toString(ParticleRepresentation_SoA))
         parameters.particleRepresentation = ParticleRepresentation_SoA;
     else if (representationParticles == toString(ParticleRepresentation_AoS))
         parameters.particleRepresentation = ParticleRepresentation_AoS;
     else
-        throw std::invalid_argument("wrong value of representation particles");
-    string ensembleStorage = parser.get<string>("ensemble_storage");
+        throw std::invalid_argument("wrong value of particle layout");
+    string ensembleStorage = parser.get<string>("ordering");
     if (ensembleStorage == toString(EnsembleRepresentation_Unordered))
         parameters.ensembleRepresentation = EnsembleRepresentation_Unordered;
     else if (ensembleStorage == toString(EnsembleRepresentation_Ordered))
@@ -64,7 +60,11 @@ Parameters readParameters(int argc, char* argv[])
     else if (ensembleStorage == toString(EnsembleRepresentation_Supercells))
         parameters.ensembleRepresentation = EnsembleRepresentation_Supercells;
     else
-        throw std::invalid_argument("wrong value of ensemble representation");
+        throw std::invalid_argument("wrong value of particle ordering");
     parameters.tileSize = parser.get<int>("tilesize");
+    if (useOpenMP())
+        parameters.numThreads = parser.get<int>("nthreads");
+    else
+        parameters.numThreads = 1;
     return parameters;
 }
