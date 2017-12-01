@@ -18,6 +18,7 @@ struct Parameters {
     double temperature;
     pica::ParticleRepresentation particleRepresentation;
     pica::EnsembleRepresentation ensembleRepresentation;
+    pica::Vector3<int> numCellsPerSupercell;
     int tileSize;
 };
 

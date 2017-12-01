@@ -4,6 +4,7 @@ include_directories(
 	cmdline)
 
 add_executable(benchmark
+    src/EnsembleHelper.h
     src/GridHelper.h
     src/Output.h
     src/Parameters.h

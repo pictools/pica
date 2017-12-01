@@ -326,4 +326,178 @@ private:
 };
 
 
+template<class ParticleArray, class Grid>
+struct ParticleProcessing<pica::EnsembleSupercells<ParticleArray>, Grid> {
+    typedef pica::EnsembleSupercells<ParticleArray> Ensemble;
+    typedef typename Ensemble::Particle Particle;
+    typedef typename Ensemble::IndexType IndexType;
+
+    ParticleProcessing(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) :
+        pImpl(createImplementation(parameters))
+    {
+        pImpl->init(parameters, ensemble, grid);
+    }
+
+    void process(Ensemble& ensemble, Grid& grid, double dt)
+    {
+        pImpl->process(ensemble, grid, dt);
+    }
+
+private:
+
+    class ImplementationBase {
+    public:
+        virtual void init(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) {}
+        virtual ~ImplementationBase() {}
+        virtual void process(Ensemble& ensemble, Grid& grid, double dt) = 0;
+    };
+
+    template<int tileSize>
+    class Implementation : public ImplementationBase {
+    public:
+
+        virtual void init(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid)
+        {
+        }
+
+        virtual void process(Ensemble& ensemble, Grid& grid, double dt)
+        {
+            zeroizeCurrents(grid);
+            processParticles(ensemble, grid, dt);
+            finalizeCurrents(grid);
+        }
+
+    private:
+
+        void zeroizeCurrents(Grid& grid)
+        {
+            // The following is for 3D only
+            #pragma omp parallel for collapse(2)
+            for (int i = 0; i < grid.getSize().x; i++)
+            for (int j = 0; j < grid.getSize().y; j++)
+            for (int k = 0; k < grid.getSize().z; k++) {
+                grid.jx(i, j, k) = 0.0;
+                grid.jy(i, j, k) = 0.0;
+                grid.jz(i, j, k) = 0.0;
+            }
+        }
+
+        void processParticles(Ensemble& ensemble, Grid& grid, double dt)
+        {
+            int tileSize = 4;
+            IndexType numSupercells = ensemble.getNumSupercells();
+            Ensemble migratingEnsemble(ensemble.getMinPosition(), ensemble.getMaxPosition(),
+                ensemble.getNumCells(), ensemble.getNumCellsPerSupercell());
+
+            /// For now 3D only
+            for (int startI = 0; startI < tileSize; startI++)
+            for (int startJ = 0; startJ < tileSize; startJ++)
+            for (int startK = 0; startK < tileSize; startK++) {
+                #pragma omp parallel for collapse(3)
+                for (int i = startI; i < numSupercells.x; i += tileSize)
+                for (int j = startJ; j < numSupercells.y; j += tileSize)
+                for (int k = startK; k < numSupercells.z; k += tileSize)
+                    processSupercell(IndexType(i, j, k), ensemble, migratingEnsemble, grid, dt);
+            }
+
+            // Finalize migration
+            #pragma omp parallel for collapse(3)
+            for (int i = 0; i < numSupercells.x; i++)
+            for (int j = 0; j < numSupercells.y; j++)
+            for (int k = 0; k < numSupercells.z; k++) {
+                ParticleArray migratingParticles = migratingEnsemble.getParticles(IndexType(i, j, k));
+                for (int idx = 0; idx < migratingParticles.size(); idx++)
+                    ensemble.add(migratingParticles[idx]);
+            }
+        }
+
+        void processSupercell(IndexType index, Ensemble& ensemble, Ensemble& migratingEnsemble,
+            Grid& grid, double dt)
+        {
+            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, tileSize> ParticleArrayProcessing;
+            typedef pica::BorisPusher<Particle> ParticlePusher;
+            typedef pica::FieldInterpolatorCIC<Grid> FieldInterpolator;
+            typedef pica::CurrentDepositorCIC<Grid> CurrentDepositor;
+            typedef ::internal::ReflectingBoundaryConditions<ParticleArray> BoundaryConditions;
+
+            ParticlePusher particlePusher;
+            FieldInterpolator fieldInterpolator(grid);
+            CurrentDepositor currentDepositor(grid);
+            BoundaryConditions boundaryConditions(ensemble.getMinPosition(), ensemble.getMaxPosition());
+            ParticleArray& particles = ensemble.getParticles(index);
+            ParticleArrayProcessing::process(particles, 0, particles.size(),
+                particlePusher, fieldInterpolator, currentDepositor, boundaryConditions, dt);
+
+            for (int i = 0; i < particles.size(); i++)
+                if (ensemble.getSupercellIndex(particles[i]) != index) {
+                    migratingEnsemble.add(particles[i]);
+                    typename Ensemble::ParticleRef lastParticle = particles.back();
+                    particles[i].setPosition(lastParticle.getPosition());
+                    particles[i].setMass(lastParticle.getMass());
+                    particles[i].setCharge(lastParticle.getCharge());
+                    particles[i].setFactor(lastParticle.getFactor());
+                    particles.popBack();
+                    i--;
+                }
+        }
+
+        void finalizeCurrents(Grid& grid)
+        {
+            // The following is for 3D only
+            double normalization = 1.0 / grid.getStep().volume();
+            #pragma omp parallel for collapse(2)
+            for (int i = 0; i < grid.getSize().x; i++)
+            for (int j = 0; j < grid.getSize().y; j++)
+            for (int k = 0; k < grid.getSize().z; k++) {
+                grid.jx(i, j, k) *= normalization;
+                grid.jy(i, j, k) *= normalization;
+                grid.jz(i, j, k) *= normalization;
+            }
+        }
+
+    };
+
+    std::auto_ptr<ImplementationBase> pImpl;
+
+    ImplementationBase* createImplementation(const Parameters& parameters)
+    {
+        const int tileSize = parameters.tileSize;
+        if (tileSize <= 8)
+            return new Implementation<8>;
+        else if (tileSize <= 16)
+            return new Implementation<16>;
+        else if (tileSize <= 24)
+            return new Implementation<24>;
+        else if (tileSize <= 32)
+            return new Implementation<32>;
+        else if (tileSize <= 40)
+            return new Implementation<40>;
+        else if (tileSize <= 48)
+            return new Implementation<48>;
+        else if (tileSize <= 56)
+            return new Implementation<56>;
+        else if (tileSize <= 64)
+            return new Implementation<64>;
+        else if (tileSize <= 72)
+            return new Implementation<72>;
+        else if (tileSize <= 80)
+            return new Implementation<80>;
+        else if (tileSize <= 88)
+            return new Implementation<88>;
+        else if (tileSize <= 96)
+            return new Implementation<96>;
+        else if (tileSize <= 104)
+            return new Implementation<104>;
+        else if (tileSize <= 112)
+            return new Implementation<112>;
+        else if (tileSize <= 120)
+            return new Implementation<120>;
+        else
+            return new Implementation<128>;
+    }
+
+};
+
+
+
 #endif

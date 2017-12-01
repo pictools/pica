@@ -1,5 +1,6 @@
 #include "Simulation.h"
 
+#include "EnsembleHelper.h"
 #include "GridHelper.h"
 #include "Parameters.h"
 #include "ParticleProcessing.h"
@@ -123,14 +124,15 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
         numCells[d] = parameters.numCells[d];
     PositionType step = (maxPosition - minPosition) / PositionType(numCells);
     std::auto_ptr<Grid> grid = createGrid<Grid>(minPosition, maxPosition, numCells);
-    Ensemble ensemble(minPosition, maxPosition);
-    createParticles(parameters, ensemble);
-    ParticleProcessing<Ensemble, Grid> particleProcessing(parameters, ensemble, *grid);
+    std::auto_ptr<Ensemble> ensemble = createEnsemble<Ensemble>(minPosition, maxPosition,
+        numCells, parameters.numCellsPerSupercell);
+    createParticles(parameters, *ensemble);
+    ParticleProcessing<Ensemble, Grid> particleProcessing(parameters, *ensemble, *grid);
     YeeSolver fieldSolver;
     Real timeStep = getTimeStep<PositionType, Real>(step);
     omp_set_num_threads(parameters.numThreads);
     for (int i = 0; i < parameters.numIterations; i++)
-        runIteration(ensemble, *grid, particleProcessing, fieldSolver, timeStep, tracker);
+        runIteration(*ensemble, *grid, particleProcessing, fieldSolver, timeStep, tracker);
 }
 
 template<Dimension dimension, class Particle, class ParticleArray>
@@ -144,6 +146,10 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
         case EnsembleRepresentation_Ordered:
             runSimulation<dimension, Particle, ParticleArray,
                 Ensemble<ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
+            break;
+        case EnsembleRepresentation_Supercells:
+            runSimulation<dimension, Particle, ParticleArray,
+                Ensemble<ParticleArray, EnsembleRepresentation_Supercells>::Type>(parameters, tracker);
             break;
         default:
             throw std::invalid_argument("wrong value of ensemble representation");
