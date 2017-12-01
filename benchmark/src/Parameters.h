@@ -13,13 +13,14 @@ struct Parameters {
     int dimension;
     pica::Vector3<int> numCells;
     int numIterations;
-    int numThreads;
     int particlesPerCell;
     double temperature;
     pica::ParticleRepresentation particleRepresentation;
     pica::EnsembleRepresentation ensembleRepresentation;
+    int sortingPeriod;
     pica::Vector3<int> numCellsPerSupercell;
     int tileSize;
+    int numThreads;
 };
 
 

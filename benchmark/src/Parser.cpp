@@ -31,6 +31,8 @@ Parameters readParameters(int argc, char* argv[])
         " or " + toString(EnsembleRepresentation_Supercells), false, toString(EnsembleRepresentation_Ordered),
         cmdline::oneof<string>(toString(EnsembleRepresentation_Unordered),
         toString(EnsembleRepresentation_Ordered), toString(EnsembleRepresentation_Supercells)));
+    parser.add<int>("sortingperiod", 0, "period of time steps to perform ordering, only used for ordered representation",
+        false, 100);
     parser.add<int>("tilesize", 0, "size of tile for particle processing", false, 8);
     if (useOpenMP())
         parser.add<int>("nthreads", 0, "number of OpenMP threads, default value is based on system settings", false, getNumThreads());
@@ -61,6 +63,7 @@ Parameters readParameters(int argc, char* argv[])
         parameters.ensembleRepresentation = EnsembleRepresentation_Supercells;
     else
         throw std::invalid_argument("wrong value of particle ordering");
+    parameters.sortingPeriod = parser.get<int>("sortingperiod");
     parameters.tileSize = parser.get<int>("tilesize");
     if (useOpenMP())
         parameters.numThreads = parser.get<int>("nthreads");

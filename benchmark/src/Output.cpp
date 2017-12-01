@@ -44,7 +44,12 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Particles per cell: " << parameters.particlesPerCell << "\n";
     cout << prefix << "Particles temperature: " << parameters.temperature << "\n";
     cout << prefix << "Particle representation: " << toString(parameters.particleRepresentation) << "\n";
-    cout << prefix << "Ensemble representation: " << toString(parameters.ensembleRepresentation) << "\n";
+    cout << prefix << "Ensemble representation: " << toString(parameters.ensembleRepresentation);
+    if (parameters.ensembleRepresentation == EnsembleRepresentation_Ordered)
+        cout << ", sorting period = " << parameters.sortingPeriod;
+    else if (parameters.ensembleRepresentation == EnsembleRepresentation_Supercells)
+        cout << ", supercell size = ";
+    cout << "\n";
     cout << prefix << "Tile size: " << toString(parameters.tileSize) << "\n";
 }
 

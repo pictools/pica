@@ -310,7 +310,7 @@ struct ParticleProcessing<pica::EnsembleOrdered<ParticleArray>, Grid> :
     ParticleProcessing(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) :
         ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid>(parameters, ensemble, grid),
         iteration(0),
-        sortingPeriod(100)
+        sortingPeriod(parameters.sortingPeriod)
     {}
 
     void process(pica::EnsembleOrdered<ParticleArray>& ensemble, Grid& grid, double dt)
@@ -322,7 +322,8 @@ struct ParticleProcessing<pica::EnsembleOrdered<ParticleArray>, Grid> :
     }
 
 private:
-    int iteration, sortingPeriod;
+    int iteration;
+    const int sortingPeriod;
 };
 
 
