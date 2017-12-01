@@ -8,12 +8,12 @@ benchmark_path = "benchmark"
 out_directory = datetime.datetime.now().strftime('benchmark_%Y-%m-%d_%H-%M-%S')
 num_repetitions = 3
 dimension = 3
-ncellsx = 10
-ncellsy = 10
-ncellsz = 10
-nppc = 1
+ncellsx = 40
+ncellsy = 40
+ncellsz = 40
+nppc = 50
 temperature = 0.0
-niterations = 1
+niterations = 100
 layouts = ["SoA", "AoS"]
 sorting_periods = [10, 20, 30]
 ordered_combinations = ["ordered --sortingperiod " + str(period) for period in sorting_periods]
@@ -53,7 +53,14 @@ for i in range(0, len(combination_values)):
     args = args_base + args_combination
     file_name = file_name[:-1] + ".txt"
     f = open(os.path.join(out_directory, file_name), "w")
-    for repeatition in range(0, num_repetitions):
+    for repetition in range(0, num_repetitions):
         popen = subprocess.Popen(args, stdout=subprocess.PIPE, universal_newlines=True)
         popen.wait()
-        f.write(str(popen.stdout.read()))
+        output = str(popen.stdout.read())
+        # cut off header
+        parameters_output = output[output.find("Parameters"):output.find("Performance")]
+        if repetition == 0:
+            f.write(parameters_output)
+        f.write("Run " + str(repetition) + ":\n")
+        performance_output = output[output.find("   Field"):]
+        f.write(performance_output + "\n")
