@@ -4,13 +4,19 @@
 
 #include "pica/math/Constants.h"
 #include "pica/math/Vectors.h"
+#include "pica/particles/ParticleTraits.h"
 
 
 namespace pica {
 
 
+template<class Particle>
 struct BorisPusher {
-    template<class ParticleRef, class MomentumType, class PositionType, typename Real>
+
+    typedef typename ParticleTraits<Particle>::PositionType PositionType;
+    typedef typename ParticleTraits<Particle>::MomentumType MomentumType;
+
+    template<class ParticleRef, typename Real>
     void push(ParticleRef particle, const MomentumType& e, const MomentumType& b, Real dt)
     {
         const Real eCoeff = particle.getCharge() * dt / (2.0 * particle.getMass() * Constants<Real>::c());

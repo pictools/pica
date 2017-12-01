@@ -32,7 +32,6 @@ template<class Ensemble, class ParticleArray, int tileSize>
 class ParticleArrayProcessing {
 public:
     typedef typename Ensemble::Particle Particle;
-    typedef typename Ensemble::ParticleRef ParticleRef;
     typedef typename pica::ParticleTraits<Particle>::MomentumType MomentumType;
     typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
 
@@ -73,9 +72,9 @@ private:
             fieldInterpolator.get(particles[particleIdx].getPosition(),
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx]);
 
-        pica::BorisPusher pusher;
+        pica::BorisPusher<Particle> pusher;
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
-            pusher.push<ParticleRef, MomentumType, PositionType, double>(particles[particleIdx],
+            pusher.push(particles[particleIdx],
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
     }
 
