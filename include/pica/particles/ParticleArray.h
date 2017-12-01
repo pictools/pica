@@ -97,6 +97,15 @@ public:
     class ParticleRef : public ConstParticleRef {
     public:
 
+        typedef typename ParticleTraits<ParticleType>::PositionType PositionType;
+        typedef typename ParticleTraits<ParticleType>::MomentumType MomentumType;
+        typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
+        typedef typename ParticleTraits<ParticleType>::MassType MassType;
+        typedef typename ParticleTraits<ParticleType>::ChargeType ChargeType;
+        typedef typename ParticleTraits<ParticleType>::FactorType FactorType;
+        static const int dimension = VectorDimensionHelper<PositionType>::dimension;
+        static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
+
         ParticleRef(ParticleArraySoA& particles, int idx) :
             ConstParticleRef(particles, idx),
             particles(particles),
@@ -138,10 +147,10 @@ public:
     template<class ConstParticleRefType>
     void pushBack(ConstParticleRefType particle)
     {
-        const ParticleRef::PositionType position = particle.getPosition();
+        const typename ParticleRef::PositionType position = particle.getPosition();
         for (int d = 0; d < ParticleRef::dimension; d++)
             positions[d].push_back(position[d]);
-        const ParticleRef::MomentumType momentum = particle.getMomentum();
+        const typename ParticleRef::MomentumType momentum = particle.getMomentum();
         for (int d = 0; d < ParticleRef::momentumDimension; d++)
             momentums[d].push_back(momentum[d]);
         masses.push_back(particle.getMass());

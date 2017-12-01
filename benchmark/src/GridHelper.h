@@ -24,9 +24,9 @@ std::auto_ptr<Grid> createGrid(typename Grid::PositionType minPosition,
     typedef typename Grid::IndexType IndexType;
     PositionType step = (maxPosition - minPosition) / Grid::PositionType(numInternalCells);
     int numGhostCells = getNumGhostCells();
-    PositionType origin = minPosition - step * static_cast<ScalarType<PositionType>::Type>(numGhostCells);
+    PositionType origin = minPosition - step * static_cast<typename pica::ScalarType<PositionType>::Type>(numGhostCells);
     IndexType numCells = numInternalCells;
-    for (int d = 0; d < VectorDimensionHelper<IndexType>::dimension; d++)
+    for (int d = 0; d < pica::VectorDimensionHelper<IndexType>::dimension; d++)
         numCells[d] += 2 * numGhostCells;
     return std::auto_ptr<Grid>(new Grid(origin, step, numCells));
 }
@@ -36,7 +36,7 @@ static typename Grid::IndexType getNumInternalCells(Grid& grid, int numGhostCell
 {
     /// Logic is hardcoded for now to match YeeSolver
     int dimension = pica::VectorDimensionHelper<typename Grid::IndexType>::dimension;
-    Grid::IndexType numInternalCells = grid.getSize();
+    typename Grid::IndexType numInternalCells = grid.getSize();
     for (int d = 0; d < dimension; d++)
         numInternalCells[d] -= 2 * numGhostCells;
     return numInternalCells;

@@ -52,6 +52,11 @@ template<typename Real>
 class CurrentDepositorCIC<YeeGrid<One, Real> > : public internal::CurrentDepositorYeeGridCICBase<One, Real> {
 public:
 
+    using typename internal::CurrentDepositorYeeGridCICBase<One, Real>::GridType;
+    using typename internal::CurrentDepositorYeeGridCICBase<One, Real>::IndexType;
+    using typename internal::CurrentDepositorYeeGridCICBase<One, Real>::PositionType;
+    using typename internal::CurrentDepositorYeeGridCICBase<One, Real>::ValueType;
+
     CurrentDepositorCIC(GridType& grid) : internal::CurrentDepositorYeeGridCICBase<One, Real>(grid)
     {}
  
@@ -70,8 +75,8 @@ private:
     typedef ValueType&(GridType::*FieldComponent1d)(int);
     void deposit(FieldComponent1d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (grid.*component)(baseIndex.x) = (1.0 - coeff.x) * value;
-        (grid.*component)(baseIndex.x + 1) = coeff.x * value;
+        (this->grid.*component)(baseIndex.x) = (1.0 - coeff.x) * value;
+        (this->grid.*component)(baseIndex.x + 1) = coeff.x * value;
     }
 
 };
@@ -80,6 +85,11 @@ private:
 template<typename Real>
 class CurrentDepositorCIC<YeeGrid<Two, Real> > : public internal::CurrentDepositorYeeGridCICBase<Two, Real> {
 public:
+
+    using typename internal::CurrentDepositorYeeGridCICBase<Two, Real>::GridType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Two, Real>::IndexType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Two, Real>::PositionType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Two, Real>::ValueType;
 
     CurrentDepositorCIC(GridType& grid) : internal::CurrentDepositorYeeGridCICBase<Two, Real>(grid)
     {}
@@ -102,10 +112,10 @@ private:
     typedef ValueType&(GridType::*FieldComponent2d)(int, int);
     void deposit(FieldComponent2d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (grid.*component)(baseIndex.x, baseIndex.y) = (1.0 - coeff.x) * (1.0 - coeff.y) * value;
-        (grid.*component)(baseIndex.x, baseIndex.y + 1) = (1.0 - coeff.x) * coeff.y * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y) = coeff.x * (1.0 - coeff.y) * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y + 1) = coeff.x * coeff.y * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y) = (1.0 - coeff.x) * (1.0 - coeff.y) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1) = (1.0 - coeff.x) * coeff.y * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y) = coeff.x * (1.0 - coeff.y) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1) = coeff.x * coeff.y * value;
     }
 
 };
@@ -114,6 +124,11 @@ private:
 template<typename Real>
 class CurrentDepositorCIC<YeeGrid<Three, Real> > : public internal::CurrentDepositorYeeGridCICBase<Three, Real> {
 public:
+
+    using typename internal::CurrentDepositorYeeGridCICBase<Three, Real>::GridType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Three, Real>::IndexType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Three, Real>::PositionType;
+    using typename internal::CurrentDepositorYeeGridCICBase<Three, Real>::ValueType;
 
     CurrentDepositorCIC(GridType& grid) : internal::CurrentDepositorYeeGridCICBase<Three, Real>(grid)
     {}
@@ -136,14 +151,14 @@ private:
     typedef ValueType&(GridType::*FieldComponent3d)(int, int, int);
     void deposit(FieldComponent3d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
-        (grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) = (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
-        (grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) = (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
-        (grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) = (1.0 - coeff.x) * coeff.y * coeff.z * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) = coeff.x * (1.0 - coeff.y) * coeff.z * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) = coeff.x * coeff.y * (1.0 - coeff.z) * value;
-        (grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) = coeff.x * coeff.y * coeff.z * value;;
+        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) = (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) = (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) = (1.0 - coeff.x) * coeff.y * coeff.z * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) = coeff.x * (1.0 - coeff.y) * coeff.z * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) = coeff.x * coeff.y * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) = coeff.x * coeff.y * coeff.z * value;;
     }
 
 };

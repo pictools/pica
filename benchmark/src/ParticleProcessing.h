@@ -94,7 +94,7 @@ private:
         const double halfDt = 0.5 * dt;
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++) {
             PositionType position = particles[particleIdx].getPosition();
-            for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+            for (int d = 0; d < pica::VectorDimensionHelper<PositionType>::dimension; d++)
                 position[d] -= particles[particleIdx].getVelocity()[d] * halfDt;
             MomentumType current = particles[particleIdx].getVelocity() * particles[particleIdx].getCharge() * (double)particles[particleIdx].getFactor();
             currentDepositor.deposit(position, current);
@@ -122,7 +122,7 @@ public:
     {
         PositionType position = particle.getPosition();
         MomentumType momentum = particle.getMomentum();
-        for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
+        for (int d = 0; d < pica::VectorDimensionHelper<PositionType>::dimension; d++)
             if (position[d] < minPosition[d]) {
                 position[d] = 2.0 * minPosition[d] - position[d];
                 momentum[d] = -momentum[d];
@@ -238,9 +238,11 @@ private:
         {
             // The following is for 3D only
             double normalization = 1.0 / grid.getStep().volume();
+            const int sizeX = grid.getSize().x;
+            const int sizeY = grid.getSize().y;
             #pragma omp parallel for collapse(2)
-            for (int i = 0; i < grid.getSize().x; i++)
-            for (int j = 0; j < grid.getSize().y; j++)
+            for (int i = 0; i < sizeX; i++)
+            for (int j = 0; j < sizeY; j++)
             for (int k = 0; k < grid.getSize().z; k++) {
                 grid.jx(i, j, k) = 0.0;
                 grid.jy(i, j, k) = 0.0;
@@ -255,7 +257,7 @@ private:
                 grid.jy(i, j, k) *= normalization;
                 grid.jz(i, j, k) *= normalization;
             }
-        }
+         }
 
         std::vector<Grid> threadGridCopies;
 
@@ -307,13 +309,15 @@ template<class ParticleArray, class Grid>
 struct ParticleProcessing<pica::EnsembleOrdered<ParticleArray>, Grid> : 
         ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid> {
 
+    typedef pica::EnsembleOrdered<ParticleArray> Ensemble;
+
     ParticleProcessing(const Parameters& parameters, const Ensemble& ensemble, const Grid& grid) :
         ParticleProcessing<pica::EnsembleUnordered<ParticleArray>, Grid>(parameters, ensemble, grid),
         iteration(0),
         sortingPeriod(parameters.sortingPeriod)
     {}
 
-    void process(pica::EnsembleOrdered<ParticleArray>& ensemble, Grid& grid, double dt)
+    void process(Ensemble& ensemble, Grid& grid, double dt)
     {
         if (iteration % sortingPeriod == 0)
             ensemble.reorder();
@@ -373,9 +377,11 @@ private:
         void zeroizeCurrents(Grid& grid)
         {
             // The following is for 3D only
+            const int sizeX = grid.getSize().x;
+            const int sizeY = grid.getSize().y;
             #pragma omp parallel for collapse(2)
-            for (int i = 0; i < grid.getSize().x; i++)
-            for (int j = 0; j < grid.getSize().y; j++)
+            for (int i = 0; i < sizeX; i++)
+            for (int j = 0; j < sizeY; j++)
             for (int k = 0; k < grid.getSize().z; k++) {
                 grid.jx(i, j, k) = 0.0;
                 grid.jy(i, j, k) = 0.0;
@@ -446,9 +452,11 @@ private:
         {
             // The following is for 3D only
             double normalization = 1.0 / grid.getStep().volume();
+            const int sizeX = grid.getSize().x;
+            const int sizeY = grid.getSize().y;
             #pragma omp parallel for collapse(2)
-            for (int i = 0; i < grid.getSize().x; i++)
-            for (int j = 0; j < grid.getSize().y; j++)
+            for (int i = 0; i < sizeX; i++)
+            for (int j = 0; j < sizeY; j++)
             for (int k = 0; k < grid.getSize().z; k++) {
                 grid.jx(i, j, k) *= normalization;
                 grid.jy(i, j, k) *= normalization;

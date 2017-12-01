@@ -16,6 +16,7 @@ namespace pica {
 template<class ParticleArray>
 class EnsembleOrdered : public EnsembleUnordered<ParticleArray> {
 public:
+    using typename EnsembleUnordered<ParticleArray>::PositionType;
     EnsembleOrdered(PositionType minPosition, PositionType maxPosition);
     void reorder();
 };
@@ -52,14 +53,14 @@ void EnsembleOrdered<ParticleArray>::reorder()
         const int dimension;
     };
 
-    std::vector<int> indexes(particles.size());
+    std::vector<int> indexes(this->particles.size());
     for (int i = 0; i < indexes.size(); i++)
         indexes[i] = i;
-    std::sort(indexes.begin(), indexes.end(), ParticleIndexComparator(particles));
+    std::sort(indexes.begin(), indexes.end(), ParticleIndexComparator(this->particles));
     ParticleArray newParticles;
     for (int i = 0; i < indexes.size(); i++)
-        newParticles.pushBack(particles[indexes[i]]);
-    particles = newParticles;
+        newParticles.pushBack(this->particles[indexes[i]]);
+    this->particles = newParticles;
 }
 
 

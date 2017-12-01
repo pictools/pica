@@ -3,6 +3,7 @@
 
 
 #include "pica/Parameters.h"
+#include "pica/math/Constants.h"
 #include "pica/math/Vectors.h"
 #include "pica/particles/Particle.h"
 #include "pica/particles/ParticleTraits.h"
@@ -31,10 +32,10 @@
 // m_maxRelativeError, else expect absolute error is smaller than
 // m_maxAbsoluteError.
 #define ASSERT_NEAR_VECTOR(expected, actual) \
-    if (expected.norm() > maxAbsoluteError) \
-        ASSERT_LE(dist(expected, actual) / expected.norm(), maxRelativeError); \
+    if (expected.norm() > this->maxAbsoluteError) \
+        ASSERT_LE(dist(expected, actual) / expected.norm(), this->maxRelativeError); \
     else \
-        ASSERT_LE(dist(expected, actual), maxAbsoluteError);
+        ASSERT_LE(dist(expected, actual), this->maxAbsoluteError);
 
 #define ASSERT_NEAR_FP3(expected, actual) \
     if (expected.norm() > maxAbsoluteError) \
@@ -43,10 +44,10 @@
         ASSERT_LE(dist(expected, actual), maxAbsoluteError); \
 
 #define ASSERT_NEAR_FP(expected, actual) \
-    if (fabs(expected) > maxAbsoluteError) \
-        ASSERT_LE(fabs(expected - actual) / fabs(expected), maxRelativeError); \
+    if (fabs(expected) > this->maxAbsoluteError) \
+        ASSERT_LE(fabs(expected - actual) / fabs(expected), this->maxRelativeError); \
     else \
-        ASSERT_LE(fabs(expected - actual), maxAbsoluteError); \
+        ASSERT_LE(fabs(expected - actual), this->maxAbsoluteError); \
 
 
 class BaseFixture : public testing::Test {
@@ -124,8 +125,8 @@ public:
         MomentumType momentum(urand(minMomentum, maxMomentum),
             urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
         FactorType factor = static_cast<FactorType>(urand(1e-5, 1e5));
-        return Particle(position, momentum, Constants<MassType>::electronMass(),
-            Constants<ChargeType>::electronCharge(), factor);
+        return Particle(position, momentum, pica::Constants<MassType>::electronMass(),
+            pica::Constants<ChargeType>::electronCharge(), factor);
     }
 
     template<class ConstParticleRef1, class ConstParticleRef2>

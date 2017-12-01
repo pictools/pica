@@ -51,6 +51,11 @@ template<typename Real>
 class FieldInterpolatorCIC<YeeGrid<One, Real> > : public internal::FieldInterpolatorYeeGridCICBase<One, Real> {
 public:
 
+    using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::GridType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::IndexType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::PositionType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::ValueType;
+
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<One, Real>(grid)
     {
     }
@@ -73,8 +78,8 @@ private:
     typedef ValueType(GridType::*FieldComponent1d)(int) const;
     ValueType interpolate(FieldComponent1d component, IndexType baseIndex, PositionType coeff) const
     {
-        return (grid.*component)(baseIndex.x) * (1.0 - coeff.x) +
-            (grid.*component)(baseIndex.x + 1) * coeff.x;
+        return (this->grid.*component)(baseIndex.x) * (1.0 - coeff.x) +
+            (this->grid.*component)(baseIndex.x + 1) * coeff.x;
     }
 
 };
@@ -83,6 +88,11 @@ private:
 template<typename Real>
 class FieldInterpolatorCIC<YeeGrid<Two, Real> > : public internal::FieldInterpolatorYeeGridCICBase<Two, Real> {
 public:
+
+    using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::GridType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::IndexType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::PositionType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::ValueType;
 
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<Two, Real>(grid)
     {
@@ -113,10 +123,10 @@ private:
     ValueType interpolate(FieldComponent2d component, const IndexType& baseIndex, const PositionType& coeff) const
     {
         return
-            (grid.*component)(baseIndex.x, baseIndex.y) * (1.0 - coeff.x) * (1.0 - coeff.y) +
-            (grid.*component)(baseIndex.x, baseIndex.y + 1) * (1.0 - coeff.x) * coeff.y +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y) * coeff.x * (1.0 - coeff.y) +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y + 1) * coeff.x * coeff.y;
+            (this->grid.*component)(baseIndex.x, baseIndex.y) * (1.0 - coeff.x) * (1.0 - coeff.y) +
+            (this->grid.*component)(baseIndex.x, baseIndex.y + 1) * (1.0 - coeff.x) * coeff.y +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y) * coeff.x * (1.0 - coeff.y) +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1) * coeff.x * coeff.y;
     }
 
 };
@@ -125,6 +135,11 @@ private:
 template<typename Real>
 class FieldInterpolatorCIC<YeeGrid<Three, Real> > : public internal::FieldInterpolatorYeeGridCICBase<Three, Real> {
 public:
+
+    using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::GridType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::IndexType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::PositionType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::ValueType;
 
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<Three, Real>(grid)
     {
@@ -155,14 +170,14 @@ private:
     ValueType interpolate(FieldComponent3d component, const IndexType& baseIndex, const PositionType& coeff) const
     {
         return
-            (grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
-            (grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
-            (grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
-            (grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) * (1.0 - coeff.x) * coeff.y * coeff.z +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) * coeff.x * (1.0 - coeff.y) * coeff.z +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) * coeff.x * coeff.y * (1.0 - coeff.z) +
-            (grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) * coeff.x * coeff.y * coeff.z;
+            (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
+            (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
+            (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) * (1.0 - coeff.x) * coeff.y * coeff.z +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) * coeff.x * (1.0 - coeff.y) * coeff.z +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) * coeff.x * coeff.y * (1.0 - coeff.z) +
+            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) * coeff.x * coeff.y * coeff.z;
     }
 
 };

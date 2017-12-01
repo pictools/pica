@@ -15,6 +15,10 @@ namespace pica {
 template<Dimension dimension, typename Real = double>
 class YeeGrid : public Grid<dimension, Real> {
 public:
+
+    using typename Grid<dimension, Real>::IndexType;
+    using typename Grid<dimension, Real>::PositionType;
+
     YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size);
 
     PositionType getShiftEx() const;
@@ -32,8 +36,13 @@ public:
 template<typename Real>
 class YeeGrid<One, Real> : public Grid<One, Real> {
 public:
+
+    using typename Grid<One, Real>::IndexType;
+    using typename Grid<One, Real>::PositionType;
+    using typename Grid<One, Real>::ValueType;
+
     YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
-        Grid(origin, step, size) {}
+        Grid<One, Real>(origin, step, size) {}
 
     ValueType& ex(int i) { return Grid<One, Real>::ex(IndexType(i)); }
     ValueType ex(int i) const { return Grid<One, Real>::ex(IndexType(i)); }
@@ -72,8 +81,13 @@ public:
 template<typename Real>
 class YeeGrid<Two, Real> : public Grid<Two, Real> {
 public:
+
+    using typename Grid<Two, Real>::IndexType;
+    using typename Grid<Two, Real>::PositionType;
+    using typename Grid<Two, Real>::ValueType;
+
     YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
-        Grid(origin, step, size) {}
+        Grid<Two, Real>(origin, step, size) {}
 
     ValueType& ex(int i, int j) { return Grid<Two, Real>::ex(IndexType(i, j)); }
     ValueType ex(int i, int j) const { return Grid<Two, Real>::ex(IndexType(i, j)); }
@@ -112,8 +126,13 @@ public:
 template<typename Real>
 class YeeGrid<Three, Real> : public Grid<Three, Real> {
 public:
+
+    using typename Grid<Three, Real>::IndexType;
+    using typename Grid<Three, Real>::PositionType;
+    using typename Grid<Three, Real>::ValueType;
+
     YeeGrid(const PositionType& origin, const PositionType& step, const IndexType& size) :
-        Grid(origin, step, size) {}
+        Grid<Three, Real>(origin, step, size) {}
 
     ValueType& ex(int i, int j, int k) { return Grid<Three, Real>::ex(IndexType(i, j, k)); }
     ValueType ex(int i, int j, int k) const { return Grid<Three, Real>::ex(IndexType(i, j, k)); }
