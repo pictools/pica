@@ -18,7 +18,9 @@ Parameters readParameters(int argc, char* argv[])
     if (useOpenMP())
         parser.add<int>("nthreads", 'n', "number of OpenMP threads", false, getNumThreads());
     parser.add<int>("dimension", 'd', "dimension", false, 3);
-    parser.add<int>("grid", 'g', "grid size per each dimension", false, 50);
+    parser.add<int>("ncellsx", 0, "number of grid cells in x", false, 40);
+    parser.add<int>("ncellsy", 0, "number of grid cells in y, only used for dimension >= 2", false, 40);
+    parser.add<int>("ncellsz", 0, "number of grid cells in z, only used for dimension = 3", false, 40);
     parser.add<int>("ppc", 'p', "particles per cell", false, 100);
     parser.add<double>("temperature", 't', "initial temperature", false, 0.0);
     parser.add<int>("iterations", 'i', "number of time iterations", false, 100);
@@ -37,8 +39,9 @@ Parameters readParameters(int argc, char* argv[])
     // For now just hardcode
     Parameters parameters;
     parameters.dimension = parser.get<int>("dimension");
-    int numCellsEachDimension = parser.get<int>("grid");
-    parameters.numCells = Vector3<int>(numCellsEachDimension, numCellsEachDimension, numCellsEachDimension);
+    parameters.numCells.x = parser.get<int>("ncellsx");
+    parameters.numCells.y = parser.get<int>("ncellsy");
+    parameters.numCells.z = parser.get<int>("ncellsz");
     parameters.numIterations = parser.get<int>("iterations");
     if (useOpenMP())
         parameters.numThreads = parser.get<int>("nthreads");
