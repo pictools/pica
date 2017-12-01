@@ -207,23 +207,31 @@ private:
 
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
         {
-            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, tileSize> ParticleArrayProcessing;
-            typedef ::internal::ReflectingBoundaryConditions<ParticleArray> BoundaryConditions;
-            typedef pica::BorisPusher<Particle> ParticlePusher;
             const int numParticles = ensemble.size();
             const int numThreads = getNumThreads();
             const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
             #pragma omp parallel for
             for (int idx = 0; idx < numThreads; idx++) {
-                ParticlePusher particlePusher;
-                pica::FieldInterpolatorCIC<Grid> fieldInterpolator(grid);
-                pica::CurrentDepositorCIC<Grid> currentDepositor(threadGridCopies[omp_get_thread_num()]);
-                BoundaryConditions boundaryConditions(ensemble.getMinPosition(), ensemble.getMaxPosition());
                 const int beginIdx = idx * particlesPerThread;
                 const int endIdx = std::min(beginIdx + particlesPerThread, numParticles);
-                ParticleArrayProcessing::process(ensemble.getParticles(), beginIdx, endIdx,
-                    particlePusher, fieldInterpolator, currentDepositor, boundaryConditions, dt);
+                processParticles(ensemble, beginIdx, endIdx, grid, dt);
             }
+        }
+
+        void processParticles(Ensemble& ensemble, int beginIdx, int endIdx, Grid& grid, double dt)
+        {
+            typedef ::internal::ParticleArrayProcessing<Ensemble, ParticleArray, tileSize> ParticleArrayProcessing;
+            typedef pica::BorisPusher<Particle> ParticlePusher;
+            typedef pica::FieldInterpolatorCIC<Grid> FieldInterpolator;
+            typedef pica::CurrentDepositorCIC<Grid> CurrentDepositor;
+            typedef ::internal::ReflectingBoundaryConditions<ParticleArray> BoundaryConditions;
+
+            ParticlePusher particlePusher;
+            FieldInterpolator fieldInterpolator(grid);
+            CurrentDepositor currentDepositor(threadGridCopies[omp_get_thread_num()]);
+            BoundaryConditions boundaryConditions(ensemble.getMinPosition(), ensemble.getMaxPosition());
+            ParticleArrayProcessing::process(ensemble.getParticles(), beginIdx, endIdx,
+                particlePusher, fieldInterpolator, currentDepositor, boundaryConditions, dt);
         }
 
         void finalizeCurrents(Grid& grid)
