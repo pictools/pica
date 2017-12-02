@@ -3,8 +3,12 @@ import itertools
 import os
 import subprocess
 
+prefix = ""
+if os.name != 'nt':
+    prefix = "./"
+
 # Modify parameters here
-benchmark_path = "benchmark"
+benchmark_path = prefix + "benchmark"
 out_directory = datetime.datetime.now().strftime('benchmark_%Y-%m-%d_%H-%M-%S')
 num_repetitions = 3
 dimension = 3
