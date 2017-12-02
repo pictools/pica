@@ -53,6 +53,8 @@ for i in range(0, len(combination_values)):
     args = args_base + args_combination
     file_name = file_name[:-1] + ".txt"
     f = open(os.path.join(out_directory, file_name), "w")
+    field_solver_time = []
+    particle_loop_time = []
     for repetition in range(0, num_repetitions):
         popen = subprocess.Popen(args, stdout=subprocess.PIPE, universal_newlines=True)
         popen.wait()
@@ -64,3 +66,16 @@ for i in range(0, len(combination_values)):
         f.write("Run " + str(repetition) + ":\n")
         performance_output = output[output.find("   Field"):]
         f.write(performance_output + "\n")
+        field_solver_time += [float(performance_output[len("   Field solver: "):performance_output.find(" sec")])]
+        performance_output = performance_output[performance_output.find("   Particle loop"):]
+        particle_loop_time += [float(performance_output[len("   Particle loop: "):performance_output.find(" sec")])]      
+
+    total_time = []
+    for idx in range(0, len(field_solver_time)):
+        total_time.append(field_solver_time[idx] + particle_loop_time[idx])
+    from operator import itemgetter
+    best_run = min(enumerate(total_time), key=itemgetter(1))[0] 
+    f.write("Best run:\n")
+    f.write("   Field solver: " + str(field_solver_time[best_run]) + " sec.\n")
+    f.write("   Particle loop: " + str(particle_loop_time[best_run]) + " sec.\n")
+    f.write("   Overall: " + str(total_time[best_run]) + " sec.\n")
