@@ -48,8 +48,15 @@ void printParameters(const Parameters& parameters)
     if (parameters.ensembleRepresentation == EnsembleRepresentation_Ordered)
         cout << ", sorting period = " << parameters.sortingPeriod;
     else if (parameters.ensembleRepresentation == EnsembleRepresentation_Supercells)
+    {
         cout << ", supercell size = " << parameters.numCellsPerSupercell.x << "x" <<
-        parameters.numCellsPerSupercell.y << "x" << parameters.numCellsPerSupercell.z;
+            parameters.numCellsPerSupercell.y << "x" << parameters.numCellsPerSupercell.z;
+        cout << ", preloading ";
+        if (parameters.enablePreloading)
+            cout << "enabled";
+        else
+            cout << "disabled";
+    }
     cout << "\n";
     cout << prefix << "Tile size: " << toString(parameters.tileSize) << "\n";
 }
