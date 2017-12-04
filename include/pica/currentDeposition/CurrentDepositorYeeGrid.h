@@ -75,8 +75,8 @@ private:
     typedef ValueType&(GridType::*FieldComponent1d)(int);
     void deposit(FieldComponent1d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (this->grid.*component)(baseIndex.x) = (1.0 - coeff.x) * value;
-        (this->grid.*component)(baseIndex.x + 1) = coeff.x * value;
+        (this->grid.*component)(baseIndex.x) += (1.0 - coeff.x) * value;
+        (this->grid.*component)(baseIndex.x + 1) += coeff.x * value;
     }
 
 };
@@ -112,10 +112,10 @@ private:
     typedef ValueType&(GridType::*FieldComponent2d)(int, int);
     void deposit(FieldComponent2d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (this->grid.*component)(baseIndex.x, baseIndex.y) = (1.0 - coeff.x) * (1.0 - coeff.y) * value;
-        (this->grid.*component)(baseIndex.x, baseIndex.y + 1) = (1.0 - coeff.x) * coeff.y * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y) = coeff.x * (1.0 - coeff.y) * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1) = coeff.x * coeff.y * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y) += (1.0 - coeff.x) * (1.0 - coeff.y) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1) += (1.0 - coeff.x) * coeff.y * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y) += coeff.x * (1.0 - coeff.y) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1) += coeff.x * coeff.y * value;
     }
 
 };
@@ -151,14 +151,14 @@ private:
     typedef ValueType&(GridType::*FieldComponent3d)(int, int, int);
     void deposit(FieldComponent3d component, IndexType baseIndex, PositionType coeff, Real value) const
     {
-        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
-        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) = (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
-        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) = (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
-        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) = (1.0 - coeff.x) * coeff.y * coeff.z * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) = (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) = coeff.x * (1.0 - coeff.y) * coeff.z * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) = coeff.x * coeff.y * (1.0 - coeff.z) * value;
-        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) = coeff.x * coeff.y * coeff.z * value;;
+        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) += (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) += (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) += (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) += (1.0 - coeff.x) * coeff.y * coeff.z * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) += (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) += coeff.x * (1.0 - coeff.y) * coeff.z * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) += coeff.x * coeff.y * (1.0 - coeff.z) * value;
+        (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) += coeff.x * coeff.y * coeff.z * value;;
     }
 
 };
