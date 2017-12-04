@@ -22,7 +22,7 @@ layouts = ["SoA", "AoS"]
 sorting_periods = [10, 20, 30]
 ordered_combinations = ["ordered --sortingperiod " + str(period) for period in sorting_periods]
 supercell_sizes = list(itertools.product([1, 2, 4], repeat=3))
-supercell_combinations = ["supercells --ncellssupercellx " + str(size[0]) + " --ncellssupercelly " + str(size[1]) + " --ncellssupercellz " + str(size[2]) for size in supercell_sizes]
+supercell_combinations = ["supercells --preloading --ncellssupercellx " + str(size[0]) + " --ncellssupercelly " + str(size[1]) + " --ncellssupercellz " + str(size[2]) for size in supercell_sizes]
 orderings = ["unordered"] + ordered_combinations + supercell_combinations
 combination_keys = ["--layout", "--ordering"]
 combinations = list(itertools.product(layouts, orderings))
