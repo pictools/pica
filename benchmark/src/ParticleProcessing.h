@@ -365,19 +365,22 @@ private:
 
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
         {
-            const int superCellStep = 4;
             IndexType numSupercells = ensemble.getNumSupercells();
             Ensemble migratingEnsemble(ensemble.getMinPosition(), ensemble.getMaxPosition(),
                 ensemble.getNumCells(), ensemble.getNumCellsPerSupercell());
 
             /// For now 3D only
-            for (int startI = 0; startI < superCellStep; startI++)
-            for (int startJ = 0; startJ < superCellStep; startJ++)
-            for (int startK = 0; startK < superCellStep; startK++) {
+            IndexType superCellStep(3, 3, 3);
+            for (int d = 0; d < 3; d++)
+                if (ensemble.getNumCellsPerSupercell()[d] == 1)
+                    superCellStep[d] = 4;
+            for (int startI = 0; startI < superCellStep.x; startI++)
+            for (int startJ = 0; startJ < superCellStep.y; startJ++)
+            for (int startK = 0; startK < superCellStep.z; startK++) {
                 #pragma omp parallel for collapse(3)
-                for (int i = startI; i < numSupercells.x; i += superCellStep)
-                for (int j = startJ; j < numSupercells.y; j += superCellStep)
-                for (int k = startK; k < numSupercells.z; k += superCellStep)
+                for (int i = startI; i < numSupercells.x; i += superCellStep.x)
+                for (int j = startJ; j < numSupercells.y; j += superCellStep.y)
+                for (int k = startK; k < numSupercells.z; k += superCellStep.z)
                     processSupercell(IndexType(i, j, k), ensemble, migratingEnsemble, grid, dt);
             }
 
