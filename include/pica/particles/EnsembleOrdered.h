@@ -38,7 +38,7 @@ void EnsembleOrdered<ParticleArray>::reorder()
             dimension(VectorDimensionHelper<PositionType>::dimension)
         {}
 
-        bool operator()(int first, int second)
+        bool operator()(int first, int second) const
         {
             for (int d = 0; d < dimension; d++)
                 if (particles[first].getPosition()[d] < particles[second].getPosition()[d])
