@@ -64,7 +64,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         deposit(&GridType::jx, IndexType(indexCollocated.x), PositionType(coeffCollocated.x), current.x);
         deposit(&GridType::jy, IndexType(indexStaggered.x), PositionType(coeffStaggered.x), current.y);
         deposit(&GridType::jz, IndexType(indexStaggered.x), PositionType(coeffStaggered.x), current.z);
@@ -98,7 +98,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         deposit(&GridType::jx, IndexType(indexCollocated.x, indexStaggered.y),
             PositionType(coeffCollocated.x, coeffStaggered.y), current.x);
         deposit(&GridType::jy, IndexType(indexStaggered.x, indexCollocated.y),
@@ -137,7 +137,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         deposit(&GridType::jx, IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z), current.x);
         deposit(&GridType::jy, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),
@@ -215,7 +215,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         deposit(jx, IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z), current.x);
         deposit(jy, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),

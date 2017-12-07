@@ -18,7 +18,7 @@ public:
         if (a.size() != b.size())
             return false;
         for (int i = 0; i < a.size(); i++)
-            if (!eqParticles_(a[i], b[i]))
+            if (!this->eqParticles_(a[i], b[i]))
                 return false;
         return true;
     }
@@ -54,8 +54,8 @@ TYPED_TEST(ParticleArrayTest, Assignment)
         particlesCopy.pushBack(this->randomParticle());
     particlesCopy = particles;
     particlesAnotherCopy = particles;
-    ASSERT_TRUE(eqParticleArrays(particles, particlesCopy));
-    ASSERT_TRUE(eqParticleArrays(particles, particlesAnotherCopy));
+    ASSERT_TRUE(this->eqParticleArrays(particles, particlesCopy));
+    ASSERT_TRUE(this->eqParticleArrays(particles, particlesAnotherCopy));
 }
 
 TYPED_TEST(ParticleArrayTest, Size)
@@ -86,8 +86,8 @@ TYPED_TEST(ParticleArrayTest, IndexAccess)
     ASSERT_EQ(numParticles, particles.size());
     ASSERT_EQ(numParticles, constParticles.size());
     for (int i = 0; i < numParticles; i++) {
-        EXPECT_TRUE(eqParticles_(particleArray[i], particles[i]));
-        EXPECT_TRUE(eqParticles_(particleArray[i], constParticles[i]));
+        EXPECT_TRUE(this->eqParticles_(particleArray[i], particles[i]));
+        EXPECT_TRUE(this->eqParticles_(particleArray[i], constParticles[i]));
     }
 }
 
@@ -100,9 +100,9 @@ TYPED_TEST(ParticleArrayTest, Back)
     for (int i = 0; i < 13; i++) {
         ParticleType particle = this->randomParticle();
         particles.pushBack(particle);
-        EXPECT_TRUE(eqParticles_(particle, particles.back()));
+        EXPECT_TRUE(this->eqParticles_(particle, particles.back()));
         const ParticleArray particlesCopy = particles;
-        EXPECT_TRUE(eqParticles_(particle, particlesCopy.back()));
+        EXPECT_TRUE(this->eqParticles_(particle, particlesCopy.back()));
     }
 }
 
@@ -114,7 +114,7 @@ TYPED_TEST(ParticleArrayTest, PushBack)
     for (int i = 0; i < 17; i++)
         particles.pushBack(this->randomParticle());
     ParticleArray particlesCopy(particles);
-    ASSERT_TRUE(eqParticleArrays(particles, particlesCopy));
+    ASSERT_TRUE(this->eqParticleArrays(particles, particlesCopy));
 }
 
 TYPED_TEST(ParticleArrayTest, PopBack)
@@ -129,8 +129,8 @@ TYPED_TEST(ParticleArrayTest, PopBack)
         particles.popBack();
         ASSERT_EQ(particlesCopy.size(), particles.size() + 1);
         for (int j = 0; j < particles.size(); j++)
-            EXPECT_TRUE(eqParticles_(particles[j], particlesCopy[j]));
+            EXPECT_TRUE(this->eqParticles_(particles[j], particlesCopy[j]));
     }
     ParticleArray particlesCopy(particles);
-    ASSERT_TRUE(eqParticleArrays(particles, particlesCopy));
+    ASSERT_TRUE(this->eqParticleArrays(particles, particlesCopy));
 }

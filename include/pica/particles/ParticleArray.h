@@ -79,9 +79,9 @@ public:
             return result;
         }
 
-        MomentumType getVelocity() const { return getMomentum() / sqrt(sqr(getMass()) + (getMomentum() / Constants<FP>::c()).norm2()); }
+        MomentumType getVelocity() const { return this->getMomentum() / sqrt(sqr(getMass()) + (this->getMomentum() / Constants<FP>::c()).norm2()); }
  
-        GammaType getGamma() const { return sqrt(static_cast<GammaType>(1) / (static_cast<GammaType>(1) + (getMomentum() / (getMass() * constants::c)).norm2())); }
+        GammaType getGamma() const { return sqrt(static_cast<GammaType>(1) / (static_cast<GammaType>(1) + (this->getMomentum() / (getMass() * constants::c)).norm2())); }
 
         MassType getMass() const { return particles.masses[idx]; }
  
@@ -122,7 +122,7 @@ public:
                 particles.momentums[d][idx] = newMomentum[d];
         }
 
-        void setVelocity(const MomentumType& newVelocity) { setMomentum(getMass() * Constants<GammaType>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2())); }
+        void setVelocity(const MomentumType& newVelocity) { setMomentum(this->getMass() * Constants<GammaType>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2())); }
 
         void setMass(MassType newMass) { particles.masses[idx] = newMass; }
 

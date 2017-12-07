@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 2.8.11)
+cmake_minimum_required(VERSION 3.0.0)
 
 project(pica)
 
-set(CMAKE_CXX_FLAGS_RELEASE "-DNDEBUG -O2")
+set(CMAKE_CXX_FLAGS "-DNDEBUG -O2")
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 

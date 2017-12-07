@@ -67,14 +67,14 @@ public:
 
     // Get shifts of components from a cell origin
     PositionType getShiftEx() const { return static_cast<ValueType>(0); }
-    PositionType getShiftEy() const { return static_cast<ValueType>(0.5 * step); }
-    PositionType getShiftEz() const { return static_cast<ValueType>(0.5 * step); }
-    PositionType getShiftBx() const { return static_cast<ValueType>(0.5 * step); }
+    PositionType getShiftEy() const { return static_cast<ValueType>(0.5 * this->step); }
+    PositionType getShiftEz() const { return static_cast<ValueType>(0.5 * this->step); }
+    PositionType getShiftBx() const { return static_cast<ValueType>(0.5 * this->step); }
     PositionType getShiftBy() const { return static_cast<ValueType>(0); }
     PositionType getShiftBz() const { return static_cast<ValueType>(0); }
     PositionType getShiftJx() const { return static_cast<ValueType>(0); }
-    PositionType getShiftJy() const { return static_cast<ValueType>(0.5 * step); }
-    PositionType getShiftJz() const { return static_cast<ValueType>(0.5 * step); }
+    PositionType getShiftJy() const { return static_cast<ValueType>(0.5 * this->step); }
+    PositionType getShiftJz() const { return static_cast<ValueType>(0.5 * this->step); }
 };
 
 // This specialization adds overloads for accessing by two ints in addition to standard Vector2<int>
@@ -111,15 +111,15 @@ public:
     ValueType jz(int i, int j) const { return Grid<Two, Real>::jz(IndexType(i, j)); }
 
     // Get shifts of components from a cell origin
-    PositionType getShiftEx() const { return PositionType(0, 0.5 * step.y); }
-    PositionType getShiftEy() const { return PositionType(0.5 * step.x, 0); }
-    PositionType getShiftEz() const { return PositionType(0.5 * step.x, 0.5 * step.y); }
-    PositionType getShiftBx() const { return PositionType(0.5 * step.x, 0); }
-    PositionType getShiftBy() const { return PositionType(0, 0.5 * step.y); }
+    PositionType getShiftEx() const { return PositionType(0, 0.5 * this->step.y); }
+    PositionType getShiftEy() const { return PositionType(0.5 * this->step.x, 0); }
+    PositionType getShiftEz() const { return PositionType(0.5 * this->step.x, 0.5 * this->step.y); }
+    PositionType getShiftBx() const { return PositionType(0.5 * this->step.x, 0); }
+    PositionType getShiftBy() const { return PositionType(0, 0.5 * this->step.y); }
     PositionType getShiftBz() const { return PositionType(0, 0); }
-    PositionType getShiftJx() const { return PositionType(0, 0.5 * step.y); }
-    PositionType getShiftJy() const { return PositionType(0.5 * step.x, 0); }
-    PositionType getShiftJz() const { return PositionType(0.5 * step.x, 0.5 * step.y); }
+    PositionType getShiftJx() const { return PositionType(0, 0.5 * this->step.y); }
+    PositionType getShiftJy() const { return PositionType(0.5 * this->step.x, 0); }
+    PositionType getShiftJz() const { return PositionType(0.5 * this->step.x, 0.5 * this->step.y); }
 };
 
 // This specialization adds overloads for accessing by two ints in addition to standard Vector3<int>
@@ -156,15 +156,15 @@ public:
     ValueType jz(int i, int j, int k) const { return Grid<Three, Real>::jz(IndexType(i, j, k)); }
 
     // Get shifts of components from a cell origin
-    PositionType getShiftEx() const { return PositionType(0, 0.5 * step.y, 0.5 * step.z); }
-    PositionType getShiftEy() const { return PositionType(0.5 * step.x, 0, 0.5 * step.z); }
-    PositionType getShiftEz() const { return PositionType(0.5 * step.x, 0.5 * step.y, 0); }
-    PositionType getShiftBx() const { return PositionType(0.5 * step.x, 0, 0); }
-    PositionType getShiftBy() const { return PositionType(0, 0.5 * step.y, 0); }
-    PositionType getShiftBz() const { return PositionType(0, 0, 0.5 * step.z); }
-    PositionType getShiftJx() const { return PositionType(0, 0.5 * step.y, 0.5 * step.z); }
-    PositionType getShiftJy() const { return PositionType(0.5 * step.x, 0, 0.5 * step.z); }
-    PositionType getShiftJz() const { return PositionType(0.5 * step.x, 0.5 * step.y, 0); }
+    PositionType getShiftEx() const { return PositionType(0, 0.5 * this->step.y, 0.5 * this->step.z); }
+    PositionType getShiftEy() const { return PositionType(0.5 * this->step.x, 0, 0.5 * this->step.z); }
+    PositionType getShiftEz() const { return PositionType(0.5 * this->step.x, 0.5 * this->step.y, 0); }
+    PositionType getShiftBx() const { return PositionType(0.5 * this->step.x, 0, 0); }
+    PositionType getShiftBy() const { return PositionType(0, 0.5 * this->step.y, 0); }
+    PositionType getShiftBz() const { return PositionType(0, 0, 0.5 * this->step.z); }
+    PositionType getShiftJx() const { return PositionType(0, 0.5 * this->step.y, 0.5 * this->step.z); }
+    PositionType getShiftJy() const { return PositionType(0.5 * this->step.x, 0, 0.5 * this->step.z); }
+    PositionType getShiftJz() const { return PositionType(0.5 * this->step.x, 0.5 * this->step.y, 0); }
 };
 
 } // namespace pica

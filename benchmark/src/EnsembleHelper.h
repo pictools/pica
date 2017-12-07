@@ -23,7 +23,7 @@ struct EnsembleFactory {
 };
 
 template<class ParticleArray>
-struct EnsembleFactory<pica::EnsembleSupercells<ParticleArray>> {
+struct EnsembleFactory<pica::EnsembleSupercells<ParticleArray> > {
     typedef pica::EnsembleSupercells<ParticleArray> Ensemble;
     typedef typename Ensemble::PositionType PositionType;
 

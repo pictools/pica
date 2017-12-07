@@ -6,7 +6,7 @@ using namespace pica;
 
 
 TEST(DimensionTest, Values) {
-    ASSERT_EQ(Dimension::One, 1);
-    ASSERT_EQ(Dimension::Two, 2);
-    ASSERT_EQ(Dimension::Three, 3);
+    ASSERT_EQ(One, 1);
+    ASSERT_EQ(Two, 2);
+    ASSERT_EQ(Three, 3);
 }

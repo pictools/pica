@@ -80,7 +80,7 @@ public:
     // Get number of rows, columns and total number of elements
     IndexType getSize() const { return size; }
     int getNumRows() const { return size.x; }
-    int getNumCols() const { return size.z; }
+    int getNumCols() const { return size.y; }
     int getNumElements() const { return (int)data.size(); }
 
     // Access the value by index without checking the index

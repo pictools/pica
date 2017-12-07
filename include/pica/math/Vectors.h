@@ -619,17 +619,17 @@ struct VectorDimensionHelper {
 };
 
 template<typename T>
-struct VectorDimensionHelper<Vector1<T>> {
+struct VectorDimensionHelper<Vector1<T> > {
     static const int dimension = 1;
 };
 
 template<typename T>
-struct VectorDimensionHelper<Vector2<T>> {
+struct VectorDimensionHelper<Vector2<T> > {
     static const int dimension = 2;
 };
 
 template<typename T>
-struct VectorDimensionHelper<Vector3<T>> {
+struct VectorDimensionHelper<Vector3<T> > {
     static const int dimension = 3;
 };
 
@@ -679,17 +679,17 @@ struct OnesHelper {
 
 template<typename T>
 struct OnesHelper<One, T> {
-    static typename VectorTypeHelper<One, T>::Type get() { return VectorTypeHelper<One, T>::Type(static_cast<T>(1)); }
+    static typename VectorTypeHelper<One, T>::Type get() { return typename VectorTypeHelper<One, T>::Type(static_cast<T>(1)); }
 };
 
 template<typename T>
 struct OnesHelper<Two, T> {
-    static typename VectorTypeHelper<Two, T>::Type get() { return VectorTypeHelper<Two, T>::Type(static_cast<T>(1), static_cast<T>(1)); }
+    static typename VectorTypeHelper<Two, T>::Type get() { return typename VectorTypeHelper<Two, T>::Type(static_cast<T>(1), static_cast<T>(1)); }
 };
 
 template<typename T>
 struct OnesHelper<Three, T> {
-    static typename VectorTypeHelper<Three, T>::Type get() { return VectorTypeHelper<Three, T>::Type(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1)); }
+    static typename VectorTypeHelper<Three, T>::Type get() { return typename VectorTypeHelper<Three, T>::Type(static_cast<T>(1), static_cast<T>(1), static_cast<T>(1)); }
 };
 
 template<Dimension dimension, typename T>
@@ -727,10 +727,6 @@ inline FP dist(const FP3& v1, const FP3& v2)
 {
     return (v1 - v2).norm();
 }
-
-
-
-
 
 } // namespace pica
 

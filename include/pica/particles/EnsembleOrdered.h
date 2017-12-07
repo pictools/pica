@@ -19,6 +19,9 @@ public:
     using typename EnsembleUnordered<ParticleArray>::PositionType;
     EnsembleOrdered(PositionType minPosition, PositionType maxPosition);
     void reorder();
+    bool operator()(int first, int second) const;
+private:
+    int dimension;
 };
 
 template<class ParticleArray>
@@ -27,36 +30,27 @@ EnsembleOrdered<ParticleArray>::EnsembleOrdered(
         typename EnsembleOrdered<ParticleArray>::PositionType maxPosition):
     EnsembleUnordered<ParticleArray>(minPosition, maxPosition)
 {
+    dimension = VectorDimensionHelper<PositionType>::dimension;
 }
+
+template<class ParticleArray>
+bool EnsembleOrdered<ParticleArray>::operator()(int first, int second) const
+{
+    for (int d = 0; d < 3; d++)
+        if (this->particles[first].getPosition()[d] < this->particles[second].getPosition()[d])
+            return true;
+        else if (this->particles[first].getPosition()[d] > this->particles[second].getPosition()[d])
+            return false;
+}
+
 
 template<class ParticleArray>
 void EnsembleOrdered<ParticleArray>::reorder()
 {
-    struct ParticleIndexComparator {
-        ParticleIndexComparator(const ParticleArray& particles) :
-            particles(particles),
-            dimension(VectorDimensionHelper<PositionType>::dimension)
-        {}
-
-        bool operator()(int first, int second) const
-        {
-            for (int d = 0; d < dimension; d++)
-                if (particles[first].getPosition()[d] < particles[second].getPosition()[d])
-                    return true;
-                else if (particles[first].getPosition()[d] > particles[second].getPosition()[d])
-                    return false;
-            return false;
-        }
-
-    private:
-        const ParticleArray& particles;
-        const int dimension;
-    };
-
     std::vector<int> indexes(this->particles.size());
     for (int i = 0; i < indexes.size(); i++)
         indexes[i] = i;
-    std::sort(indexes.begin(), indexes.end(), ParticleIndexComparator(this->particles));
+    std::sort(indexes.begin(), indexes.end(), *this);
     ParticleArray newParticles;
     for (int i = 0; i < indexes.size(); i++)
         newParticles.pushBack(this->particles[indexes[i]]);

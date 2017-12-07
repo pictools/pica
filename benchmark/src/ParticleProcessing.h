@@ -208,7 +208,7 @@ private:
         void processParticles(Ensemble& ensemble, Grid& grid, double dt)
         {
             const int numParticles = ensemble.size();
-            const int numThreads = getNumThreads();
+            const int numThreads = pica::getNumThreads();
             const int particlesPerThread = (numParticles + numThreads - 1) / numThreads;
             #pragma omp parallel for
             for (int idx = 0; idx < numThreads; idx++) {

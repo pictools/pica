@@ -64,7 +64,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
         e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
         e.z = interpolate(&GridType::ey, IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
@@ -102,7 +102,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x, indexStaggered.y),
             PositionType(coeffCollocated.x, coeffStaggered.y));
         e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexCollocated.y),
@@ -149,7 +149,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z));
         e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),
@@ -225,7 +225,7 @@ public:
     {
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
-        getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
+        this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
         e.x = interpolate(ex, IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z));
         e.y = interpolate(ey, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),

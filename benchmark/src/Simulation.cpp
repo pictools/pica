@@ -141,15 +141,15 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
     switch (parameters.ensembleRepresentation) {
         case EnsembleRepresentation_Unordered:
             runSimulation<dimension, Particle, ParticleArray,
-                Ensemble<ParticleArray, EnsembleRepresentation_Unordered>::Type>(parameters, tracker);
+                typename Ensemble<ParticleArray, EnsembleRepresentation_Unordered>::Type>(parameters, tracker);
             break;
         case EnsembleRepresentation_Ordered:
             runSimulation<dimension, Particle, ParticleArray,
-                Ensemble<ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
+                typename Ensemble<ParticleArray, EnsembleRepresentation_Ordered>::Type>(parameters, tracker);
             break;
         case EnsembleRepresentation_Supercells:
             runSimulation<dimension, Particle, ParticleArray,
-                Ensemble<ParticleArray, EnsembleRepresentation_Supercells>::Type>(parameters, tracker);
+                typename Ensemble<ParticleArray, EnsembleRepresentation_Supercells>::Type>(parameters, tracker);
             break;
         default:
             throw std::invalid_argument("wrong value of ensemble representation");
@@ -162,10 +162,10 @@ void runSimulation(const Parameters& parameters, PerformanceTracker& tracker)
 {
     switch (parameters.particleRepresentation) {
         case ParticleRepresentation_AoS:
-            runSimulation<dimension, Particle, ParticleArray<Particle, ParticleRepresentation_AoS>::Type>(parameters, tracker);
+            runSimulation<dimension, Particle, typename ParticleArray<Particle, ParticleRepresentation_AoS>::Type>(parameters, tracker);
             break;
         case ParticleRepresentation_SoA:
-            runSimulation<dimension, Particle, ParticleArray<Particle, ParticleRepresentation_SoA>::Type>(parameters, tracker);
+            runSimulation<dimension, Particle, typename ParticleArray<Particle, ParticleRepresentation_SoA>::Type>(parameters, tracker);
             break;
         default:
             throw std::invalid_argument("wrong value of particle representation");

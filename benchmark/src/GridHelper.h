@@ -22,7 +22,7 @@ std::auto_ptr<Grid> createGrid(typename Grid::PositionType minPosition,
 {
     typedef typename Grid::PositionType PositionType;
     typedef typename Grid::IndexType IndexType;
-    PositionType step = (maxPosition - minPosition) / Grid::PositionType(numInternalCells);
+    PositionType step = (maxPosition - minPosition) / (typename Grid::PositionType(numInternalCells));
     int numGhostCells = getNumGhostCells();
     PositionType origin = minPosition - step * static_cast<typename pica::ScalarType<PositionType>::Type>(numGhostCells);
     IndexType numCells = numInternalCells;
@@ -48,7 +48,7 @@ struct FieldBoundaryConditions {
 };
 
 template<class Real>
-struct FieldBoundaryConditions<pica::YeeGrid<pica::One, Real>> {
+struct FieldBoundaryConditions<pica::YeeGrid<pica::One, Real> > {
     void apply(pica::YeeGrid<pica::One, Real>& grid)
     {
         typedef typename pica::YeeGrid<pica::One, Real>::IndexType IndexType;
@@ -66,7 +66,7 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::One, Real>> {
 };
 
 template<class Real>
-struct FieldBoundaryConditions<pica::YeeGrid<pica::Two, Real>> {
+struct FieldBoundaryConditions<pica::YeeGrid<pica::Two, Real> > {
     void apply(pica::YeeGrid<pica::Two, Real>& grid)
     {
         typedef typename pica::YeeGrid<pica::Two, Real>::IndexType IndexType;
@@ -97,7 +97,7 @@ struct FieldBoundaryConditions<pica::YeeGrid<pica::Two, Real>> {
 };
 
 template<class Real>
-struct FieldBoundaryConditions<pica::YeeGrid<pica::Three, Real>> {
+struct FieldBoundaryConditions<pica::YeeGrid<pica::Three, Real> > {
     void apply(pica::YeeGrid<pica::Three, Real>& grid)
     {
         typedef typename pica::YeeGrid<pica::Three, Real>::IndexType IndexType;
