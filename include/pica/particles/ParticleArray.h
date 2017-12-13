@@ -75,18 +75,25 @@ public:
         MomentumType getMomentum() const {
             MomentumType result;
             for (int d = 0; d < momentumDimension; d++)
-                result[d] = particles.momentums[d][idx];
+                result[d] = particles.ps[d][idx];
+            return result * Constants<GammaType>::c() * particles.masses[idx];
+        }
+
+        MomentumType getP() const {
+            MomentumType result;
+            for (int d = 0; d < momentumDimension; d++)
+                result[d] = particles.ps[d][idx];
             return result;
         }
 
-        MomentumType getVelocity() const { return this->getMomentum() / sqrt(sqr(getMass()) + (this->getMomentum() / Constants<FP>::c()).norm2()); }
- 
-        GammaType getGamma() const { return sqrt(static_cast<GammaType>(1) / (static_cast<GammaType>(1) + (this->getMomentum() / (getMass() * constants::c)).norm2())); }
+        MomentumType getVelocity() const { return this->getP() * Constants<GammaType>::c() * particles.invGammas[idx]; }
+
+        GammaType getGamma() const { return static_cast<GammaType>(1.0) / particles.invGammas[idx]; }
 
         MassType getMass() const { return particles.masses[idx]; }
- 
+
         ChargeType getCharge() const { return particles.charges[idx]; }
- 
+
         FactorType getFactor() const { return particles.factors[idx]; }
 
     private:
@@ -117,12 +124,29 @@ public:
                 particles.positions[d][idx] = newPosition[d];
         }
 
-        void setMomentum(const MomentumType& newMomentum) { 
+        void setMomentum(const MomentumType& newMomentum)
+        {
+            MomentumType p = newMomentum / (Constants<GammaType>::c() * particles.masses[idx]);
             for (int d = 0; d < momentumDimension; d++)
-                particles.momentums[d][idx] = newMomentum[d];
+                particles.ps[d][idx] = p[d];
+            particles.invGammas[idx] = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
         }
 
-        void setVelocity(const MomentumType& newVelocity) { setMomentum(this->getMass() * Constants<GammaType>::c() * newVelocity / sqrt(sqr(constants::c * constants::c) - newVelocity.norm2())); }
+        void setP(const MomentumType& newP)
+        {
+            MomentumType p = newP;
+            for (int d = 0; d < momentumDimension; d++)
+                particles.ps[d][idx] = p[d];
+            particles.invGammas[idx] = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
+        }
+
+        void setVelocity(const MomentumType& newVelocity)
+        {
+            MomentumType p = newVelocity / sqrt(constants::c * constants::c - newVelocity.norm2());
+            for (int d = 0; d < momentumDimension; d++)
+                particles.ps[d][idx] = p[d];
+            particles.invGammas[idx] = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
+        }
 
         void setMass(MassType newMass) { particles.masses[idx] = newMass; }
 
@@ -150,31 +174,34 @@ public:
         const typename ParticleRef::PositionType position = particle.getPosition();
         for (int d = 0; d < ParticleRef::dimension; d++)
             positions[d].push_back(position[d]);
-        const typename ParticleRef::MomentumType momentum = particle.getMomentum();
+        const typename ParticleRef::MomentumType p = particle.getP();
         for (int d = 0; d < ParticleRef::momentumDimension; d++)
-            momentums[d].push_back(momentum[d]);
+            ps[d].push_back(p[d]);
         masses.push_back(particle.getMass());
         charges.push_back(particle.getCharge());
         factors.push_back(particle.getFactor());
+        invGammas.push_back(static_cast<typename ParticleRef::GammaType>(1.0) / particle.getGamma());
     }
     void popBack()
     {
         for (int d = 0; d < ParticleRef::dimension; d++)
             positions[d].pop_back();
         for (int d = 0; d < ParticleRef::momentumDimension; d++)
-            momentums[d].pop_back();
+            ps[d].pop_back();
         masses.pop_back();
         charges.pop_back();
         factors.pop_back();
+        invGammas.pop_back();
     }
 
 private:
 
     std::vector<typename ScalarType<typename ParticleRef::PositionType>::Type> positions[ParticleRef::dimension];
-    std::vector<typename ScalarType<typename ParticleRef::MomentumType>::Type> momentums[ParticleRef::momentumDimension];
+    std::vector<typename ScalarType<typename ParticleRef::MomentumType>::Type> ps[ParticleRef::momentumDimension];
     std::vector<typename ParticleRef::MassType> masses;
     std::vector<typename ParticleRef::ChargeType> charges;
     std::vector<typename ParticleRef::FactorType> factors;
+    std::vector<typename ParticleRef::GammaType> invGammas;
 
     friend class ParticleRef;
     friend class ConstParticleRef;

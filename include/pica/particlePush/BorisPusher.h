@@ -23,14 +23,15 @@ struct BorisPusher {
         // The code below uses precomputed coefficient:
         // eCoeff = q * dt / (2 * m * c)
         MomentumType eMomentum = e * eCoeff;
-        MomentumType um = particle.getMomentum() / (particle.getMass() * Constants<Real>::c()) + eMomentum;
+        MomentumType um = particle.getP() + eMomentum;
         MomentumType t = b * eCoeff / sqrt((FP)1 + um.norm2());
         MomentumType uprime = um + cross(um, t);
         MomentumType s = t * (Real)2.0 / ((Real)1.0 + t.norm2());
-        particle.setMomentum((um + cross(uprime, s) + eMomentum) * particle.getMass() * Constants<Real>::c());
+        particle.setP((um + cross(uprime, s) + eMomentum));
         PositionType position = particle.getPosition();
+        MomentumType v =  particle.getVelocity();
         for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
-            position[d] += particle.getVelocity()[d] * dt;
+            position[d] += v[d] * dt;
         particle.setPosition(position);
     }
 };
