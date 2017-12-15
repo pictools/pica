@@ -19,20 +19,9 @@ public:
     using typename EnsembleUnordered<ParticleArray>::PositionType;
     EnsembleOrdered(PositionType minPosition, PositionType maxPosition);
     void reorder();
-};
 
-template<class ParticleArray>
-EnsembleOrdered<ParticleArray>::EnsembleOrdered(
-        typename EnsembleOrdered<ParticleArray>::PositionType minPosition,
-        typename EnsembleOrdered<ParticleArray>::PositionType maxPosition):
-    EnsembleUnordered<ParticleArray>(minPosition, maxPosition)
-{
-}
+private:
 
-
-template<class ParticleArray>
-void EnsembleOrdered<ParticleArray>::reorder()
-{
     struct ParticleIndexComparator {
         typedef EnsembleOrdered<ParticleArray> Ensemble;
 
@@ -57,6 +46,20 @@ void EnsembleOrdered<ParticleArray>::reorder()
         const int dimension;
     };
 
+};
+
+template<class ParticleArray>
+EnsembleOrdered<ParticleArray>::EnsembleOrdered(
+        typename EnsembleOrdered<ParticleArray>::PositionType minPosition,
+        typename EnsembleOrdered<ParticleArray>::PositionType maxPosition):
+    EnsembleUnordered<ParticleArray>(minPosition, maxPosition)
+{
+}
+
+
+template<class ParticleArray>
+void EnsembleOrdered<ParticleArray>::reorder()
+{
     std::vector<int> indexes(this->particles.size());
     for (int i = 0; i < indexes.size(); i++)
         indexes[i] = i;
