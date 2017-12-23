@@ -15,6 +15,7 @@ public:
     typedef Real ValueType;
     typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
     typedef typename VectorTypeHelper<dimension, int>::Type IndexType;
+    typedef typename ArrayTypeHelper<dimension, Real>::Type ArrayType;
 
     Grid(const PositionType& origin, const PositionType& step, const IndexType& size) :
         exData(size),
@@ -55,8 +56,28 @@ public:
     ValueType& jz(const IndexType& index) { return jzData(index); }
     ValueType jz(const IndexType& index) const { return jzData(index); }
 
+    ArrayType& ex() { return exData; }
+    const ArrayType& ex() const { return exData; }
+    ArrayType& ey() { return eyData; }
+    const ArrayType& ey() const { return eyData; }
+    ArrayType& ez() { return ezData; }
+    const ArrayType& ez() const { return ezData; }
+
+    ArrayType& bx() { return bxData; }
+    const ArrayType& bx() const { return bxData; }
+    ArrayType& by() { return byData; }
+    const ArrayType& by() const { return byData; }
+    ArrayType& bz() { return bzData; }
+    const ArrayType& bz() const { return bzData; }
+
+    ArrayType& jx() { return jxData; }
+    const ArrayType& jx() const { return jxData; }
+    ArrayType& jy() { return jyData; }
+    const ArrayType& jy() const { return jyData; }
+    ArrayType& jz() { return jzData; }
+    const ArrayType& jz() const { return jzData; }
+
 private:
-    typedef typename ArrayTypeHelper<dimension, Real>::Type ArrayType;
     ArrayType exData, eyData, ezData, bxData, byData, bzData, jxData, jyData, jzData;
     PositionType origin, step;
 };

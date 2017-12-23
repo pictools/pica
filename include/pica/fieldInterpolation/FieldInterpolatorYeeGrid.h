@@ -17,6 +17,7 @@ public:
     typedef typename GridType::PositionType PositionType;
     typedef typename GridType::IndexType IndexType;
     typedef typename GridType::ValueType ValueType;
+    typedef typename GridType::ArrayType ArrayType;
     typedef typename ScalarType<PositionType>::Type ScalarPositionType;
 
     FieldInterpolatorYeeGridCICBase(const GridType& grid) :
@@ -55,6 +56,7 @@ public:
     using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::IndexType;
     using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::PositionType;
     using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::ValueType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<One, Real>::ArrayType;
 
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<One, Real>(grid)
     {
@@ -65,21 +67,19 @@ public:
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
         this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
-        e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
-        e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
-        e.z = interpolate(&GridType::ey, IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
-        b.x = interpolate(&GridType::bx, IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
-        b.y = interpolate(&GridType::by, IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
-        b.z = interpolate(&GridType::bz, IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
+        e.x = interpolate(this->grid.ex(), IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
+        e.y = interpolate(this->grid.ey(), IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
+        e.z = interpolate(this->grid.ez(), IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
+        b.x = interpolate(this->grid.bx(), IndexType(indexStaggered.x), PositionType(coeffStaggered.x));
+        b.y = interpolate(this->grid.by(), IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
+        b.z = interpolate(this->grid.bz(), IndexType(indexCollocated.x), PositionType(coeffCollocated.x));
     }
 
 private:
 
-    typedef ValueType(GridType::*FieldComponent1d)(int) const;
-    ValueType interpolate(FieldComponent1d component, IndexType baseIndex, PositionType coeff) const
+    ValueType interpolate(const ArrayType& component, IndexType baseIndex, PositionType coeff) const
     {
-        return (this->grid.*component)(baseIndex.x) * (1.0 - coeff.x) +
-            (this->grid.*component)(baseIndex.x + 1) * coeff.x;
+        return component(baseIndex.x) * (1.0 - coeff.x) + component(baseIndex.x + 1) * coeff.x;
     }
 
 };
@@ -93,6 +93,7 @@ public:
     using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::IndexType;
     using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::PositionType;
     using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::ValueType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Two, Real>::ArrayType;
 
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<Two, Real>(grid)
     {
@@ -103,30 +104,30 @@ public:
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
         this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
-        e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x, indexStaggered.y),
-            PositionType(coeffCollocated.x, coeffStaggered.y));
-        e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexCollocated.y),
-            PositionType(coeffStaggered.x, coeffCollocated.y));
-        e.z = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexStaggered.y),
-            PositionType(coeffStaggered.x, coeffStaggered.y));
-        b.x = interpolate(&GridType::bx, IndexType(indexStaggered.x, indexCollocated.y),
-            PositionType(coeffStaggered.x, coeffCollocated.y));
-        b.y = interpolate(&GridType::by, IndexType(indexCollocated.x, indexStaggered.y),
-            PositionType(coeffCollocated.x, coeffStaggered.y));
-        b.z = interpolate(&GridType::bz, IndexType(indexCollocated.x, indexCollocated.y),
-            PositionType(coeffCollocated.x, coeffCollocated.y));
+        e.x = interpolate(this->grid.ex(), IndexType(indexCollocated.x, indexStaggered.y),
+            PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z));
+        e.y = interpolate(this->grid.ey(), IndexType(indexStaggered.x, indexCollocated.y),
+            PositionType(coeffStaggered.x, coeffCollocated.y, coeffStaggered.z));
+        e.z = interpolate(this->grid.ez(), IndexType(indexStaggered.x, indexStaggered.y),
+            PositionType(coeffStaggered.x, coeffStaggered.y, coeffCollocated.z));
+        b.x = interpolate(this->grid.bx(), IndexType(indexStaggered.x, indexCollocated.y),
+            PositionType(coeffStaggered.x, coeffCollocated.y, coeffCollocated.z));
+        b.y = interpolate(this->grid.by(), IndexType(indexCollocated.x, indexStaggered.y),
+            PositionType(coeffCollocated.x, coeffStaggered.y, coeffCollocated.z));
+        b.z = interpolate(this->grid.bz(), IndexType(indexCollocated.x, indexCollocated.y),
+            PositionType(coeffCollocated.x, coeffCollocated.y, coeffStaggered.z));
+
     }
 
 private:
 
-    typedef ValueType(GridType::*FieldComponent2d)(int, int) const;
-    ValueType interpolate(FieldComponent2d component, const IndexType& baseIndex, const PositionType& coeff) const
+    ValueType interpolate(const ArrayType component, const IndexType& baseIndex, const PositionType& coeff) const
     {
         return
-            (this->grid.*component)(baseIndex.x, baseIndex.y) * (1.0 - coeff.x) * (1.0 - coeff.y) +
-            (this->grid.*component)(baseIndex.x, baseIndex.y + 1) * (1.0 - coeff.x) * coeff.y +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y) * coeff.x * (1.0 - coeff.y) +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1) * coeff.x * coeff.y;
+            component(baseIndex.x, baseIndex.y) * (1.0 - coeff.x) * (1.0 - coeff.y) +
+            component(baseIndex.x, baseIndex.y + 1) * (1.0 - coeff.x) * coeff.y +
+            component(baseIndex.x + 1, baseIndex.y) * coeff.x * (1.0 - coeff.y) +
+            component(baseIndex.x + 1, baseIndex.y + 1) * coeff.x * coeff.y;
     }
 
 };
@@ -140,6 +141,7 @@ public:
     using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::IndexType;
     using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::PositionType;
     using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::ValueType;
+    using typename internal::FieldInterpolatorYeeGridCICBase<Three, Real>::ArrayType;
 
     FieldInterpolatorCIC(const GridType& grid) : internal::FieldInterpolatorYeeGridCICBase<Three, Real>(grid)
     {
@@ -150,34 +152,33 @@ public:
         IndexType indexCollocated, indexStaggered;
         PositionType coeffCollocated, coeffStaggered;
         this->getIndexCoeff(position, indexCollocated, coeffCollocated, indexStaggered, coeffStaggered);
-        e.x = interpolate(&GridType::ex, IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
+        e.x = interpolate(this->grid.ex(), IndexType(indexCollocated.x, indexStaggered.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z));
-        e.y = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),
+        e.y = interpolate(this->grid.ey(), IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),
             PositionType(coeffStaggered.x, coeffCollocated.y, coeffStaggered.z));
-        e.z = interpolate(&GridType::ey, IndexType(indexStaggered.x, indexStaggered.y, indexCollocated.z),
+        e.z = interpolate(this->grid.ez(), IndexType(indexStaggered.x, indexStaggered.y, indexCollocated.z),
             PositionType(coeffStaggered.x, coeffStaggered.y, coeffCollocated.z));
-        b.x = interpolate(&GridType::bx, IndexType(indexStaggered.x, indexCollocated.y, indexCollocated.z),
+        b.x = interpolate(this->grid.bx(), IndexType(indexStaggered.x, indexCollocated.y, indexCollocated.z),
             PositionType(coeffStaggered.x, coeffCollocated.y, coeffCollocated.z));
-        b.y = interpolate(&GridType::by, IndexType(indexCollocated.x, indexStaggered.y, indexCollocated.z),
+        b.y = interpolate(this->grid.by(), IndexType(indexCollocated.x, indexStaggered.y, indexCollocated.z),
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffCollocated.z));
-        b.z = interpolate(&GridType::bz, IndexType(indexCollocated.x, indexCollocated.y, indexStaggered.z),
+        b.z = interpolate(this->grid.bz(), IndexType(indexCollocated.x, indexCollocated.y, indexStaggered.z),
             PositionType(coeffCollocated.x, coeffCollocated.y, coeffStaggered.z));
     }
 
 private:
-    
-    typedef ValueType(GridType::*FieldComponent3d)(int, int, int) const;
-    ValueType interpolate(FieldComponent3d component, const IndexType& baseIndex, const PositionType& coeff) const
+
+    ValueType interpolate(const ArrayType& component, const IndexType& baseIndex, const PositionType& coeff) const
     {
         return
-            (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
-            (this->grid.*component)(baseIndex.x, baseIndex.y, baseIndex.z + 1) * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
-            (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z) * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
-            (this->grid.*component)(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) * (1.0 - coeff.x) * coeff.y * coeff.z +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) * coeff.x * (1.0 - coeff.y) * coeff.z +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) * coeff.x * coeff.y * (1.0 - coeff.z) +
-            (this->grid.*component)(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) * coeff.x * coeff.y * coeff.z;
+            component(baseIndex.x, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            component(baseIndex.x, baseIndex.y, baseIndex.z + 1) * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
+            component(baseIndex.x, baseIndex.y + 1, baseIndex.z) * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
+            component(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) * (1.0 - coeff.x) * coeff.y * coeff.z +
+            component(baseIndex.x + 1, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            component(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) * coeff.x * (1.0 - coeff.y) * coeff.z +
+            component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) * coeff.x * coeff.y * (1.0 - coeff.z) +
+            component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) * coeff.x * coeff.y * coeff.z;
     }
 
 };
