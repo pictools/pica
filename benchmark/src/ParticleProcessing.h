@@ -74,6 +74,8 @@ private:
             fieldInterpolator.get(particles[particleIdx].getPosition(),
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx]);
 
+        #pragma simd
+        #pragma forceinline
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
             particlePusher.push(particles[particleIdx],
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
