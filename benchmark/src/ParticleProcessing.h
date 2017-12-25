@@ -518,35 +518,35 @@ private:
         if (tileSize <= 8)
             return createImplementationInternal<8>(parameters);
         else if (tileSize <= 16)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<16>(parameters);
         else if (tileSize <= 24)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<24>(parameters);
         else if (tileSize <= 32)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<32>(parameters);
         else if (tileSize <= 40)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<40>(parameters);
         else if (tileSize <= 48)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<48>(parameters);
         else if (tileSize <= 56)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<56>(parameters);
         else if (tileSize <= 64)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<64>(parameters);
         else if (tileSize <= 72)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<72>(parameters);
         else if (tileSize <= 80)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<80>(parameters);
         else if (tileSize <= 88)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<88>(parameters);
         else if (tileSize <= 96)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<96>(parameters);
         else if (tileSize <= 104)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<104>(parameters);
         else if (tileSize <= 112)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<112>(parameters);
         else if (tileSize <= 120)
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<120>(parameters);
         else
-            return createImplementationInternal<8>(parameters);
+            return createImplementationInternal<128>(parameters);
     }
 
     template<int tileSize>
