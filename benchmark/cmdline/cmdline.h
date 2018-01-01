@@ -38,15 +38,15 @@
 #include <algorithm>
 #include <cstdlib>
 
-#ifndef WIN32
+#ifndef _WIN32
 #include <cxxabi.h>
 #else
 #include <windows.h> 
 #pragma warning( push )
-#pragma warning( disable : 4091 )  
+#pragma warning( disable : 4091 )
 #include <Dbghelp.h>
 #pragma warning( pop )
-#pragma comment(lib,"dbghelp.lib")     
+#pragma comment(lib,"dbghelp.lib")
 #endif
 
 
