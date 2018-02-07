@@ -19,12 +19,13 @@ struct BorisPusher {
     template<class ParticleRef, typename Real>
     void push(ParticleRef particle, const MomentumType& e, const MomentumType& b, Real dt)
     {
-        const Real eCoeff = particle.getCharge() * dt / (2.0 * particle.getMass() * Constants<Real>::c());
+        const Real eCoeff = particle.getCharge() * dt /
+            ((Real)2.0 * particle.getMass() * Constants<Real>::c());
         // The code below uses precomputed coefficient:
         // eCoeff = q * dt / (2 * m * c)
         MomentumType eMomentum = e * eCoeff;
         MomentumType um = particle.getP() + eMomentum;
-        MomentumType t = b * eCoeff / sqrt((FP)1 + um.norm2());
+        MomentumType t = b * eCoeff / sqrt((Real)1.0 + um.norm2());
         MomentumType uprime = um + cross(um, t);
         MomentumType s = t * (Real)2.0 / ((Real)1.0 + t.norm2());
         particle.setP((um + cross(uprime, s) + eMomentum));
