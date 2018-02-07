@@ -109,6 +109,7 @@ set(pica_headers
     ${PICA_HEADER_DIR}/particles/EnsembleSupercells.h
     ${PICA_HEADER_DIR}/particles/EnsembleUnordered.h
     ${PICA_HEADER_DIR}/particles/Particle.h
+    ${PICA_HEADER_DIR}/particles/ParticleBaseline.h
     ${PICA_HEADER_DIR}/particles/ParticleArray.h
     ${PICA_HEADER_DIR}/particles/ParticleInterface.h
     ${PICA_HEADER_DIR}/particles/ParticleTraits.h
