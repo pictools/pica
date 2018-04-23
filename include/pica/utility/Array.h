@@ -72,7 +72,7 @@ public:
 
     // Create a matrix of the given size with the given value of elements
     Array2d(int nRows, int nCols, ValueType value = 0) :
-        Array2d(IndexType(nRows, nCols), value) {}
+        size(IndexType(nRows, nCols)), data(size.volume(), value) {}
 
     Array2d(IndexType size, ValueType value = 0) :
         size(size), data(size.volume(), value) {}
@@ -127,7 +127,7 @@ public:
 
     // Create a matrix of the given size with the given value of elements
     Array3d(int n1, int n2, int n3, T value = 0) :
-        Array3d(IndexType(n1, n2, n3), value) {}
+        size(IndexType(n1, n2, n3)), data(size.x * size.y * size.z, value) {}
 
     Array3d(IndexType size, T value = 0) :
         size(size), data(size.x * size.y * size.z, value) {}
