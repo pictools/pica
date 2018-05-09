@@ -61,7 +61,7 @@ void printParameters(const Parameters& parameters)
     cout << prefix << "Tile size: " << toString(parameters.tileSize) << "\n";
 }
 
-void printPerformance(const PerformanceTracker& tracker, long numParticleUpdates)
+void printPerformance(const PerformanceTracker& tracker, long long numParticleUpdates)
 {
     string prefix = getPrefix();
     cout << "\nPerformance results:\n";
