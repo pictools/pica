@@ -28,8 +28,7 @@ struct BorisPusherBaseline {
         MomentumType s = t * (Real)2.0 / ((Real)1.0 + t.norm2());
         particle.setMomentum((um + cross(uprime, s) + eMomentum) * particle.getMass() * Constants<Real>::c());
         PositionType position = particle.getPosition();
-        for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
-            position[d] += particle.getVelocity()[d] * dt;
+        position += particle.getVelocity() * dt;
         particle.setPosition(position);
     }
 };

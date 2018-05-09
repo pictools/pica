@@ -31,8 +31,7 @@ struct BorisPusher {
         particle.setP((um + cross(uprime, s) + eMomentum));
         PositionType position = particle.getPosition();
         MomentumType v =  particle.getVelocity();
-        for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)
-            position[d] += v[d] * dt;
+        position += v * dt;
         particle.setPosition(position);
     }
 };
