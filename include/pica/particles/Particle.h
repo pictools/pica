@@ -5,6 +5,7 @@
 #include "pica/math/Constants.h"
 #include "pica/math/FP.h"
 #include "pica/math/Vectors.h"
+#include "pica/particles/ParticleBaseline.h"
 
 #include <cmath>
 #include <stddef.h>
@@ -24,19 +25,18 @@ public:
     typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
     typedef typename VectorTypeHelper<Three, Real>::Type MomentumType;
     typedef Real GammaType;
-    typedef Real MassType;
-    typedef Real ChargeType;
     typedef float FactorType;
+    typedef short TypeIndexType;
 
     Particle() :
         factor(1),
-        mass(0.0),
-        charge(0.0),
-        invGamma(1.0) {}
+        invGamma(1.0),
+        typeIndex(0)
+    {}
 
     Particle(const PositionType& position, const MomentumType& momentum,
-        MassType mass, ChargeType charge, FactorType factor = 1) :
-        position(position), mass(mass), charge(charge), factor(factor)
+        FactorType factor = 1, TypeIndexType typeIndex = 0) :
+        position(position), factor(factor), typeIndex(typeIndex)
     {
         setMomentum(momentum);
     }
@@ -46,12 +46,12 @@ public:
 
     MomentumType getMomentum() const
     {
-        return p * Constants<MassType>::c() * mass;
+        return p * Constants<MassType>::c() * getMass();
     }
 
     void setMomentum(const MomentumType& newMomentum)
     {
-        p = newMomentum / (Constants<GammaType>::c() * mass);
+        p = newMomentum / (Constants<GammaType>::c() * getMass());
         invGamma = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
     }
 
@@ -76,23 +76,23 @@ public:
 
     GammaType getGamma() const { return static_cast<GammaType>(1.0) / invGamma; }
 
-    MassType getMass() const { return mass; }
-    void setMass(MassType newMass) { mass = newMass; }
-    
-    ChargeType getCharge() const { return charge; }
-    void setCharge(ChargeType newCharge) { charge = newCharge; }
+    MassType getMass() const { return ParticleTypes::types[typeIndex].mass; }
+
+    ChargeType getCharge() const { return ParticleTypes::types[typeIndex].charge; }
 
     FactorType getFactor() const { return factor; }
     void setFactor(FactorType newFactor) { factor = newFactor; }
+
+    TypeIndexType getType() const { return typeIndex; }
+    void setType(TypeIndexType newType) { typeIndex = newType; }
 
 private:
 
     PositionType position;
     MomentumType p;
-    MassType mass;
-    ChargeType charge;
     FactorType factor;
     GammaType invGamma;
+    TypeIndexType typeIndex;
 };
 
 typedef Particle<One> Particle1d;

@@ -13,8 +13,7 @@
 
 
 namespace pica {
-   
-  
+
 // Collection of particles with array-like semantics,
 // representation as array of structures
 template<class ParticleType>
@@ -59,8 +58,6 @@ public:
         typedef typename ParticleTraits<ParticleType>::PositionType PositionType;
         typedef typename ParticleTraits<ParticleType>::MomentumType MomentumType;
         typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
-        typedef typename ParticleTraits<ParticleType>::MassType MassType;
-        typedef typename ParticleTraits<ParticleType>::ChargeType ChargeType;
         typedef typename ParticleTraits<ParticleType>::FactorType FactorType;
         static const int dimension = VectorDimensionHelper<PositionType>::dimension;
         static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
@@ -76,7 +73,7 @@ public:
             MomentumType result;
             for (int d = 0; d < momentumDimension; d++)
                 result[d] = particles.ps[d][idx];
-            return result * Constants<GammaType>::c() * particles.masses[idx];
+            return result * Constants<GammaType>::c() * pica::ParticleTypes::types[particles.typeIndex[idx]].mass;
         }
 
         MomentumType getP() const {
@@ -90,9 +87,9 @@ public:
 
         GammaType getGamma() const { return static_cast<GammaType>(1.0) / particles.invGammas[idx]; }
 
-        MassType getMass() const { return particles.masses[idx]; }
+        MassType getMass() const { return ParticleTypes::types[particles.typeIndex[idx]].mass; }
 
-        ChargeType getCharge() const { return particles.charges[idx]; }
+        ChargeType getCharge() const { return ParticleTypes::types[particles.typeIndex[idx]].charge; }
 
         FactorType getFactor() const { return particles.factors[idx]; }
 
@@ -107,9 +104,8 @@ public:
         typedef typename ParticleTraits<ParticleType>::PositionType PositionType;
         typedef typename ParticleTraits<ParticleType>::MomentumType MomentumType;
         typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
-        typedef typename ParticleTraits<ParticleType>::MassType MassType;
-        typedef typename ParticleTraits<ParticleType>::ChargeType ChargeType;
         typedef typename ParticleTraits<ParticleType>::FactorType FactorType;
+        typedef typename ParticleTraits<ParticleType>::TypeIndexType TypeIndexType;
         static const int dimension = VectorDimensionHelper<PositionType>::dimension;
         static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
 
@@ -126,7 +122,7 @@ public:
 
         void setMomentum(const MomentumType& newMomentum)
         {
-            MomentumType p = newMomentum / (Constants<GammaType>::c() * particles.masses[idx]);
+            MomentumType p = newMomentum / (Constants<GammaType>::c() * ParticleTypes::types[particles.typeIndex[idx]].mass);
             for (int d = 0; d < momentumDimension; d++)
                 particles.ps[d][idx] = p[d];
             particles.invGammas[idx] = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
@@ -148,10 +144,6 @@ public:
             particles.invGammas[idx] = static_cast<GammaType>(1.0) / sqrt(static_cast<GammaType>(1.0) + p.norm2());
         }
 
-        void setMass(MassType newMass) { particles.masses[idx] = newMass; }
-
-        void setCharge(ChargeType newCharge) { particles.charges[idx] = newCharge; }
-
         void setFactor(FactorType newFactor) { particles.factors[idx] = newFactor; }
 
     private:
@@ -160,7 +152,7 @@ public:
         int idx;
     };
 
-    int size() const { return static_cast<int>(masses.size()); }
+    int size() const { return static_cast<int>(typeIndex.size()); }
 
     ParticleRef operator[](int idx) { return ParticleRef(*this, idx); }
     ConstParticleRef operator[](int idx) const { return ConstParticleRef(*this, idx); }
@@ -177,10 +169,9 @@ public:
         const typename ParticleRef::MomentumType p = particle.getP();
         for (int d = 0; d < ParticleRef::momentumDimension; d++)
             ps[d].push_back(p[d]);
-        masses.push_back(particle.getMass());
-        charges.push_back(particle.getCharge());
         factors.push_back(particle.getFactor());
         invGammas.push_back(static_cast<typename ParticleRef::GammaType>(1.0) / particle.getGamma());
+        typeIndex.push_back(particle.getType());
     }
     void popBack()
     {
@@ -188,20 +179,18 @@ public:
             positions[d].pop_back();
         for (int d = 0; d < ParticleRef::momentumDimension; d++)
             ps[d].pop_back();
-        masses.pop_back();
-        charges.pop_back();
         factors.pop_back();
         invGammas.pop_back();
+        typeIndex.pop_back();
     }
 
 private:
 
     std::vector<typename ScalarType<typename ParticleRef::PositionType>::Type> positions[ParticleRef::dimension];
     std::vector<typename ScalarType<typename ParticleRef::MomentumType>::Type> ps[ParticleRef::momentumDimension];
-    std::vector<typename ParticleRef::MassType> masses;
-    std::vector<typename ParticleRef::ChargeType> charges;
     std::vector<typename ParticleRef::FactorType> factors;
     std::vector<typename ParticleRef::GammaType> invGammas;
+    std::vector<typename ParticleRef::TypeIndexType> typeIndex;
 
     friend class ParticleRef;
     friend class ConstParticleRef;

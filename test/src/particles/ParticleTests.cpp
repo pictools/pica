@@ -5,7 +5,6 @@
 
 using namespace pica;
 
-
 template <class ParticleType>
 class ParticleTest : public BaseParticleFixture<ParticleType> {
 public:
@@ -13,8 +12,6 @@ public:
     using typename BaseParticleFixture<ParticleType>::PositionType;
     using typename BaseParticleFixture<ParticleType>::MomentumType;
     using typename BaseParticleFixture<ParticleType>::GammaType;
-    using typename BaseParticleFixture<ParticleType>::MassType;
-    using typename BaseParticleFixture<ParticleType>::ChargeType;
     using typename BaseParticleFixture<ParticleType>::FactorType;
 };
 
@@ -30,7 +27,6 @@ TYPED_TEST(ParticleTest, DefaultConstructor)
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     ParticleType particle;
-    particle.setMass(Constants<double>::electronMass());
     ASSERT_EQ_VECTOR(PositionType(), particle.getPosition(), this->dimension);
     ASSERT_EQ_VECTOR(MomentumType(), particle.getMomentum(), this->momentumDimension);
     ASSERT_EQ_VECTOR(MomentumType(), particle.getVelocity(), this->momentumDimension);
@@ -44,8 +40,6 @@ TYPED_TEST(ParticleTest, Constructor)
     typedef typename ParticleTest<TypeParam>::PositionType PositionType;
     typedef typename ParticleTest<TypeParam>::MomentumType MomentumType;
     typedef typename ParticleTest<TypeParam>::GammaType GammaType;
-    typedef typename ParticleTest<TypeParam>::MassType MassType;
-    typedef typename ParticleTest<TypeParam>::ChargeType ChargeType;
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     PositionType position = this->getPosition(3.1, -32.1, 4.3e-5);
@@ -54,7 +48,7 @@ TYPED_TEST(ParticleTest, Constructor)
     ChargeType charge = Constants<ChargeType>::electronCharge();
     FactorType factor = static_cast<FactorType>(1.4e2);
 
-    ParticleType particle(position, momentum, mass, charge, factor);
+    ParticleType particle(position, momentum, factor, 0);
     ASSERT_EQ_VECTOR(position, particle.getPosition(), this->dimension);
     ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), this->momentumDimension);
     ASSERT_EQ(mass, particle.getMass());
@@ -71,15 +65,13 @@ TYPED_TEST(ParticleTest, ConstructorDefaultFactor)
     typedef typename ParticleTest<TypeParam>::PositionType PositionType;
     typedef typename ParticleTest<TypeParam>::MomentumType MomentumType;
     typedef typename ParticleTest<TypeParam>::GammaType GammaType;
-    typedef typename ParticleTest<TypeParam>::MassType MassType;
-    typedef typename ParticleTest<TypeParam>::ChargeType ChargeType;
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     PositionType position = this->getPosition(-12.34, 0.2, 423.12e-2);
     MomentumType momentum(3254.23, -123.324, 1.23e5);
     MassType mass = Constants<MassType>::electronMass();
     ChargeType charge = Constants<ChargeType>::electronCharge();
-    ParticleType particle(position, momentum, mass, charge);
+    ParticleType particle(position, momentum);
     ASSERT_EQ_VECTOR(position, particle.getPosition(), this->dimension);
     ASSERT_EQ_VECTOR(momentum, particle.getMomentum(), this->momentumDimension);
     ASSERT_EQ(mass, particle.getMass());
@@ -93,16 +85,12 @@ TYPED_TEST(ParticleTest, CopyConstructor)
     typedef typename ParticleTest<TypeParam>::PositionType PositionType;
     typedef typename ParticleTest<TypeParam>::MomentumType MomentumType;
     typedef typename ParticleTest<TypeParam>::GammaType GammaType;
-    typedef typename ParticleTest<TypeParam>::MassType MassType;
-    typedef typename ParticleTest<TypeParam>::ChargeType ChargeType;
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     PositionType position = this->getPosition(-134.12, 412.6342, 2346.562);
     MomentumType momentum(-4531.23e5, 6534.123e3, 12.32);
-    MassType mass = Constants<MassType>::electronMass();
-    ChargeType charge = Constants<ChargeType>::electronCharge();
     FactorType factor = 213.51f;
-    ParticleType particle(position, momentum, mass, charge, factor);
+    ParticleType particle(position, momentum, factor, 0);
     ParticleType copyParticle(particle);
     ASSERT_TRUE(this->eqParticles_(particle, copyParticle));
 }
@@ -113,16 +101,12 @@ TYPED_TEST(ParticleTest, Assignment)
     typedef typename ParticleTest<TypeParam>::PositionType PositionType;
     typedef typename ParticleTest<TypeParam>::MomentumType MomentumType;
     typedef typename ParticleTest<TypeParam>::GammaType GammaType;
-    typedef typename ParticleTest<TypeParam>::MassType MassType;
-    typedef typename ParticleTest<TypeParam>::ChargeType ChargeType;
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     PositionType position = this->getPosition(432.453, -3452.15, -15.125);
     MomentumType momentum(431.124, -54.12, 5643.176);
-    MassType mass = Constants<MassType>::electronMass();
-    ChargeType charge = Constants<ChargeType>::electronCharge();
     FactorType factor = 1.9945f;
-    ParticleType particle(position, momentum, mass, charge, factor);
+    ParticleType particle(position, momentum, factor, 0);
     ParticleType copyParticle;
     copyParticle = particle;
     ASSERT_TRUE(this->eqParticles_(particle, copyParticle));
@@ -179,26 +163,20 @@ TYPED_TEST(ParticleTest, GetGamma)
     ASSERT_NEAR_FP(expectedGamma, particle.getGamma());
 }
 
-TYPED_TEST(ParticleTest, GetSetMass)
+TYPED_TEST(ParticleTest, GetMass)
 {
     typedef typename ParticleTest<TypeParam>::Particle ParticleType;
-    typedef typename ParticleTest<TypeParam>::MassType MassType;
 
     ParticleType particle = this->randomParticle();
-    MassType newMass = 1.3e-10;
-    particle.setMass(newMass);
-    ASSERT_EQ(newMass, particle.getMass());
+    ASSERT_EQ(pica::Constants<MassType>::electronMass(), particle.getMass());
 }
 
-TYPED_TEST(ParticleTest, GetSetCharge)
+TYPED_TEST(ParticleTest, GetCharge)
 {
     typedef typename ParticleTest<TypeParam>::Particle ParticleType;
-    typedef typename ParticleTest<TypeParam>::ChargeType ChargeType;
 
     ParticleType particle = this->randomParticle();
-    ChargeType newCharge = -5.7e-13;
-    particle.setCharge(newCharge);
-    ASSERT_EQ(newCharge, particle.getCharge());
+    ASSERT_EQ(pica::Constants<ChargeType>::electronCharge(), particle.getCharge());
 }
 
 TYPED_TEST(ParticleTest, GetSetFactor) 

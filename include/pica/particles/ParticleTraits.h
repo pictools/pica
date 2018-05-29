@@ -14,9 +14,8 @@ public:
     typedef typename ParticleType::PositionType PositionType;
     typedef typename ParticleType::MomentumType MomentumType;
     typedef typename ParticleType::GammaType GammaType;
-    typedef typename ParticleType::MassType MassType;
-    typedef typename ParticleType::ChargeType ChargeType;
     typedef typename ParticleType::FactorType FactorType;
+    typedef typename ParticleType::TypeIndexType TypeIndexType;
 };
 
 

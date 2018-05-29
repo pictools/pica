@@ -7,10 +7,26 @@
 #include "pica/math/Vectors.h"
 
 #include <cmath>
+#include <vector>
 
 
 namespace pica {
 
+typedef FP Real;
+typedef Real MassType;
+typedef Real ChargeType;
+
+struct ParticleType {
+    MassType mass;
+    ChargeType charge;
+};
+
+namespace ParticleTypes
+{
+    extern std::vector<ParticleType> typesVector;
+    extern const ParticleType* types;
+    extern int numTypes;
+};
 
 // Baseline representation for particle
 template<Dimension dimension>
@@ -25,15 +41,15 @@ public:
     typedef Real MassType;
     typedef Real ChargeType;
     typedef float FactorType;
+    typedef short TypeIndexType;
 
     ParticleBaseline() :
         factor(1),
-        mass(0.0),
-        charge(0.0) {}
+        typeIndex(0)
+    {}
 
-    ParticleBaseline(const PositionType& position, const MomentumType& momentum,
-        MassType mass, ChargeType charge, FactorType factor = 1) :
-        position(position), momentum(momentum), mass(mass), charge(charge), factor(factor) {}
+    ParticleBaseline(const PositionType& position, const MomentumType& momentum, FactorType factor = 1, TypeIndexType typeIndex = 0) :
+        position(position), momentum(momentum), mass(mass), charge(charge), factor(factor), typeIndex(typeIndex) {}
 
     PositionType getPosition() const { return position; }
     void setPosition(const PositionType& newPosition) { position = newPosition; }
@@ -46,23 +62,22 @@ public:
 
     GammaType getGamma() const { return sqrt(static_cast<FP>(1.0) + (momentum / (getMass() * Constants<GammaType>::c())).norm2()); }
 
-    MassType getMass() const { return mass; }
-    void setMass(MassType newMass) { mass = newMass; }
-    
-    ChargeType getCharge() const { return charge; }
-    void setCharge(ChargeType newCharge) { charge = newCharge; }
+    MassType getMass() const { return ParticleTypes::types[typeIndex].mass; }
+
+    ChargeType getCharge() const { return ParticleTypes::types[typeIndex].charge; }
 
     FactorType getFactor() const { return factor; }
     void setFactor(FactorType newFactor) { factor = newFactor; }
+
+    TypeIndexType getType() const { return typeIndex; }
+    void setType(TypeIndexType newType) { typeIndex = newType; }
 
 private:
 
     PositionType position;
     MomentumType momentum;
-    MassType mass;
-    ChargeType charge;
     FactorType factor;
-
+    TypeIndexType typeIndex;
 };
 
 

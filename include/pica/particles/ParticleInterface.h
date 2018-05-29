@@ -23,10 +23,8 @@ public:
         MassType mass, ChargeType charge, FactorType factor);
 
     MassType getMass() const;
-    void setMass(MassType newMass);
 
     ChargeType getCharge() const;
-    void setCharge(ChargeType newCharge);
 
     PositionType getPosition() const;
     void setPosition(const PositionType& newPosition);

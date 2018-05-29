@@ -89,12 +89,21 @@ public:
     typedef typename pica::ParticleTraits<Particle>::PositionType PositionType;
     typedef typename pica::ParticleTraits<Particle>::MomentumType MomentumType;
     typedef typename pica::ParticleTraits<Particle>::GammaType GammaType;
-    typedef typename pica::ParticleTraits<Particle>::MassType MassType;
-    typedef typename pica::ParticleTraits<Particle>::ChargeType ChargeType;
     typedef typename pica::ParticleTraits<Particle>::FactorType FactorType;
     typedef typename pica::ScalarType<MomentumType>::Type Real;
     static const int dimension = pica::VectorDimensionHelper<PositionType>::dimension;
     static const int momentumDimension = pica::VectorDimensionHelper<MomentumType>::dimension;
+
+    virtual void SetUp()
+    {
+        BaseFixture::SetUp();
+
+        pica::ParticleTypes::numTypes = 1;
+        pica::ParticleTypes::typesVector.resize(1);
+        pica::ParticleTypes::types = &pica::ParticleTypes::typesVector[0];
+        pica::ParticleTypes::typesVector[0].mass = pica::Constants<pica::MassType>::electronMass();
+        pica::ParticleTypes::typesVector[0].charge = pica::Constants<pica::ChargeType>::electronCharge();
+    }
 
     // Helper function to unify initialization of positions for 1d, 2d and 3d
     // In 1d y, z are ignored, in 2d z is ignored
@@ -107,7 +116,7 @@ public:
         return position;
     }
 
-    Particle randomParticle() const
+    Particle randomParticle()
     {
         Real minPosition = -10;
         Real maxPosition = 10;
@@ -115,7 +124,7 @@ public:
             getPosition(maxPosition, maxPosition, maxPosition));
     }
 
-    Particle randomParticle(PositionType minPosition, PositionType maxPosition) const
+    Particle randomParticle(PositionType minPosition, PositionType maxPosition)
     {
         PositionType position;
         for (int d = 0; d < dimension; d++)
@@ -125,8 +134,7 @@ public:
         MomentumType momentum(urand(minMomentum, maxMomentum),
             urand(minMomentum, maxMomentum), urand(minMomentum, maxMomentum));
         FactorType factor = static_cast<FactorType>(urand(1e-5, 1e5));
-        return Particle(position, momentum, pica::Constants<MassType>::electronMass(),
-            pica::Constants<ChargeType>::electronCharge(), factor);
+        return Particle(position, momentum, factor, 0);
     }
 
     template<class ConstParticleRef1, class ConstParticleRef2>

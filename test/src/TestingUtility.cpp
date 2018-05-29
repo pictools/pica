@@ -9,6 +9,15 @@
 
 using namespace pica;
 
+namespace pica {
+
+    namespace ParticleTypes {
+        std::vector<ParticleType> typesVector;
+        const ParticleType* types = nullptr;
+        int numTypes = 0;
+    } // namespace ParticleTypes
+
+} // namespace pica
 
 void BaseFixture::SetUp() {
     srand(1);
