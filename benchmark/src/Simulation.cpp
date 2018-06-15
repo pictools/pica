@@ -23,6 +23,13 @@
 
 using namespace pica;
 
+namespace pica {
+    namespace ParticleTypes {
+        std::vector<ParticleType> typesVector;
+        const ParticleType* types = nullptr;
+        int numTypes = 0;
+    }
+}
 
 template<class Grid, class FieldSolver>
 void updateField(Grid& grid, FieldSolver& fieldSolver, double dt, PerformanceTracker& tracker)
@@ -84,10 +91,13 @@ void createParticles(const Parameters& parameters, Ensemble& ensemble)
     int numParticles = numCells * parameters.particlesPerCell;
     PositionType minPosition = ensemble.getMinPosition();
     PositionType maxPosition = ensemble.getMaxPosition();
+    ParticleTypes::numTypes = 1;
+    ParticleTypes::typesVector.resize(ParticleTypes::numTypes);
+    ParticleTypes::typesVector[0].charge = Constants<pica::ChargeType>::electronCharge();
+    ParticleTypes::typesVector[0].mass = Constants<pica::MassType>::electronMass();
     for (int i = 0; i < numParticles; i++) {
         typename Ensemble::Particle particle;
-        particle.setMass(constants::electronMass);
-        particle.setCharge(constants::electronCharge);
+        particle.setType(0);
         particle.setFactor(1.0);
         PositionType position;
         for (int d = 0; d < VectorDimensionHelper<PositionType>::dimension; d++)

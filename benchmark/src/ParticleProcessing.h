@@ -77,7 +77,7 @@ private:
         #pragma simd
         #pragma forceinline
         for (int particleIdx = beginIdx; particleIdx < endIdx; particleIdx++)
-            particlePusher.push(particles[particleIdx],
+            particlePusher.push(&particles[particleIdx],
                 interpolatedE[particleIdx - beginIdx], interpolatedB[particleIdx - beginIdx], dt);
     }
 
@@ -445,8 +445,7 @@ private:
                     migratingEnsemble.add(particles[i]);
                     typename Ensemble::ParticleRef lastParticle = particles.back();
                     particles[i].setPosition(lastParticle.getPosition());
-                    particles[i].setMass(lastParticle.getMass());
-                    particles[i].setCharge(lastParticle.getCharge());
+                    particles[i].setType(lastParticle.getType());
                     particles[i].setFactor(lastParticle.getFactor());
                     particles.popBack();
                     i--;
@@ -502,8 +501,7 @@ private:
                     migratingEnsemble.add(particles[i]);
                     typename Ensemble::ParticleRef lastParticle = particles.back();
                     particles[i].setPosition(lastParticle.getPosition());
-                    particles[i].setMass(lastParticle.getMass());
-                    particles[i].setCharge(lastParticle.getCharge());
+                    particles[i].setType(lastParticle.getType());
                     particles[i].setFactor(lastParticle.getFactor());
                     particles.popBack();
                     i--;

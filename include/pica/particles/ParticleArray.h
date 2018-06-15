@@ -59,6 +59,7 @@ public:
         typedef typename ParticleTraits<ParticleType>::MomentumType MomentumType;
         typedef typename ParticleTraits<ParticleType>::GammaType GammaType;
         typedef typename ParticleTraits<ParticleType>::FactorType FactorType;
+        typedef typename ParticleTraits<ParticleType>::TypeIndexType TypeIndexType;
         static const int dimension = VectorDimensionHelper<PositionType>::dimension;
         static const int momentumDimension = VectorDimensionHelper<MomentumType>::dimension;
 
@@ -92,6 +93,9 @@ public:
         ChargeType getCharge() const { return ParticleTypes::types[particles.typeIndex[idx]].charge; }
 
         FactorType getFactor() const { return particles.factors[idx]; }
+
+        TypeIndexType getType() const { return particles.typeIndex[idx]; }
+
 
     private:
         const ParticleArraySoA& particles;
@@ -145,6 +149,8 @@ public:
         }
 
         void setFactor(FactorType newFactor) { particles.factors[idx] = newFactor; }
+
+        void setType(TypeIndexType newTypeIndex) { particles.typeIndex[idx] = newTypeIndex; }
 
     private:
         // These intentionally overshadow members of ConstParticleRef
