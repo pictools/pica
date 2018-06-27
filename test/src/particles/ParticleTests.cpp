@@ -89,7 +89,7 @@ TYPED_TEST(ParticleTest, CopyConstructor)
 
     PositionType position = this->getPosition(-134.12, 412.6342, 2346.562);
     MomentumType momentum(-4531.23e5, 6534.123e3, 12.32);
-    FactorType factor = 213.51f;
+    FactorType factor = 213.51;
     ParticleType particle(position, momentum, factor, 0);
     ParticleType copyParticle(particle);
     ASSERT_TRUE(this->eqParticles_(particle, copyParticle));
@@ -105,7 +105,7 @@ TYPED_TEST(ParticleTest, Assignment)
 
     PositionType position = this->getPosition(432.453, -3452.15, -15.125);
     MomentumType momentum(431.124, -54.12, 5643.176);
-    FactorType factor = 1.9945f;
+    FactorType factor = 1.9945;
     ParticleType particle(position, momentum, factor, 0);
     ParticleType copyParticle;
     copyParticle = particle;
@@ -185,7 +185,7 @@ TYPED_TEST(ParticleTest, GetSetFactor)
     typedef typename ParticleTest<TypeParam>::FactorType FactorType;
 
     ParticleType particle = this->randomParticle();
-    FactorType newFactor = 6523.54f;
+    FactorType newFactor = 6523.54;
     particle.setFactor(newFactor);
     ASSERT_EQ(newFactor, particle.getFactor());
 }

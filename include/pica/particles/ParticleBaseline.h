@@ -40,7 +40,7 @@ public:
     typedef Real GammaType;
     typedef Real MassType;
     typedef Real ChargeType;
-    typedef float FactorType;
+    typedef Real FactorType;
     typedef short TypeIndexType;
 
     ParticleBaseline() :

@@ -25,7 +25,9 @@ public:
     typedef typename VectorTypeHelper<dimension, Real>::Type PositionType;
     typedef typename VectorTypeHelper<Three, Real>::Type MomentumType;
     typedef Real GammaType;
-    typedef float FactorType;
+    typedef Real MassType;
+    typedef Real ChargeType;
+    typedef Real FactorType;
     typedef short TypeIndexType;
 
     Particle() :
