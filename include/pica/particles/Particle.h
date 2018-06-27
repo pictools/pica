@@ -26,7 +26,7 @@ public:
     typedef Real GammaType;
     typedef Real MassType;
     typedef Real ChargeType;
-    typedef float FactorType;
+    typedef Real FactorType;
 
     Particle() :
         factor(1),
