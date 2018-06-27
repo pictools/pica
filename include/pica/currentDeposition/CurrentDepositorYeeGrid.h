@@ -156,10 +156,10 @@ private:
         component(baseIndex.x, baseIndex.y, baseIndex.z + 1) += (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
         component(baseIndex.x, baseIndex.y + 1, baseIndex.z) += (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
         component(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) += (1.0 - coeff.x) * coeff.y * coeff.z * value;
-        component(baseIndex.x + 1, baseIndex.y, baseIndex.z) += (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        component(baseIndex.x + 1, baseIndex.y, baseIndex.z) += coeff.x * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
         component(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) += coeff.x * (1.0 - coeff.y) * coeff.z * value;
         component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) += coeff.x * coeff.y * (1.0 - coeff.z) * value;
-        component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) += coeff.x * coeff.y * coeff.z * value;;
+        component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) += coeff.x * coeff.y * coeff.z * value;
     }
 
 };
@@ -255,10 +255,10 @@ private:
         component[baseIndex.x][baseIndex.y][baseIndex.z + 1] += (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z * value;
         component[baseIndex.x][baseIndex.y + 1][baseIndex.z] += (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) * value;
         component[baseIndex.x][baseIndex.y + 1][baseIndex.z + 1] += (1.0 - coeff.x) * coeff.y * coeff.z * value;
-        component[baseIndex.x + 1][baseIndex.y][baseIndex.z] += (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
+        component[baseIndex.x + 1][baseIndex.y][baseIndex.z] += coeff.x * (1.0 - coeff.y) * (1.0 - coeff.z) * value;
         component[baseIndex.x + 1][baseIndex.y][baseIndex.z + 1] += coeff.x * (1.0 - coeff.y) * coeff.z * value;
         component[baseIndex.x + 1][baseIndex.y + 1][baseIndex.z] += coeff.x * coeff.y * (1.0 - coeff.z) * value;
-        component[baseIndex.x + 1][baseIndex.y + 1][baseIndex.z + 1] += coeff.x * coeff.y * coeff.z * value;;
+        component[baseIndex.x + 1][baseIndex.y + 1][baseIndex.z + 1] += coeff.x * coeff.y * coeff.z * value;
     }
 
 };
