@@ -53,7 +53,7 @@ public:
     template<class ConstParticleRef>
     IndexType getSupercellIndex(ConstParticleRef particle)
     {
-        return truncate((particle.getPosition() - minPosition) * supercellInvSize);
+        return floor((particle.getPosition() - minPosition) * supercellInvSize);
     }
 
 private:

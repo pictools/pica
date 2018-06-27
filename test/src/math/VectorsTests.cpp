@@ -423,6 +423,12 @@ TEST(VectorsTest, FP3GreaterOrEqual)
     ASSERT_FALSE(v3 >= v2);
 }
 
+TEST(VectorsTest, FP3Floor)
+{
+    FP3 v(5.2, 7.5, -1.4);
+    ASSERT_EQ_INT3(floor(v), Int3(5, 7, -2));
+}
+
 TEST(VectorsTest, FP3Truncate)
 {
     FP3 v(5.2, 7.5, -1.4);

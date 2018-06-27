@@ -637,6 +637,27 @@ typedef Vector3<int> Int3;
 typedef Vector3<FP> FP3;
 
 template<typename Real>
+inline const Vector1<int> floor(const Vector1<Real>& v)
+{
+    return Vector1<int>(static_cast<int>(std::floor(v.x)));
+}
+
+template<typename Real>
+inline const Vector2<int> floor(const Vector2<Real>& v)
+{
+    return Vector2<int>(static_cast<int>(std::floor(v.x)),
+        static_cast<int>(std::floor(v.y)));
+}
+
+template<typename Real>
+inline const Vector3<int> floor(const Vector3<Real>& v)
+{
+    return Vector3<int>(static_cast<int>(std::floor(v.x)),
+        static_cast<int>(std::floor(v.y)),
+        static_cast<int>(std::floor(v.z)));
+}
+
+template<typename Real>
 inline const Vector1<int> truncate(const Vector1<Real>& v)
 {
     return Vector1<int>(static_cast<int>(v.x));
@@ -645,13 +666,16 @@ inline const Vector1<int> truncate(const Vector1<Real>& v)
 template<typename Real>
 inline const Vector2<int> truncate(const Vector2<Real>& v)
 {
-    return Vector2<int>(static_cast<int>(v.x), static_cast<int>(v.y));
+    return Vector2<int>(static_cast<int>(v.x),
+        static_cast<int>(v.y));
 }
 
 template<typename Real>
 inline const Vector3<int> truncate(const Vector3<Real>& v)
 {
-    return Vector3<int>(static_cast<int>(v.x), static_cast<int>(v.y), static_cast<int>(v.z));
+    return Vector3<int>(static_cast<int>(v.x),
+        static_cast<int>(v.y),
+        static_cast<int>(v.z));
 }
 
 template<typename Real>
