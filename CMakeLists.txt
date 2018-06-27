@@ -122,12 +122,6 @@ set(pica_headers
     ${PICA_HEADER_DIR}/Parameters.h)
 add_custom_target(pica SOURCES ${pica_headers})
 
-add_subdirectory(benchmark)
-add_custom_target(post_benchmark ALL DEPENDS benchmark
-			      COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:benchmark>
-                                                                ${ROOT_DIR}/bin/$<TARGET_FILE_NAME:benchmark>)
-set_target_properties(post_benchmark PROPERTIES FOLDER BuildInfrastructure)
-
 if (USE_TESTS)
 	add_subdirectory(test)
 	set(TESTS $<TARGET_FILE_NAME:tests>)
