@@ -26,7 +26,7 @@ public:
         IndexType numCells, IndexType numCellsPerSupercell) :
         minPosition(minPosition), maxPosition(maxPosition), numCells(numCells),
         numCellsPerSupercell(numCellsPerSupercell),
-        supercells((numCells + numCellsPerSupercell) / numCellsPerSupercell, ParticleArray())
+        supercells((numCells + numCellsPerSupercell - OnesHelper<(Dimension)dimension, int>::get()) / numCellsPerSupercell, ParticleArray())
     {
         PositionType cellSize = (maxPosition - minPosition) / PositionType(numCells);
         PositionType supercellSize = PositionType(numCellsPerSupercell) * cellSize;

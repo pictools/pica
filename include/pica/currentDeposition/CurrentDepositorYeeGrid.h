@@ -44,7 +44,7 @@ protected:
     PositionType inverseStep;
     PositionType normalizedOrigin, normalizedOriginStaggered;
 
-};    
+};
 
 } // namespace pica::internal
 
@@ -182,7 +182,7 @@ public:
         normalizedOrigin((minPosition - grid.getStep()) / grid.getStep()),
         normalizedOriginStaggered(normalizedOrigin + ones<Three, ScalarPositionType>() * static_cast<ScalarPositionType>(0.5))
     {
-        baseIdx = truncate(normalizedOriginStaggered);
+        baseIdx = truncate(minPosition / grid.getStep()) + Int3(1, 1, 1);
         size = numCellsPerSupercell + IndexType(3, 3, 3);
         /// Poor man's check
         for (int d = 0; d < 3; d++)
@@ -206,9 +206,9 @@ public:
         for (int k = 0; k < size.z; k++)
         {
             IndexType gridxIdx = baseIdx + IndexType(i, j, k);
-            grid.jx(gridxIdx.x, gridxIdx.y, gridxIdx.z) = jx[i][j][k] * normalization;
-            grid.jy(gridxIdx.x, gridxIdx.y, gridxIdx.z) = jy[i][j][k] * normalization;
-            grid.jz(gridxIdx.x, gridxIdx.y, gridxIdx.z) = jz[i][j][k] * normalization;
+            grid.jx(gridxIdx.x, gridxIdx.y, gridxIdx.z) += jx[i][j][k] * normalization;
+            grid.jy(gridxIdx.x, gridxIdx.y, gridxIdx.z) += jy[i][j][k] * normalization;
+            grid.jz(gridxIdx.x, gridxIdx.y, gridxIdx.z) += jz[i][j][k] * normalization;
         }
     }
 

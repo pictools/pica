@@ -5,7 +5,6 @@
 #include "pica/math/Constants.h"
 #include "pica/math/FP.h"
 #include "pica/math/Vectors.h"
-#include "pica/particles/ParticleBaseline.h"
 
 #include <cmath>
 #include <stddef.h>
@@ -15,6 +14,21 @@
 
 namespace pica {
 
+typedef FP Real;
+typedef Real MassType;
+typedef Real ChargeType;
+
+struct ParticleType {
+    MassType mass;
+    ChargeType charge;
+};
+
+namespace ParticleTypes
+{
+    extern std::vector<ParticleType> typesVector;
+    extern const ParticleType* types;
+    extern int numTypes;
+};
 
 template<Dimension dimension>
 class Particle {

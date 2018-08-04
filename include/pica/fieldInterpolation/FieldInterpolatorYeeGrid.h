@@ -175,7 +175,7 @@ private:
             component(baseIndex.x, baseIndex.y, baseIndex.z + 1) * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
             component(baseIndex.x, baseIndex.y + 1, baseIndex.z) * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
             component(baseIndex.x, baseIndex.y + 1, baseIndex.z + 1) * (1.0 - coeff.x) * coeff.y * coeff.z +
-            component(baseIndex.x + 1, baseIndex.y, baseIndex.z) * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            component(baseIndex.x + 1, baseIndex.y, baseIndex.z) * coeff.x * (1.0 - coeff.y) * (1.0 - coeff.z) +
             component(baseIndex.x + 1, baseIndex.y, baseIndex.z + 1) * coeff.x * (1.0 - coeff.y) * coeff.z +
             component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z) * coeff.x * coeff.y * (1.0 - coeff.z) +
             component(baseIndex.x + 1, baseIndex.y + 1, baseIndex.z + 1) * coeff.x * coeff.y * coeff.z;
@@ -201,8 +201,8 @@ public:
         normalizedOrigin((minPosition - grid.getStep()) / grid.getStep()),
         normalizedOriginStaggered(normalizedOrigin + ones<Three, ScalarPositionType>() * static_cast<ScalarPositionType>(0.5))
     {
-        IndexType baseIdx = truncate(normalizedOriginStaggered);
         IndexType size = numCellsPerSupercell + IndexType(2, 2, 2);
+        IndexType baseIdx = truncate(minPosition / grid.getStep()) + Int3(1, 1, 1);
         /// Poor man's check
         for (int d = 0; d < 3; d++)
             if (size[d] > maxSize)
@@ -231,7 +231,7 @@ public:
             PositionType(coeffCollocated.x, coeffStaggered.y, coeffStaggered.z));
         e.y = interpolate(ey, IndexType(indexStaggered.x, indexCollocated.y, indexStaggered.z),
             PositionType(coeffStaggered.x, coeffCollocated.y, coeffStaggered.z));
-        e.z = interpolate(ey, IndexType(indexStaggered.x, indexStaggered.y, indexCollocated.z),
+        e.z = interpolate(ez, IndexType(indexStaggered.x, indexStaggered.y, indexCollocated.z),
             PositionType(coeffStaggered.x, coeffStaggered.y, coeffCollocated.z));
         b.x = interpolate(bx, IndexType(indexStaggered.x, indexCollocated.y, indexCollocated.z),
             PositionType(coeffStaggered.x, coeffCollocated.y, coeffCollocated.z));
@@ -274,7 +274,7 @@ private:
             component[baseIndex.x][baseIndex.y][baseIndex.z + 1] * (1.0 - coeff.x) * (1.0 - coeff.y) * coeff.z +
             component[baseIndex.x][baseIndex.y + 1][baseIndex.z] * (1.0 - coeff.x) * coeff.y * (1.0 - coeff.z) +
             component[baseIndex.x][baseIndex.y + 1][baseIndex.z + 1] * (1.0 - coeff.x) * coeff.y * coeff.z +
-            component[baseIndex.x + 1][baseIndex.y][baseIndex.z] * (1.0 - coeff.x) * (1.0 - coeff.y) * (1.0 - coeff.z) +
+            component[baseIndex.x + 1][baseIndex.y][baseIndex.z] * coeff.x * (1.0 - coeff.y) * (1.0 - coeff.z) +
             component[baseIndex.x + 1][baseIndex.y][baseIndex.z + 1] * coeff.x * (1.0 - coeff.y) * coeff.z +
             component[baseIndex.x + 1][baseIndex.y + 1][baseIndex.z] * coeff.x * coeff.y * (1.0 - coeff.z) +
             component[baseIndex.x + 1][baseIndex.y + 1][baseIndex.z + 1] * coeff.x * coeff.y * coeff.z;
