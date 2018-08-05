@@ -109,17 +109,16 @@ set(pica_headers
     ${PICA_HEADER_DIR}/particles/EnsembleSupercells.h
     ${PICA_HEADER_DIR}/particles/EnsembleUnordered.h
     ${PICA_HEADER_DIR}/particles/Particle.h
-    ${PICA_HEADER_DIR}/particles/ParticleBaseline.h
     ${PICA_HEADER_DIR}/particles/ParticleArray.h
     ${PICA_HEADER_DIR}/particles/ParticleInterface.h
     ${PICA_HEADER_DIR}/particles/ParticleTraits.h
     ${PICA_HEADER_DIR}/particlePush/BorisPusher.h
-    ${PICA_HEADER_DIR}/particlePush/BorisPusherBaseline.h
-	${PICA_HEADER_DIR}/threading/OpenMPHelper.h
-	${PICA_HEADER_DIR}/utility/Array.h
-	${PICA_HEADER_DIR}/utility/Assert.h
-	${PICA_HEADER_DIR}/utility/Utility.h
+    ${PICA_HEADER_DIR}/threading/OpenMPHelper.h
+    ${PICA_HEADER_DIR}/utility/Array.h
+    ${PICA_HEADER_DIR}/utility/Assert.h
+    ${PICA_HEADER_DIR}/utility/Utility.h
     ${PICA_HEADER_DIR}/Parameters.h)
+
 add_custom_target(pica SOURCES ${pica_headers})
 
 if (USE_TESTS)
